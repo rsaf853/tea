@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>r♡sie OOC</title>
+<title>r♡siememo</title>
+<link rel="icon" type="image/png" href="images/favi3.png">
+<link rel="apple-touch-icon" href="images/icon1.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <style>
   :root,
@@ -81,7 +83,10 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 4px 0 16px; margin-bottom: 6px;
     border-bottom: 1px solid var(--border-soft);
+    position: sticky; top: 0; z-index: 30;
+    background: var(--bg-app);
   }
+  .header-right { display: flex; align-items: center; gap: 8px; }
   .app-brand { display: flex; align-items: baseline; gap: 5px; font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
   .app-brand .heart { color: var(--heart); font-size: 0.9em; margin: 0 1px; }
   .app-brand small { font-weight: 500; color: var(--ink-faint); font-size: 13px; }
@@ -113,6 +118,22 @@
   }
   #newText:focus { border-color: var(--accent); }
 
+  .md-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
+  .md-btn {
+    width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg-card); color: var(--ink); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; font-size: 13px; font-weight: 700; padding: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .md-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .md-btn i { font-style: italic; font-weight: 500; }
+  .hl-preview {
+    background: var(--accent-soft); color: var(--ink);
+    font-size: 12px; font-weight: 500; line-height: 1.3;
+    padding: 1px 4px; border-radius: 3px;
+  }
+
   .tag-input-row {
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
     margin-top: 8px; padding: 6px 8px;
@@ -125,8 +146,9 @@
   .tag-chip {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-strong);
-    padding: 3px 8px; border-radius: 999px; font-size: 11.5px; white-space: nowrap;
+    padding: 3px 8px; border-radius: 8px; font-size: 11.5px; white-space: nowrap;
   }
+  .tag-chip .tag-chip-label::before { content: "#"; }
   .tag-chip button {
     border: none; background: none; color: var(--ink-soft); cursor: pointer;
     font-size: 12px; line-height: 1; padding: 0;
@@ -141,22 +163,43 @@
   }
   .btn-save:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
 
+  /* ---------- search ---------- */
+  .search-row { position: relative; }
+  .search-row input {
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease, width 0.2s ease;
+  }
+  .search-row input:focus { border-color: var(--accent); background: var(--bg-panel); }
+
+  .header-search { flex-shrink: 0; }
+  .header-search input {
+    width: 92px; padding: 6px 10px; font-size: 12px;
+  }
+  .header-search:focus-within input { width: 150px; }
+
   /* ---------- tag filter bar ---------- */
   .filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
   .filter-chip {
     border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink-soft);
-    font-size: 12px; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: 999px;
+    font-size: 12px; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: 8px;
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
+  .filter-chip.tag-filter::before { content: "#"; }
   .filter-chip:hover { border-color: var(--accent); color: var(--ink); }
   .filter-chip.active { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--accent-ink); font-weight: 600; }
 
-  /* ---------- masonry card grid ---------- */
-  .card-grid { column-width: 260px; column-gap: 14px; }
+  /* ---------- card grid ---------- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    align-items: start;
+  }
   .note-card {
-    break-inside: avoid; display: inline-block; width: 100%;
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
-    padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-card);
+    padding: 12px 14px; box-shadow: var(--shadow-card);
     position: relative; transition: border-color 0.15s ease, background 0.25s ease;
   }
   .note-card:hover { border-color: var(--border-strong); }
@@ -181,11 +224,19 @@
     font-size: 13.5px; line-height: 1.6; color: var(--ink);
     white-space: pre-wrap; word-break: break-word; margin: 0 4px 4px 0;
   }
+  .note-text strong { font-weight: 700; }
+  .note-text em { font-style: italic; }
+  .note-text mark {
+    background: var(--accent-soft); color: var(--ink);
+    padding: 0 3px; border-radius: 4px;
+  }
+  html[data-theme="dark"] .note-text mark { color: var(--ink); }
   .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 30px 8px 0; }
   .note-tag {
     font-size: 11px; color: var(--ink-soft); background: var(--bg-card);
-    border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px;
+    border: 1px solid var(--border); padding: 2px 8px; border-radius: 8px;
   }
+  .note-tag::before { content: "#"; }
 
   .note-edit-area {
     width: 100%; min-height: 70px; resize: vertical; border: 1px solid var(--accent);
@@ -200,6 +251,11 @@
   .btn-mini.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
 
   .empty-hint { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 50px 0; }
+
+  .site-footer {
+    text-align: center; font-size: 11px; color: var(--ink-faint);
+    opacity: 0.55; padding: 26px 0 4px;
+  }
 
   /* ---------- toast ---------- */
   #toastStack {
@@ -226,17 +282,27 @@
   <div class="app-header">
     <div class="app-brand">
       <span>r<span class="heart">♡</span>sie</span>
-      <small>OOC</small>
+      <small>memo</small>
     </div>
-    <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
-      <span class="theme-toggle-thumb"></span>
-    </button>
+    <div class="header-right">
+      <div class="search-row header-search">
+        <input type="text" id="searchInput" placeholder="검색">
+      </div>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
+        <span class="theme-toggle-thumb"></span>
+      </button>
+    </div>
   </div>
 
   <div class="add-card">
-    <textarea id="newText" placeholder="짧은 글이나 대사를 적어두세요."></textarea>
+    <div class="md-toolbar">
+      <button type="button" class="md-btn" data-wrap="**" title="굵게">B</button>
+      <button type="button" class="md-btn" data-wrap="_" title="기울임"><i>I</i></button>
+      <button type="button" class="md-btn" data-wrap="==" title="하이라이트"><span class="hl-preview">가</span></button>
+    </div>
+    <textarea id="newText" placeholder="**굵게**  _기울임_  ==하이라이트=="></textarea>
     <div class="tag-input-row" id="newTagRow">
-      <input type="text" id="newTagInput" placeholder="태그 입력 후 Enter">
+      <input type="text" id="newTagInput" placeholder="태그 입력">
     </div>
     <div class="add-card-footer">
       <button type="button" class="btn-save" id="saveNewBtn">저장</button>
@@ -247,6 +313,8 @@
 
   <div class="card-grid" id="cardGrid"></div>
   <div class="empty-hint" id="emptyHint" style="display:none;">아직 저장된 카드가 없습니다.</div>
+
+  <footer class="site-footer">by @hard7uck</footer>
 </div>
 
 <script>
@@ -257,6 +325,7 @@ const THEME_KEY = 'rosie_ooc_theme';
 let cards = [];
 let newTags = [];
 let activeFilters = new Set();
+let searchQuery = '';
 let editingId = null;
 
 // ---------- storage ----------
@@ -289,7 +358,7 @@ function renderNewTagChips() {
   newTags.forEach(tag => {
     const chip = document.createElement('span');
     chip.className = 'tag-chip';
-    chip.innerHTML = `${tag} <button type="button" aria-label="태그 삭제">×</button>`;
+    chip.innerHTML = `<span class="tag-chip-label">${tag}</span> <button type="button" aria-label="태그 삭제">×</button>`;
     chip.querySelector('button').addEventListener('click', () => {
       newTags = newTags.filter(t => t !== tag);
       renderNewTagChips();
@@ -298,16 +367,59 @@ function renderNewTagChips() {
   });
 }
 
-el('newTagInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
-    const v = e.target.value.trim().replace(/,$/, '');
-    if (!v) { if (e.key !== ' ') e.preventDefault(); return; }
+let newTagComposing = false;
+const newTagInputEl = el('newTagInput');
+
+function commitNewTagIfNeeded() {
+  const raw = newTagInputEl.value;
+  if (/[,\s]$/.test(raw)) {
+    const v = raw.replace(/[,\s]+$/, '').trim();
+    if (v && !newTags.includes(v)) { newTags.push(v); renderNewTagChips(); }
+    newTagInputEl.value = '';
+  }
+}
+
+newTagInputEl.addEventListener('compositionstart', () => { newTagComposing = true; });
+newTagInputEl.addEventListener('compositionend', () => {
+  newTagComposing = false;
+  commitNewTagIfNeeded();
+});
+newTagInputEl.addEventListener('input', () => {
+  if (newTagComposing) return;
+  commitNewTagIfNeeded();
+});
+newTagInputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
     e.preventDefault();
-    if (!newTags.includes(v)) { newTags.push(v); renderNewTagChips(); }
-    e.target.value = '';
-  } else if (e.key === 'Backspace' && !e.target.value && newTags.length) {
+    if (e.isComposing || e.keyCode === 229) return;
+    const v = newTagInputEl.value.trim();
+    if (v) {
+      if (!newTags.includes(v)) { newTags.push(v); renderNewTagChips(); }
+      newTagInputEl.value = '';
+    }
+  } else if (e.key === 'Backspace' && !newTagInputEl.value && newTags.length) {
     newTags.pop(); renderNewTagChips();
   }
+});
+
+// ---------- markdown toolbar ----------
+function applyMarkdownWrap(textarea, marker) {
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = textarea.value;
+  const selected = value.slice(start, end);
+  const before = value.slice(0, start);
+  const after = value.slice(end);
+  textarea.value = before + marker + selected + marker + after;
+  const cursorPos = selected ? start + marker.length + selected.length + marker.length : start + marker.length;
+  textarea.focus();
+  textarea.setSelectionRange(cursorPos, cursorPos);
+}
+
+document.querySelectorAll('.md-toolbar .md-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    applyMarkdownWrap(el('newText'), btn.dataset.wrap);
+  });
 });
 
 el('saveNewBtn').addEventListener('click', () => {
@@ -318,6 +430,12 @@ el('saveNewBtn').addEventListener('click', () => {
   newTags = []; renderNewTagChips();
   saveCards(); renderAll();
   showToast('저장되었습니다.');
+});
+
+// ---------- search ----------
+el('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderCardGrid();
 });
 
 // ---------- filter bar ----------
@@ -339,7 +457,7 @@ function renderFilterBar() {
   getAllTags().forEach(tag => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'filter-chip' + (activeFilters.has(tag) ? ' active' : '');
+    btn.className = 'filter-chip tag-filter' + (activeFilters.has(tag) ? ' active' : '');
     btn.textContent = tag;
     btn.addEventListener('click', () => {
       if (activeFilters.has(tag)) activeFilters.delete(tag); else activeFilters.add(tag);
@@ -351,8 +469,15 @@ function renderFilterBar() {
 
 // ---------- card grid ----------
 function getVisibleCards() {
-  if (activeFilters.size === 0) return cards;
-  return cards.filter(c => c.tags.some(t => activeFilters.has(t)));
+  let list = cards;
+  if (activeFilters.size > 0) list = list.filter(c => c.tags.some(t => activeFilters.has(t)));
+  if (searchQuery) {
+    list = list.filter(c =>
+      c.text.toLowerCase().includes(searchQuery) ||
+      c.tags.some(t => t.toLowerCase().includes(searchQuery))
+    );
+  }
+  return list;
 }
 
 function copyCardText(text) {
@@ -371,7 +496,11 @@ function renderCardGrid() {
   const grid = el('cardGrid');
   const visible = getVisibleCards();
   grid.innerHTML = '';
-  el('emptyHint').style.display = visible.length === 0 ? 'block' : 'none';
+  const hint = el('emptyHint');
+  hint.style.display = visible.length === 0 ? 'block' : 'none';
+  hint.textContent = (searchQuery || activeFilters.size > 0)
+    ? '조건에 맞는 카드가 없습니다.'
+    : '아직 저장된 카드가 없습니다.';
 
   visible.forEach(card => {
     const div = document.createElement('div');
@@ -389,14 +518,14 @@ function renderCardGrid() {
       const editTags = [...card.tags];
       const tagRow = div.querySelector('.edit-tag-row');
       const tagInput = document.createElement('input');
-      tagInput.type = 'text'; tagInput.placeholder = '태그 입력 후 Enter';
+      tagInput.type = 'text'; tagInput.placeholder = '태그 입력';
 
       function renderEditChips() {
         tagRow.querySelectorAll('.tag-chip').forEach(c => c.remove());
         editTags.forEach(tag => {
           const chip = document.createElement('span');
           chip.className = 'tag-chip';
-          chip.innerHTML = `${tag} <button type="button">×</button>`;
+          chip.innerHTML = `<span class="tag-chip-label">${tag}</span> <button type="button">×</button>`;
           chip.querySelector('button').addEventListener('click', () => {
             const idx = editTags.indexOf(tag); if (idx > -1) editTags.splice(idx, 1);
             renderEditChips();
@@ -407,13 +536,35 @@ function renderCardGrid() {
       tagRow.appendChild(tagInput);
       renderEditChips();
 
+      let editTagComposing = false;
+      function commitEditTagIfNeeded() {
+        const raw = tagInput.value;
+        if (/[,\s]$/.test(raw)) {
+          const v = raw.replace(/[,\s]+$/, '').trim();
+          if (v && !editTags.includes(v)) { editTags.push(v); renderEditChips(); }
+          tagInput.value = '';
+        }
+      }
+      tagInput.addEventListener('compositionstart', () => { editTagComposing = true; });
+      tagInput.addEventListener('compositionend', () => {
+        editTagComposing = false;
+        commitEditTagIfNeeded();
+      });
+      tagInput.addEventListener('input', () => {
+        if (editTagComposing) return;
+        commitEditTagIfNeeded();
+      });
       tagInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
-          const v = e.target.value.trim().replace(/,$/, '');
-          if (!v) { if (e.key !== ' ') e.preventDefault(); return; }
+        if (e.key === 'Enter') {
           e.preventDefault();
-          if (!editTags.includes(v)) { editTags.push(v); renderEditChips(); }
-          e.target.value = '';
+          if (e.isComposing || e.keyCode === 229) return;
+          const v = tagInput.value.trim();
+          if (v) {
+            if (!editTags.includes(v)) { editTags.push(v); renderEditChips(); }
+            tagInput.value = '';
+          }
+        } else if (e.key === 'Backspace' && !tagInput.value && editTags.length) {
+          editTags.pop(); renderEditChips();
         }
       });
 
@@ -435,7 +586,7 @@ function renderCardGrid() {
         <div class="note-tags"></div>
         <div class="note-text"></div>
       `;
-      div.querySelector('.note-text').textContent = card.text;
+      div.querySelector('.note-text').innerHTML = renderMarkdown(card.text);
       const tagsWrap = div.querySelector('.note-tags');
       card.tags.forEach(tag => {
         const span = document.createElement('span');
@@ -453,6 +604,14 @@ function renderCardGrid() {
 
 function escapeHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMarkdown(raw) {
+  let s = escapeHtml(raw);
+  s = s.replace(/==([^=\n]+?)==/g, '<mark>$1</mark>');
+  s = s.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/_([^_\n]+?)_/g, '<em>$1</em>');
+  return s;
 }
 
 function renderAll() {

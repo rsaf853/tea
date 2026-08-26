@@ -1,1 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>r♡sie OOC</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<style>
+  :root,
+  html[data-theme="light"] {
+    --bg-app: #fef4f8;
+    --bg-panel: #ffffff;
+    --bg-card: #fef8fb;
 
+    --border-soft: #ffedf6;
+    --border: #ffdcec;
+    --border-strong: #ffb8d9;
+
+    --ink: #5c3450;
+    --ink-soft: #96677f;
+    --ink-faint: #cc9bb5;
+    --ink-placeholder: #e5c2d5;
+
+    --accent: #ffa8d4;
+    --accent-strong: #ff7ebd;
+    --accent-ink: #ffffff;
+    --accent-soft: #ffe3f0;
+
+    --danger: #e15b8a;
+    --danger-bg: #fdeef3;
+    --danger-border: #f5c6da;
+    --heart: #ff7ebd;
+
+    --shadow-bar: 0 4px 12px rgba(255, 130, 190, 0.12), 0 1px 2px rgba(255, 130, 190, 0.08);
+    --shadow-card: 0 2px 10px rgba(255, 150, 195, 0.10);
+  }
+
+  html[data-theme="dark"] {
+    --bg-app: #121212;
+    --bg-panel: #1e1e1e;
+    --bg-card: #252525;
+
+    --border-soft: #2a2a2a;
+    --border: #333333;
+    --border-strong: #444444;
+
+    --ink: #eeeeee;
+    --ink-soft: #aaaaaa;
+    --ink-faint: #777777;
+    --ink-placeholder: #555555;
+
+    --accent: #ffc9e5;
+    --accent-strong: #ffa3d1;
+    --accent-ink: #000000;
+    --accent-soft: #3a2530;
+
+    --danger: #ff9bb3;
+    --danger-bg: #3a2230;
+    --danger-border: #5c3540;
+    --heart: #ffa3d1;
+
+    --shadow-bar: 0 6px 20px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+  body, html {
+    margin: 0; padding: 0; width: 100%; min-height: 100%;
+    font-family: 'Pretendard Variable', -apple-system, sans-serif;
+    background: var(--bg-app); color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  ::placeholder { color: var(--ink-placeholder); opacity: 1; }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 18px 16px 60px; }
+
+  /* ---------- header ---------- */
+  .app-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 0 16px; margin-bottom: 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .app-brand { display: flex; align-items: baseline; gap: 5px; font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .app-brand .heart { color: var(--heart); font-size: 0.9em; margin: 0 1px; }
+  .app-brand small { font-weight: 500; color: var(--ink-faint); font-size: 13px; }
+
+  .theme-toggle {
+    position: relative; width: 44px; height: 24px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--accent-soft);
+    cursor: pointer; padding: 0; flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .theme-toggle-thumb {
+    position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 4px;
+    background: var(--accent); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s ease;
+  }
+  html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(20px); background: var(--accent-strong); }
+
+  /* ---------- add card form ---------- */
+  .add-card {
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
+    padding: 14px; margin: 16px 0 22px; box-shadow: var(--shadow-card);
+  }
+  #newText {
+    width: 100%; min-height: 74px; resize: vertical;
+    border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px;
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none;
+    transition: border-color 0.15s ease;
+  }
+  #newText:focus { border-color: var(--accent); }
+
+  .tag-input-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    margin-top: 8px; padding: 6px 8px;
+    border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card);
+  }
+  .tag-input-row input {
+    flex: 1; min-width: 90px; border: none; background: transparent; outline: none;
+    color: var(--ink); font-family: inherit; font-size: 12.5px; padding: 3px 2px;
+  }
+  .tag-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-strong);
+    padding: 3px 8px; border-radius: 999px; font-size: 11.5px; white-space: nowrap;
+  }
+  .tag-chip button {
+    border: none; background: none; color: var(--ink-soft); cursor: pointer;
+    font-size: 12px; line-height: 1; padding: 0;
+  }
+  .tag-chip button:hover { color: var(--danger); }
+
+  .add-card-footer { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .btn-save {
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    font-weight: 600; font-size: 13px; padding: 8px 18px; border-radius: 6px; cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn-save:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+  /* ---------- tag filter bar ---------- */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .filter-chip {
+    border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink-soft);
+    font-size: 12px; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: 999px;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .filter-chip:hover { border-color: var(--accent); color: var(--ink); }
+  .filter-chip.active { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--accent-ink); font-weight: 600; }
+
+  /* ---------- masonry card grid ---------- */
+  .card-grid { column-width: 260px; column-gap: 14px; }
+  .note-card {
+    break-inside: avoid; display: inline-block; width: 100%;
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--shadow-card);
+    position: relative; transition: border-color 0.15s ease, background 0.25s ease;
+  }
+  .note-card:hover { border-color: var(--border-strong); }
+
+  .note-card-actions {
+    position: absolute; top: 8px; right: 8px; display: flex; gap: 4px;
+    opacity: 0; transition: opacity 0.15s ease;
+  }
+  .note-card:hover .note-card-actions,
+  .note-card:focus-within .note-card-actions { opacity: 1; }
+
+  .icon-btn {
+    width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--bg-card); color: var(--ink-soft); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .icon-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+  .icon-btn.danger:hover { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+
+  .note-text {
+    font-size: 13.5px; line-height: 1.6; color: var(--ink);
+    white-space: pre-wrap; word-break: break-word; margin: 0 4px 4px 0;
+  }
+  .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 30px 8px 0; }
+  .note-tag {
+    font-size: 11px; color: var(--ink-soft); background: var(--bg-card);
+    border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px;
+  }
+
+  .note-edit-area {
+    width: 100%; min-height: 70px; resize: vertical; border: 1px solid var(--accent);
+    border-radius: 6px; padding: 8px 10px; background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none; margin-top: 4px;
+  }
+  .note-edit-footer { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+  .btn-mini {
+    border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink);
+    font-size: 12px; padding: 5px 12px; border-radius: 6px; cursor: pointer;
+  }
+  .btn-mini.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+
+  .empty-hint { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 50px 0; }
+
+  /* ---------- toast ---------- */
+  #toastStack {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none;
+  }
+  .toast {
+    display: inline-flex; align-items: center; background: var(--bg-panel); color: var(--ink);
+    border: 1px solid var(--border-strong); padding: 9px 16px; border-radius: 999px;
+    font-size: 12.5px; font-weight: 500; white-space: nowrap; box-shadow: var(--shadow-bar);
+    opacity: 0; transform: translateY(-10px) scale(0.96);
+    transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  }
+  .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+  .toast.hide { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  .toast.toast-danger { border-color: var(--danger-border); color: var(--danger); }
+</style>
+</head>
+<body>
+
+<div id="toastStack"></div>
+
+<div class="wrap">
+  <div class="app-header">
+    <div class="app-brand">
+      <span>r<span class="heart">♡</span>sie</span>
+      <small>OOC</small>
+    </div>
+    <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
+      <span class="theme-toggle-thumb"></span>
+    </button>
+  </div>
+
+  <div class="add-card">
+    <textarea id="newText" placeholder="짧은 글이나 대사를 적어두세요."></textarea>
+    <div class="tag-input-row" id="newTagRow">
+      <input type="text" id="newTagInput" placeholder="태그 입력 후 Enter">
+    </div>
+    <div class="add-card-footer">
+      <button type="button" class="btn-save" id="saveNewBtn">저장</button>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="filterBar"></div>
+
+  <div class="card-grid" id="cardGrid"></div>
+  <div class="empty-hint" id="emptyHint" style="display:none;">아직 저장된 카드가 없습니다.</div>
+</div>
+
+<script>
+const el = id => document.getElementById(id);
+const STORAGE_KEY = 'rosie_ooc_cards_v1';
+const THEME_KEY = 'rosie_ooc_theme';
+
+let cards = [];
+let newTags = [];
+let activeFilters = new Set();
+let editingId = null;
+
+// ---------- storage ----------
+function loadCards() {
+  try { cards = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { cards = []; }
+}
+function saveCards() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+}
+
+// ---------- toast ----------
+function showToast(msg, type) {
+  const stack = el('toastStack');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type === 'danger' ? ' toast-danger' : '');
+  t.textContent = msg;
+  stack.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show'); t.classList.add('hide');
+    setTimeout(() => t.remove(), 250);
+  }, 1600);
+}
+
+// ---------- new card tag input ----------
+function renderNewTagChips() {
+  const row = el('newTagRow');
+  const input = el('newTagInput');
+  row.querySelectorAll('.tag-chip').forEach(c => c.remove());
+  newTags.forEach(tag => {
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${tag} <button type="button" aria-label="태그 삭제">×</button>`;
+    chip.querySelector('button').addEventListener('click', () => {
+      newTags = newTags.filter(t => t !== tag);
+      renderNewTagChips();
+    });
+    row.insertBefore(chip, input);
+  });
+}
+
+el('newTagInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
+    const v = e.target.value.trim().replace(/,$/, '');
+    if (!v) { if (e.key !== ' ') e.preventDefault(); return; }
+    e.preventDefault();
+    if (!newTags.includes(v)) { newTags.push(v); renderNewTagChips(); }
+    e.target.value = '';
+  } else if (e.key === 'Backspace' && !e.target.value && newTags.length) {
+    newTags.pop(); renderNewTagChips();
+  }
+});
+
+el('saveNewBtn').addEventListener('click', () => {
+  const text = el('newText').value.trim();
+  if (!text) { showToast('내용을 입력해주세요.', 'danger'); return; }
+  cards.unshift({ id: Date.now() + Math.random(), text, tags: [...newTags], createdAt: Date.now() });
+  el('newText').value = '';
+  newTags = []; renderNewTagChips();
+  saveCards(); renderAll();
+  showToast('저장되었습니다.');
+});
+
+// ---------- filter bar ----------
+function getAllTags() {
+  const set = new Set();
+  cards.forEach(c => c.tags.forEach(t => set.add(t)));
+  return [...set].sort((a,b) => a.localeCompare(b, 'ko'));
+}
+
+function renderFilterBar() {
+  const bar = el('filterBar');
+  bar.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.type = 'button'; allBtn.className = 'filter-chip' + (activeFilters.size === 0 ? ' active' : '');
+  allBtn.textContent = '전체';
+  allBtn.addEventListener('click', () => { activeFilters.clear(); renderAll(); });
+  bar.appendChild(allBtn);
+
+  getAllTags().forEach(tag => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-chip' + (activeFilters.has(tag) ? ' active' : '');
+    btn.textContent = tag;
+    btn.addEventListener('click', () => {
+      if (activeFilters.has(tag)) activeFilters.delete(tag); else activeFilters.add(tag);
+      renderAll();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+// ---------- card grid ----------
+function getVisibleCards() {
+  if (activeFilters.size === 0) return cards;
+  return cards.filter(c => c.tags.some(t => activeFilters.has(t)));
+}
+
+function copyCardText(text) {
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('클립보드에 복사되었습니다.'))
+    .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+}
+
+function deleteCard(id) {
+  cards = cards.filter(c => c.id !== id);
+  saveCards(); renderAll();
+  showToast('삭제되었습니다.');
+}
+
+function renderCardGrid() {
+  const grid = el('cardGrid');
+  const visible = getVisibleCards();
+  grid.innerHTML = '';
+  el('emptyHint').style.display = visible.length === 0 ? 'block' : 'none';
+
+  visible.forEach(card => {
+    const div = document.createElement('div');
+    div.className = 'note-card';
+
+    if (editingId === card.id) {
+      div.innerHTML = `
+        <textarea class="note-edit-area">${escapeHtml(card.text)}</textarea>
+        <div class="tag-input-row edit-tag-row"></div>
+        <div class="note-edit-footer">
+          <button type="button" class="btn-mini" data-act="cancel">취소</button>
+          <button type="button" class="btn-mini primary" data-act="save">저장</button>
+        </div>
+      `;
+      const editTags = [...card.tags];
+      const tagRow = div.querySelector('.edit-tag-row');
+      const tagInput = document.createElement('input');
+      tagInput.type = 'text'; tagInput.placeholder = '태그 입력 후 Enter';
+
+      function renderEditChips() {
+        tagRow.querySelectorAll('.tag-chip').forEach(c => c.remove());
+        editTags.forEach(tag => {
+          const chip = document.createElement('span');
+          chip.className = 'tag-chip';
+          chip.innerHTML = `${tag} <button type="button">×</button>`;
+          chip.querySelector('button').addEventListener('click', () => {
+            const idx = editTags.indexOf(tag); if (idx > -1) editTags.splice(idx, 1);
+            renderEditChips();
+          });
+          tagRow.insertBefore(chip, tagInput);
+        });
+      }
+      tagRow.appendChild(tagInput);
+      renderEditChips();
+
+      tagInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
+          const v = e.target.value.trim().replace(/,$/, '');
+          if (!v) { if (e.key !== ' ') e.preventDefault(); return; }
+          e.preventDefault();
+          if (!editTags.includes(v)) { editTags.push(v); renderEditChips(); }
+          e.target.value = '';
+        }
+      });
+
+      div.querySelector('[data-act="cancel"]').addEventListener('click', () => { editingId = null; renderAll(); });
+      div.querySelector('[data-act="save"]').addEventListener('click', () => {
+        const newText = div.querySelector('.note-edit-area').value.trim();
+        if (!newText) { showToast('내용을 입력해주세요.', 'danger'); return; }
+        card.text = newText; card.tags = editTags;
+        editingId = null; saveCards(); renderAll();
+        showToast('수정되었습니다.');
+      });
+    } else {
+      div.innerHTML = `
+        <div class="note-card-actions">
+          <button type="button" class="icon-btn" data-act="copy" title="복사">⧉</button>
+          <button type="button" class="icon-btn" data-act="edit" title="수정">✎</button>
+          <button type="button" class="icon-btn danger" data-act="delete" title="삭제">×</button>
+        </div>
+        <div class="note-tags"></div>
+        <div class="note-text"></div>
+      `;
+      div.querySelector('.note-text').textContent = card.text;
+      const tagsWrap = div.querySelector('.note-tags');
+      card.tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'note-tag'; span.textContent = tag;
+        tagsWrap.appendChild(span);
+      });
+      div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(card.text));
+      div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
+      div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+    }
+
+    grid.appendChild(div);
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderAll() {
+  renderFilterBar();
+  renderCardGrid();
+}
+
+// ---------- theme ----------
+(function () {
+  const root = document.documentElement;
+  const toggleBtn = el('themeToggle');
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    toggleBtn.setAttribute('aria-pressed', theme === 'dark');
+  }
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  toggleBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+  });
+})();
+
+loadCards();
+renderAll();
+</script>
+</body>
+</html>

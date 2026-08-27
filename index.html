@@ -10,11 +10,14 @@
 <style>
   :root {
     /* 기본(보통) 모서리 프리셋 — 커스텀 테마에서 덮어씀 */
-    --r-lg: 10px;
-    --r-md: 6px;
-    --r-sm: 4px;
+    --r-lg: 8px;
+    --r-md: 5px;
+    --r-sm: 3px;
     --r-pill: 999px;
     --font-base: 'Pretendard Variable';
+    --u-letter-spacing: 0em;
+    --u-line-height: 1.6;
+    --u-zoom: 1;
   }
   :root,
   html[data-theme="light"] {
@@ -107,7 +110,14 @@
   @font-face {
     font-family: 'Aritaburi';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
-    font-weight: normal; font-display: swap;
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    /* 700(굵게) 웨이트도 같은 파일로 등록 — 안 하면 브라우저가 이미 두꺼운 글자를
+       또 합성 볼드(faux-bold) 처리해서 훨씬 더 두껍게 보임 */
+    font-family: 'Aritaburi';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
+    font-weight: 700; font-display: swap;
   }
   @font-face {
     font-family: 'ArittaDodum';
@@ -127,7 +137,13 @@
   @font-face {
     font-family: 'BoldRound';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2507-2@1.0/BoldDungGeunMo.woff2') format('woff2');
-    font-weight: normal; font-display: swap;
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    /* 700(굵게) 웨이트도 같은 파일로 등록 — 합성 볼드로 인한 과도한 두꺼움 방지 */
+    font-family: 'BoldRound';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2507-2@1.0/BoldDungGeunMo.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
   }
 
   * { box-sizing: border-box; }
@@ -180,6 +196,9 @@
     background: var(--bg-app);
   }
   .header-right { display: flex; align-items: center; gap: 8px; }
+  #boardSettingsBtn, #adminBtn {
+    width: 30px; height: 30px; font-size: 15px;
+  }
   .app-brand { display: flex; align-items: baseline; gap: 5px; font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
   .app-brand .heart { color: var(--heart); font-size: 0.9em; margin: 0 1px; }
   .app-brand small { font-weight: 500; color: var(--ink-faint); font-size: 13px; }
@@ -222,7 +241,7 @@
     max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .user-handle-label:hover { color: var(--accent-strong); text-decoration: underline; }
-  .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; border-radius: 50%; }
+  .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; border-radius: var(--r-md); }
 
   .link-btn {
     border: none; background: none; color: var(--ink-faint);
@@ -257,8 +276,22 @@
   .invite-code-row .status.unused { color: var(--accent-strong); }
   .invite-code-row .status.used-tag { color: var(--ink-faint); }
 
+  /* ---------- 색상 피커: 스와치가 박스에 꽉 차게 ---------- */
+  #settingsModalCard input[type="color"] {
+    -webkit-appearance: none; appearance: none;
+    padding: 0; border: 1px solid var(--border);
+  }
+  #settingsModalCard input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  #settingsModalCard input[type="color"]::-webkit-color-swatch { border: none; border-radius: var(--r-md); }
+  #settingsModalCard input[type="color"]::-moz-color-swatch { border: none; border-radius: var(--r-md); }
+
   /* ---------- add card panel ---------- */
-  .content-row { display: block; }
+  .content-row {
+    display: block;
+    letter-spacing: var(--u-letter-spacing);
+    line-height: var(--u-line-height);
+    zoom: var(--u-zoom);
+  }
 
   /* mobile: classic always-visible card, rounded style */
   .add-card {
@@ -640,7 +673,7 @@
 
     <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">폰트</div>
     <select id="settingsFont" style="width:100%; padding:9px 10px; border-radius:var(--r-md); border:1px solid var(--border); background:var(--bg-card); color:var(--ink); font-size:13px; margin-bottom:16px; font-family:inherit;">
-      <option value="">기본 (Pretendard)</option>
+      <option value="">프리텐다드</option>
       <option value="IbmPlexSans" style="font-family:'IbmPlexSans';">IBM Plex Sans</option>
       <option value="NexonLv1Gothic" style="font-family:'NexonLv1Gothic';">넥슨 Lv.1 고딕</option>
       <option value="CloudSans" style="font-family:'CloudSans';">구름 산스</option>
@@ -650,14 +683,18 @@
       <option value="BoldRound" style="font-family:'BoldRound';">둥근모</option>
     </select>
 
-    <div style="display:flex; gap:16px; margin-bottom:16px;">
+    <div style="display:flex; gap:12px; margin-bottom:16px;">
       <div style="flex:1;">
         <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">포인트색</div>
-        <input type="color" id="settingsAccent" value="#ff7ebd" style="width:100%; height:36px; border:1px solid var(--border); border-radius:var(--r-md); background:none; cursor:pointer; padding:2px;">
+        <input type="color" id="settingsAccent" value="#ff7ebd" style="width:100%; height:36px; border-radius:var(--r-md); background:none; cursor:pointer;">
       </div>
       <div style="flex:1;">
         <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">배경색</div>
-        <input type="color" id="settingsBg" value="#fef4f8" style="width:100%; height:36px; border:1px solid var(--border); border-radius:var(--r-md); background:none; cursor:pointer; padding:2px;">
+        <input type="color" id="settingsBg" value="#fef4f8" style="width:100%; height:36px; border-radius:var(--r-md); background:none; cursor:pointer;">
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">카드색</div>
+        <input type="color" id="settingsCard" value="#fef8fb" style="width:100%; height:36px; border-radius:var(--r-md); background:none; cursor:pointer;">
       </div>
     </div>
 
@@ -667,6 +704,21 @@
       <button type="button" class="vis-btn" data-radius="normal">보통</button>
       <button type="button" class="vis-btn" data-radius="round">둥글게</button>
     </div>
+
+    <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; display:flex; justify-content:space-between;">
+      <span>글자 크기</span><span id="settingsFontScaleVal" style="color:var(--ink-faint); font-weight:400;">100%</span>
+    </div>
+    <input type="range" id="settingsFontScale" min="80" max="150" step="5" value="100" style="width:100%; accent-color:var(--accent); margin-bottom:14px;">
+
+    <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; display:flex; justify-content:space-between;">
+      <span>자간</span><span id="settingsLetterSpacingVal" style="color:var(--ink-faint); font-weight:400;">0em</span>
+    </div>
+    <input type="range" id="settingsLetterSpacing" min="-5" max="15" step="1" value="0" style="width:100%; accent-color:var(--accent); margin-bottom:14px;">
+
+    <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; display:flex; justify-content:space-between;">
+      <span>줄간격</span><span id="settingsLineHeightVal" style="color:var(--ink-faint); font-weight:400;">1.6</span>
+    </div>
+    <input type="range" id="settingsLineHeight" min="120" max="220" step="5" value="160" style="width:100%; accent-color:var(--accent); margin-bottom:18px;">
 
     <div class="add-card-footer" style="justify-content:space-between;">
       <button type="button" id="settingsResetBtn" class="link-btn">기본값으로</button>
@@ -693,7 +745,7 @@
         <button type="button" id="logoutBtn" class="icon-btn" title="로그아웃">⏻</button>
       </div>
       <button type="button" id="adminBtn" class="icon-btn" title="초대 코드 관리" style="display:none;">🔑</button>
-      <button type="button" id="boardSettingsBtn" class="icon-btn" title="보드 설정" style="display:none;">⚙</button>
+      <button type="button" id="boardSettingsBtn" class="icon-btn" title="보드 설정" style="display:none;">⚙️</button>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
         <span class="theme-toggle-thumb"></span>
       </button>
@@ -935,6 +987,9 @@ function updateBoardLabel() {
   const label = el('boardLabel');
   if (viewedHandle && !isOwner) {
     label.innerHTML = `@${viewedHandle}<span class="board-viewonly-tag">보기 전용</span>`;
+  } else if (viewedSiteName && viewedHandle) {
+    // 사이트 이름을 직접 지정한 경우, memo 대신 자기 핸들을 보여준다.
+    label.textContent = `@${viewedHandle}`;
   } else {
     label.textContent = 'memo';
   }
@@ -943,9 +998,9 @@ function updateBoardLabel() {
 // ---------- board theme (핸들 주인이 커스터마이즈 가능) ----------
 const DEFAULT_SITE_NAME = 'r<span class="heart">♡</span>sie';
 const RADIUS_PRESETS = {
-  sharp:  { lg: '2px',  md: '2px',  sm: '2px',  pill: '4px'   },
-  normal: { lg: '10px', md: '6px',  sm: '4px',  pill: '999px' },
-  round:  { lg: '20px', md: '14px', sm: '8px',  pill: '999px' }
+  sharp:  { lg: '2px', md: '2px', sm: '2px', pill: '4px'   },
+  normal: { lg: '8px', md: '5px', sm: '3px', pill: '999px' },
+  round:  { lg: '20px', md: '14px', sm: '8px', pill: '999px' }
 };
 const customThemeStyleEl = document.createElement('style');
 customThemeStyleEl.id = 'customThemeStyle';
@@ -999,42 +1054,70 @@ function contrastInk(hex) {
   return l > 55 ? '#3a2a33' : '#ffffff';
 }
 
-function computeThemeCss(accentHex, bgHex) {
+// 배경/카드 밝기에 맞춰 본문 글자색(명도)을 밝게/어둡게 자동으로 골라준다.
+function inkSet(h, s, isLightBg) {
+  return isLightBg ? {
+    ink: hslToHex(h, Math.min(s * 0.4, 30), 27),
+    inkSoft: hslToHex(h, Math.min(s * 0.3, 25), 46),
+    inkFaint: hslToHex(h, Math.min(s * 0.25, 20), 68),
+    inkPlaceholder: hslToHex(h, Math.min(s * 0.25, 20), 82)
+  } : {
+    ink: hslToHex(h, Math.min(s * 0.12, 12), 93),
+    inkSoft: hslToHex(h, Math.min(s * 0.1, 10), 72),
+    inkFaint: hslToHex(h, Math.min(s * 0.1, 10), 52),
+    inkPlaceholder: hslToHex(h, Math.min(s * 0.1, 10), 40)
+  };
+}
+
+function computeThemeCss(accentHex, bgHex, cardHex) {
   const a = hexToHsl(accentHex);
   const b = hexToHsl(bgHex);
+
+  // 라이트 모드는 사용자가 고른 배경색을 그대로 쓰기 때문에, 실제로 밝은지 어두운지 보고
+  // 글자색(흰/검 계열)을 그때그때 맞춰준다. 다크 모드는 배경 자체를 항상 어둡게 강제하므로
+  // 어두운 배경용 글자색 세트를 그대로 쓰면 된다.
+  const lightBgIsLight = b.l >= 50;
+  const lightInk = inkSet(b.h, b.s, lightBgIsLight);
+  const darkInk = inkSet(b.h, b.s, false);
+
+  const lightAccentStrong = hslToHex(a.h, a.s, clamp(a.l, 45, 68));
+  const darkAccentStrong = hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80));
+
   const light = {
     '--bg-app': hslToHex(b.h, b.s, b.l),
     '--bg-panel': hslToHex(b.h, b.s * 0.4, 98),
-    '--bg-card': hslToHex(b.h, b.s * 0.55, clamp(b.l + 3, 90, 97)),
+    '--bg-card': cardHex || hslToHex(b.h, b.s * 0.55, clamp(b.l + 3, 90, 97)),
     '--border-soft': hslToHex(b.h, b.s * 0.6, 94),
     '--border': hslToHex(b.h, b.s * 0.65, 87),
     '--border-strong': hslToHex(b.h, b.s * 0.7, 76),
-    '--ink': hslToHex(b.h, Math.min(b.s * 0.4, 30), 27),
-    '--ink-soft': hslToHex(b.h, Math.min(b.s * 0.3, 25), 46),
-    '--ink-faint': hslToHex(b.h, Math.min(b.s * 0.25, 20), 68),
-    '--ink-placeholder': hslToHex(b.h, Math.min(b.s * 0.25, 20), 82),
+    '--ink': lightInk.ink,
+    '--ink-soft': lightInk.inkSoft,
+    '--ink-faint': lightInk.inkFaint,
+    '--ink-placeholder': lightInk.inkPlaceholder,
     '--accent': hslToHex(a.h, a.s, clamp(a.l + 12, 60, 82)),
-    '--accent-strong': hslToHex(a.h, a.s, clamp(a.l, 45, 68)),
+    '--accent-strong': lightAccentStrong,
     '--accent-soft': hslToHex(a.h, a.s * 0.5, 93),
-    '--accent-ink': contrastInk(hslToHex(a.h, a.s, clamp(a.l, 45, 68))),
-    '--heart': hslToHex(a.h, a.s, clamp(a.l, 45, 68))
+    '--accent-ink': contrastInk(lightAccentStrong),
+    '--heart': lightAccentStrong
   };
   const dark = {
     '--bg-app': hslToHex(b.h, Math.min(b.s * 0.35, 22), 10),
     '--bg-panel': hslToHex(b.h, Math.min(b.s * 0.3, 20), 15),
-    '--bg-card': hslToHex(b.h, Math.min(b.s * 0.3, 20), 18),
+    '--bg-card': cardHex || hslToHex(b.h, Math.min(b.s * 0.3, 20), 18),
     '--border-soft': hslToHex(b.h, Math.min(b.s * 0.25, 18), 22),
     '--border': hslToHex(b.h, Math.min(b.s * 0.25, 18), 27),
     '--border-strong': hslToHex(b.h, Math.min(b.s * 0.3, 20), 35),
-    '--ink': hslToHex(b.h, Math.min(b.s * 0.12, 12), 93),
-    '--ink-soft': hslToHex(b.h, Math.min(b.s * 0.1, 10), 72),
-    '--ink-faint': hslToHex(b.h, Math.min(b.s * 0.1, 10), 52),
-    '--ink-placeholder': hslToHex(b.h, Math.min(b.s * 0.1, 10), 40),
+    '--ink': darkInk.ink,
+    '--ink-soft': darkInk.inkSoft,
+    '--ink-faint': darkInk.inkFaint,
+    '--ink-placeholder': darkInk.inkPlaceholder,
     '--accent': hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88)),
-    '--accent-strong': hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80)),
+    '--accent-strong': darkAccentStrong,
     '--accent-soft': hslToHex(a.h, Math.min(a.s * 0.4, 40), 24),
-    '--accent-ink': '#000000',
-    '--heart': hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80))
+    // 예전엔 항상 검정으로 고정돼 있어서, 다크 모드에서 어둡고 채도 낮은 포인트색을
+    // 고르면 버튼 글자가 안 보이는 문제가 있었음 — 실제 포인트색 밝기에 맞춰 계산.
+    '--accent-ink': contrastInk(darkAccentStrong),
+    '--heart': darkAccentStrong
   };
   const toCssBlock = (sel, vars) => `html[data-theme="${sel}"] { ${Object.entries(vars).map(([k, v]) => `${k}: ${v};`).join(' ')} }`;
   return toCssBlock('light', light) + '\n' + toCssBlock('dark', dark);
@@ -1048,8 +1131,11 @@ function applyBoardTheme(theme) {
   document.documentElement.style.setProperty('--r-md', radius.md);
   document.documentElement.style.setProperty('--r-sm', radius.sm);
   document.documentElement.style.setProperty('--r-pill', radius.pill);
+  document.documentElement.style.setProperty('--u-letter-spacing', (typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) + 'em');
+  document.documentElement.style.setProperty('--u-line-height', typeof t.lineHeight === 'number' ? t.lineHeight : 1.6);
+  document.documentElement.style.setProperty('--u-zoom', typeof t.fontScale === 'number' ? t.fontScale : 1);
   if (t.accent && t.bg) {
-    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg);
+    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.card);
   } else {
     customThemeStyleEl.textContent = '';
   }
@@ -1058,12 +1144,18 @@ function applyBoardTheme(theme) {
 function applySiteName(name) {
   const nameEl = el('siteNameLabel');
   if (name) {
+    // 사이트 이름을 직접 정한 경우: 탭 제목도 그 이름만 그대로 사용.
     nameEl.textContent = name;
-    document.title = `${name} · memo`;
+    document.title = name;
+  } else if (viewedHandle) {
+    // 기본값: 로그인한 핸들 주인의 보드는 r♡sie 대신 자기 핸들을 보여준다.
+    nameEl.textContent = viewedHandle;
+    document.title = viewedHandle;
   } else {
     nameEl.innerHTML = DEFAULT_SITE_NAME;
     document.title = 'r♡siememo';
   }
+  updateBoardLabel();
 }
 
 let viewedTheme = null;
@@ -1075,6 +1167,7 @@ async function loadBoardTheme(uid) {
     return;
   }
   try {
+    viewedTheme = null; viewedSiteName = null;
     const snap = await getDoc(doc(db, 'users', uid));
     const data = snap.exists() ? snap.data() : {};
     viewedTheme = data.theme || null;
@@ -1093,12 +1186,30 @@ function openSettingsModal() {
   el('settingsFont').value = t.font || '';
   el('settingsAccent').value = t.accent || '#ff7ebd';
   el('settingsBg').value = t.bg || '#fef4f8';
+  el('settingsCard').value = t.card || '#fef8fb';
+  // 이미 저장된 커스텀 색상이 있을 때만 "색상을 직접 정했다"고 간주한다.
+  // 그래야 모서리만 바꾸고 저장해도 기본 팔레트가 계산된 커스텀 팔레트로
+  // 덮어써지지 않는다.
+  colorsCustomized = !!(t.accent && t.bg);
+
+  const fontScalePct = Math.round((typeof t.fontScale === 'number' ? t.fontScale : 1) * 100);
+  const letterSpacingPct = Math.round((typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) * 100);
+  const lineHeightPct = Math.round((typeof t.lineHeight === 'number' ? t.lineHeight : 1.6) * 100);
+  el('settingsFontScale').value = fontScalePct;
+  el('settingsFontScaleVal').textContent = fontScalePct + '%';
+  el('settingsLetterSpacing').value = letterSpacingPct;
+  el('settingsLetterSpacingVal').textContent = (letterSpacingPct / 100) + 'em';
+  el('settingsLineHeight').value = lineHeightPct;
+  el('settingsLineHeightVal').textContent = (lineHeightPct / 100).toFixed(2);
+
   const radiusKey = t.radius || 'normal';
   el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.radius === radiusKey));
   el('settingsModalOverlay').classList.add('open');
 }
 function closeSettingsModal() {
   el('settingsModalOverlay').classList.remove('open');
+  // 저장하지 않고 닫으면 미리보기로 바꿔둔 값을 실제 저장된 테마로 되돌린다.
+  applyBoardTheme(viewedTheme);
 }
 el('boardSettingsBtn').addEventListener('click', () => { if (isOwner) openSettingsModal(); });
 el('settingsModalClose').addEventListener('click', closeSettingsModal);
@@ -1106,27 +1217,68 @@ el('settingsModalOverlay').addEventListener('click', (e) => {
   if (e.target === el('settingsModalOverlay')) closeSettingsModal();
 });
 let selectedRadiusPreset = 'normal';
+let colorsCustomized = false;
+el('settingsAccent').addEventListener('input', () => { colorsCustomized = true; });
+el('settingsBg').addEventListener('input', () => { colorsCustomized = true; });
+el('settingsCard').addEventListener('input', () => { colorsCustomized = true; });
 el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     selectedRadiusPreset = btn.dataset.radius;
     el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b === btn));
   });
 });
+
+// 자간/줄간격/글자크기: 드래그하는 대로 바로 미리보기.
+el('settingsFontScale').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsFontScaleVal').textContent = v + '%';
+  document.documentElement.style.setProperty('--u-zoom', v / 100);
+});
+el('settingsLetterSpacing').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsLetterSpacingVal').textContent = (v / 100) + 'em';
+  document.documentElement.style.setProperty('--u-letter-spacing', (v / 100) + 'em');
+});
+el('settingsLineHeight').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsLineHeightVal').textContent = (v / 100).toFixed(2);
+  document.documentElement.style.setProperty('--u-line-height', v / 100);
+});
+
 el('settingsSaveBtn').addEventListener('click', async () => {
   if (!isOwner || !currentUser) return;
   const siteName = el('settingsSiteName').value.trim().slice(0, 20);
   const font = el('settingsFont').value;
   const accent = el('settingsAccent').value;
   const bg = el('settingsBg').value;
+  const card = el('settingsCard').value;
+  const fontScale = Number(el('settingsFontScale').value) / 100;
+  const letterSpacing = Number(el('settingsLetterSpacing').value) / 100;
+  const lineHeight = Number(el('settingsLineHeight').value) / 100;
   const activeRadiusBtn = el('settingsRadiusRow').querySelector('.vis-btn.active');
   const radius = activeRadiusBtn ? activeRadiusBtn.dataset.radius : 'normal';
   try {
+    const themePayload = { font: font || deleteField(), radius, fontScale, letterSpacing, lineHeight };
+    if (colorsCustomized) {
+      themePayload.accent = accent;
+      themePayload.bg = bg;
+      themePayload.card = card;
+    } else {
+      themePayload.accent = deleteField();
+      themePayload.bg = deleteField();
+      themePayload.card = deleteField();
+    }
     await setDoc(doc(db, 'users', currentUser.uid), {
       siteName: siteName || deleteField(),
-      theme: { font: font || deleteField(), accent, bg, radius }
+      theme: themePayload
     }, { merge: true });
     viewedSiteName = siteName || null;
-    viewedTheme = { font, accent, bg, radius };
+    viewedTheme = {
+      font, radius, fontScale, letterSpacing, lineHeight,
+      accent: colorsCustomized ? accent : undefined,
+      bg: colorsCustomized ? bg : undefined,
+      card: colorsCustomized ? card : undefined
+    };
     applyBoardTheme(viewedTheme);
     applySiteName(viewedSiteName);
     closeSettingsModal();

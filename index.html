@@ -76,7 +76,35 @@
 
   ::placeholder { color: var(--ink-placeholder); opacity: 1; }
 
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 18px 16px 60px; }
+  /* ---------- selection ---------- */
+  ::selection { background: var(--accent); color: #ffffff; }
+
+  /* ---------- scrollbar ---------- */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover { background-color: var(--accent-strong); }
+  *::-webkit-scrollbar-corner { background: transparent; }
+
+  .wrap { max-width: 100%; margin: 0 auto; padding: 18px 16px 60px; }
+  @media (min-width: 701px) {
+    .wrap { max-width: 92%; transition: margin-right 0.38s cubic-bezier(0.32, 0.72, 0, 1); }
+  }
+  @media (min-width: 901px) {
+    .wrap { max-width: 78%; }
+  }
+  @media (min-width: 1200px) {
+    .wrap { max-width: 1080px; }
+  }
 
   /* ---------- header ---------- */
   .app-header {
@@ -104,11 +132,64 @@
   }
   html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(20px); background: var(--accent-strong); }
 
-  /* ---------- add card form ---------- */
+  /* ---------- add card panel ---------- */
+  .content-row { display: block; }
+
+  /* mobile: classic always-visible card, rounded style */
   .add-card {
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
-    padding: 14px; margin: 16px 0 22px; box-shadow: var(--shadow-card);
+    box-sizing: border-box; box-shadow: var(--shadow-card);
+    padding: 14px; margin: 0 0 16px;
   }
+
+  @media (min-width: 701px) {
+    .content-row { display: block; }
+    .add-card {
+      position: fixed; top: 0; right: 0; height: 100vh;
+      padding: 16px; margin: 0; border: none; border-left: 1px solid var(--border-soft);
+      border-radius: 0; box-sizing: border-box;
+      background: var(--bg-panel); box-shadow: var(--shadow-bar); overflow-y: auto; overflow-x: hidden;
+      z-index: 50;
+      transform: translateX(105%);
+      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .add-card.open {
+      transform: translateX(0);
+    }
+    .add-card.resizing { transition: none; }
+
+    .resize-handle {
+      position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+      cursor: ew-resize; z-index: 3;
+    }
+    .resize-handle:hover, .resize-handle.active { background: var(--accent-soft); }
+  }
+
+  .add-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .add-panel-header span {
+    font-size: 14px; font-weight: 700; color: var(--ink);
+  }
+  @media (max-width: 700px) {
+    .add-panel-header { display: none; }
+  }
+
+  .btn-add-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 6px;
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    font-size: 15px; font-weight: 400; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-add-toggle:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+  @media (max-width: 700px) {
+    .btn-add-toggle { display: none; }
+  }
+
+
   #newText {
     width: 100%; min-height: 74px; resize: vertical;
     border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px;
@@ -118,6 +199,7 @@
   }
   #newText:focus { border-color: var(--accent); }
 
+  
   .md-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
   .md-btn {
     width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
@@ -146,7 +228,7 @@
   .tag-chip {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-strong);
-    padding: 3px 8px; border-radius: 8px; font-size: 11.5px; white-space: nowrap;
+    padding: 3px 8px; border-radius: 4px; font-size: 11.5px; white-space: nowrap;
   }
   .tag-chip .tag-chip-label::before { content: "#"; }
   .tag-chip button {
@@ -166,12 +248,12 @@
   /* ---------- search ---------- */
   .search-row { position: relative; }
   .search-row input {
-    border: 1px solid var(--border-strong); border-radius: 6px;
-    background: var(--bg-card); color: var(--ink);
+    border: none; border-radius: 6px;
+    background: var(--bg-panel); color: var(--ink);
     font-family: inherit; outline: none;
-    transition: border-color 0.15s ease, background 0.15s ease, width 0.2s ease;
+    transition: background 0.15s ease, width 0.2s ease, box-shadow 0.15s ease;
   }
-  .search-row input:focus { border-color: var(--accent); background: var(--bg-panel); }
+  .search-row input:focus { box-shadow: 0 0 0 1px var(--accent) inset; }
 
   .header-search { flex-shrink: 0; }
   .header-search input {
@@ -192,15 +274,22 @@
 
   /* ---------- card grid ---------- */
   .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 14px;
-    align-items: start;
+    column-count: 1;
+    column-gap: 14px;
+  }
+  @media (min-width: 560px) {
+    .card-grid { column-count: 2; }
+  }
+  @media (min-width: 901px) {
+    .card-grid { column-count: 3; }
   }
   .note-card {
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
     padding: 12px 14px; box-shadow: var(--shadow-card);
-    position: relative; transition: border-color 0.15s ease, background 0.25s ease;
+    position: relative; contain: layout; transition: border-color 0.15s ease, background 0.25s ease;
+    display: inline-block; width: 100%; box-sizing: border-box;
+    break-inside: avoid; -webkit-column-break-inside: avoid;
+    margin: 0 0 14px;
   }
   .note-card:hover { border-color: var(--border-strong); }
 
@@ -210,6 +299,13 @@
   }
   .note-card:hover .note-card-actions,
   .note-card:focus-within .note-card-actions { opacity: 1; }
+
+  .note-card-body {
+    margin-top: 0; transition: margin-top 0.18s ease;
+    cursor: pointer;
+  }
+  .note-card:hover .note-card-body,
+  .note-card:focus-within .note-card-body { margin-top: 28px; }
 
   .icon-btn {
     width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border);
@@ -224,8 +320,25 @@
     font-size: 13.5px; line-height: 1.6; color: var(--ink);
     white-space: pre-wrap; word-break: break-word; margin: 0 4px 4px 0;
   }
+  .note-text.truncated {
+    max-height: 333px; overflow: hidden; position: relative;
+    cursor: pointer;
+  }
+  .note-text.truncated::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 110px;
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--bg-panel) 0%, transparent) 0%,
+      color-mix(in srgb, var(--bg-panel) 22%, transparent) 28%,
+      color-mix(in srgb, var(--bg-panel) 50%, transparent) 52%,
+      color-mix(in srgb, var(--bg-panel) 82%, transparent) 78%,
+      var(--bg-panel) 100%);
+    pointer-events: none;
+  }
   .note-text strong { font-weight: 700; }
   .note-text em { font-style: italic; }
+  .note-text del { text-decoration: line-through; }
+  .note-text u { text-decoration: underline; }
   .note-text mark {
     background: var(--accent-soft); color: var(--ink);
     padding: 0 3px; border-radius: 4px;
@@ -234,7 +347,7 @@
   .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 30px 8px 0; }
   .note-tag {
     font-size: 11px; color: var(--ink-soft); background: var(--bg-card);
-    border: 1px solid var(--border); padding: 2px 8px; border-radius: 8px;
+    border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px;
   }
   .note-tag::before { content: "#"; }
 
@@ -272,11 +385,44 @@
   .toast.show { opacity: 1; transform: translateY(0) scale(1); }
   .toast.hide { opacity: 0; transform: translateY(-6px) scale(0.98); }
   .toast.toast-danger { border-color: var(--danger-border); color: var(--danger); }
+
+  /* ---------- note modal ---------- */
+  .note-modal-overlay {
+    position: fixed; inset: 0; background: rgba(30, 15, 25, 0.35);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; pointer-events: none; z-index: 80;
+    transition: opacity 0.2s ease;
+  }
+  .note-modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .note-modal-card {
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 12px;
+    box-shadow: var(--shadow-bar); padding: 44px 22px 22px; width: 100%; max-width: 480px;
+    max-height: 80vh; overflow-y: auto; position: relative;
+    transform: scale(0.96) translateY(6px); transition: transform 0.2s ease;
+  }
+  .note-modal-overlay.open .note-modal-card { transform: scale(1) translateY(0); }
+
+  .note-modal-close {
+    position: absolute; top: 14px; right: 14px;
+  }
+  .note-modal-card .note-text {
+    font-size: 14px; line-height: 1.7;
+  }
+
 </style>
 </head>
 <body>
 
 <div id="toastStack"></div>
+
+<div class="note-modal-overlay" id="noteModalOverlay">
+  <div class="note-modal-card" id="noteModalCard">
+    <button type="button" class="icon-btn note-modal-close" id="noteModalClose" aria-label="닫기" title="닫기">×</button>
+    <div class="note-tags" id="noteModalTags"></div>
+    <div class="note-text" id="noteModalText"></div>
+  </div>
+</div>
 
 <div class="wrap">
   <div class="app-header">
@@ -286,33 +432,44 @@
     </div>
     <div class="header-right">
       <div class="search-row header-search">
-        <input type="text" id="searchInput" placeholder="검색">
+        <input type="text" id="searchInput" placeholder="Search">
       </div>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
         <span class="theme-toggle-thumb"></span>
       </button>
+      <button type="button" id="addPanelToggle" class="btn-add-toggle" aria-label="메모 추가" title="메모 추가">+</button>
     </div>
   </div>
 
-  <div class="add-card">
-    <div class="md-toolbar">
-      <button type="button" class="md-btn" data-wrap="**" title="굵게">B</button>
-      <button type="button" class="md-btn" data-wrap="_" title="기울임"><i>I</i></button>
-      <button type="button" class="md-btn" data-wrap="==" title="하이라이트"><span class="hl-preview">가</span></button>
+  <div class="content-row" id="contentRow">
+    <div class="add-card" id="addPanel">
+      <div class="resize-handle" id="resizeHandle"></div>
+      <div class="add-panel-header">
+        <span>메모 추가</span>
+      </div>
+      <div class="md-toolbar">
+        <button type="button" class="md-btn" data-wrap="**" title="굵게">B</button>
+        <button type="button" class="md-btn" data-wrap="_" title="기울임"><i>I</i></button>
+        <button type="button" class="md-btn" data-wrap="++" title="밑줄"><u>U</u></button>
+        <button type="button" class="md-btn" data-wrap="~~" title="취소선"><s>S</s></button>
+        <button type="button" class="md-btn" data-wrap="==" title="하이라이트"><span class="hl-preview">가</span></button>
+      </div>
+      <textarea id="newText" placeholder="**굵게**  _기울임_  ++밑줄++  ~~취소선~~  ==하이라이트=="></textarea>
+      <div class="tag-input-row" id="newTagRow">
+        <input type="text" id="newTagInput" placeholder="태그 입력">
+      </div>
+      <div class="add-card-footer">
+        <button type="button" class="btn-save" id="saveNewBtn">저장</button>
+      </div>
     </div>
-    <textarea id="newText" placeholder="**굵게**  _기울임_  ==하이라이트=="></textarea>
-    <div class="tag-input-row" id="newTagRow">
-      <input type="text" id="newTagInput" placeholder="태그 입력">
-    </div>
-    <div class="add-card-footer">
-      <button type="button" class="btn-save" id="saveNewBtn">저장</button>
+
+    <div class="main-content">
+      <div class="filter-bar" id="filterBar"></div>
+
+      <div class="card-grid" id="cardGrid"></div>
+      <div class="empty-hint" id="emptyHint" style="display:none;">아직 저장된 카드가 없습니다.</div>
     </div>
   </div>
-
-  <div class="filter-bar" id="filterBar"></div>
-
-  <div class="card-grid" id="cardGrid"></div>
-  <div class="empty-hint" id="emptyHint" style="display:none;">아직 저장된 카드가 없습니다.</div>
 
   <footer class="site-footer">by @hard7uck</footer>
 </div>
@@ -432,6 +589,75 @@ el('saveNewBtn').addEventListener('click', () => {
   showToast('저장되었습니다.');
 });
 
+// ---------- add panel ----------
+const addPanel = el('addPanel');
+const addPanelToggle = el('addPanelToggle');
+const resizeHandle = el('resizeHandle');
+const wrapEl = document.querySelector('.wrap');
+const DEFAULT_PANEL_WIDTH = 340;
+const MIN_PANEL_WIDTH = 280;
+const MAX_PANEL_WIDTH = 620;
+let panelWidth = DEFAULT_PANEL_WIDTH;
+let isResizing = false;
+
+function isDesktop() { return window.innerWidth >= 701; }
+
+if (isDesktop()) addPanel.style.width = panelWidth + 'px';
+
+function syncWrapMargin() {
+  if (isDesktop() && addPanel.classList.contains('open')) {
+    wrapEl.style.marginRight = panelWidth + 'px';
+  } else {
+    wrapEl.style.marginRight = '';
+  }
+}
+
+function updateToggleIcon() {
+  const isOpen = addPanel.classList.contains('open');
+  addPanelToggle.textContent = isOpen ? '×' : '+';
+  const label = isOpen ? '닫기' : '메모 추가';
+  addPanelToggle.setAttribute('aria-label', label);
+  addPanelToggle.setAttribute('title', label);
+}
+function openAddPanel() {
+  addPanel.classList.add('open'); document.body.classList.add('panel-open');
+  syncWrapMargin(); updateToggleIcon();
+}
+function closeAddPanel() {
+  addPanel.classList.remove('open'); document.body.classList.remove('panel-open');
+  syncWrapMargin(); updateToggleIcon();
+}
+addPanelToggle.addEventListener('click', () => {
+  addPanel.classList.contains('open') ? closeAddPanel() : openAddPanel();
+});
+
+resizeHandle.addEventListener('mousedown', (e) => {
+  if (!isDesktop() || !addPanel.classList.contains('open')) return;
+  isResizing = true;
+  addPanel.classList.add('resizing');
+  resizeHandle.classList.add('active');
+  document.body.style.userSelect = 'none';
+  e.preventDefault();
+});
+document.addEventListener('mousemove', (e) => {
+  if (!isResizing) return;
+  const newWidth = window.innerWidth - e.clientX;
+  panelWidth = Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, newWidth));
+  addPanel.style.width = panelWidth + 'px';
+  syncWrapMargin();
+});
+document.addEventListener('mouseup', () => {
+  if (!isResizing) return;
+  isResizing = false;
+  addPanel.classList.remove('resizing');
+  resizeHandle.classList.remove('active');
+  document.body.style.userSelect = '';
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && addPanel.classList.contains('open')) closeAddPanel();
+});
+
 // ---------- search ----------
 el('searchInput').addEventListener('input', (e) => {
   searchQuery = e.target.value.trim().toLowerCase();
@@ -486,11 +712,57 @@ function copyCardText(text) {
     .catch(() => showToast('복사에 실패했습니다.', 'danger'));
 }
 
+function copyCardLink(id) {
+  const url = `${location.origin}${location.pathname}#note-${id}`;
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('링크가 복사되었습니다.'))
+    .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+  location.hash = `note-${id}`;
+}
+
 function deleteCard(id) {
   cards = cards.filter(c => c.id !== id);
   saveCards(); renderAll();
   showToast('삭제되었습니다.');
 }
+
+// ---------- note modal ----------
+const noteModalOverlay = el('noteModalOverlay');
+const noteModalClose = el('noteModalClose');
+
+function openNoteModal(id) {
+  const card = cards.find(c => String(c.id) === String(id));
+  if (!card) return;
+  const tagsWrap = el('noteModalTags');
+  tagsWrap.innerHTML = '';
+  card.tags.forEach(tag => {
+    const span = document.createElement('span');
+    span.className = 'note-tag'; span.textContent = tag;
+    tagsWrap.appendChild(span);
+  });
+  el('noteModalText').innerHTML = renderMarkdown(card.text);
+  noteModalOverlay.classList.add('open');
+  if (location.hash !== `#note-${id}`) location.hash = `note-${id}`;
+}
+function closeNoteModal() {
+  noteModalOverlay.classList.remove('open');
+  if (location.hash.startsWith('#note-')) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+}
+noteModalClose.addEventListener('click', closeNoteModal);
+noteModalOverlay.addEventListener('click', (e) => {
+  if (e.target === noteModalOverlay) closeNoteModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && noteModalOverlay.classList.contains('open')) closeNoteModal();
+});
+
+function checkHashForNote() {
+  const match = location.hash.match(/^#note-(.+)$/);
+  if (match) openNoteModal(match[1]);
+}
+window.addEventListener('hashchange', checkHashForNote);
 
 function renderCardGrid() {
   const grid = el('cardGrid');
@@ -579,12 +851,20 @@ function renderCardGrid() {
     } else {
       div.innerHTML = `
         <div class="note-card-actions">
+          <button type="button" class="icon-btn" data-act="link" title="링크 복사">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+          </button>
           <button type="button" class="icon-btn" data-act="copy" title="복사">⧉</button>
           <button type="button" class="icon-btn" data-act="edit" title="수정">✎</button>
           <button type="button" class="icon-btn danger" data-act="delete" title="삭제">×</button>
         </div>
-        <div class="note-tags"></div>
-        <div class="note-text"></div>
+        <div class="note-card-body">
+          <div class="note-tags"></div>
+          <div class="note-text"></div>
+        </div>
       `;
       div.querySelector('.note-text').innerHTML = renderMarkdown(card.text);
       const tagsWrap = div.querySelector('.note-tags');
@@ -593,9 +873,20 @@ function renderCardGrid() {
         span.className = 'note-tag'; span.textContent = tag;
         tagsWrap.appendChild(span);
       });
+      div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
       div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(card.text));
       div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
       div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+
+      const textEl = div.querySelector('.note-text');
+      const bodyEl = div.querySelector('.note-card-body');
+      bodyEl.addEventListener('click', () => openNoteModal(card.id));
+      const TRUNCATE_HEIGHT = 333;
+      requestAnimationFrame(() => {
+        if (textEl.scrollHeight > TRUNCATE_HEIGHT + 4) {
+          textEl.classList.add('truncated');
+        }
+      });
     }
 
     grid.appendChild(div);
@@ -610,6 +901,8 @@ function renderMarkdown(raw) {
   let s = escapeHtml(raw);
   s = s.replace(/==([^=\n]+?)==/g, '<mark>$1</mark>');
   s = s.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/~~([^~\n]+?)~~/g, '<del>$1</del>');
+  s = s.replace(/\+\+([^\+\n]+?)\+\+/g, '<u>$1</u>');
   s = s.replace(/_([^_\n]+?)_/g, '<em>$1</em>');
   return s;
 }
@@ -639,6 +932,7 @@ function renderAll() {
 
 loadCards();
 renderAll();
+checkHashForNote();
 </script>
 </body>
 </html>

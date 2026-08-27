@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>r♡sie memo</title>
+<script>
+  // GitHub Pages는 존재하지 않는 경로면 이 파일을 보여줌.
+  // /tea/핸들 형태의 경로를 index.html이 이해하는 ?u=핸들 쿼리로 바꿔서 리다이렉트.
+  var BASE_PATH = '/tea/';
+  var path = location.pathname;
+  if (path.indexOf(BASE_PATH) === 0) path = path.slice(BASE_PATH.length);
+  path = path.replace(/^\/+|\/+$/g, '');
+
+  var params = new URLSearchParams(location.search);
+  if (path) params.set('u', decodeURIComponent(path));
+  var qs = params.toString();
+
+  location.replace(BASE_PATH + (qs ? '?' + qs : '') + location.hash);
+</script>
+</head>
+<body></body>
+</html>

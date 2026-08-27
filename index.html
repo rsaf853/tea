@@ -8,6 +8,14 @@
 <link rel="apple-touch-icon" href="images/icon1.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <style>
+  :root {
+    /* 기본(보통) 모서리 프리셋 — 커스텀 테마에서 덮어씀 */
+    --r-lg: 10px;
+    --r-md: 6px;
+    --r-sm: 4px;
+    --r-pill: 999px;
+    --font-base: 'Pretendard Variable';
+  }
   :root,
   html[data-theme="light"] {
     --bg-app: #fef4f8;
@@ -65,10 +73,67 @@
     --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
   }
 
+  /* ---------- 커스텀 폰트 (핸들 주인이 설정 가능) ---------- */
+  @font-face {
+    font-family: 'IbmPlexSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'IbmPlexSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-SemiBold.woff') format('woff');
+    font-weight: 600; font-display: swap;
+  }
+  @font-face {
+    font-family: 'NexonLv1Gothic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON%20Lv1%20Gothic%20OTF.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'NexonLv1Gothic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON%20Lv1%20Gothic%20OTF%20Bold.woff') format('woff');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face {
+    font-family: 'CloudSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-regular.woff2') format('woff2');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: 'CloudSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-bold.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aritaburi';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'ArittaDodum';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-dotum-Medium.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Mona12';
+    src: url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/Mona12.woff2') format('woff2');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Mona12';
+    src: url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/Mona12-Bold.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face {
+    font-family: 'BoldRound';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2507-2@1.0/BoldDungGeunMo.woff2') format('woff2');
+    font-weight: normal; font-display: swap;
+  }
+
   * { box-sizing: border-box; }
   body, html {
     margin: 0; padding: 0; width: 100%; min-height: 100%;
-    font-family: 'Pretendard Variable', -apple-system, sans-serif;
+    font-family: var(--font-base), 'Pretendard Variable', -apple-system, sans-serif;
     background: var(--bg-app); color: var(--ink);
     -webkit-font-smoothing: antialiased;
     transition: background 0.25s ease, color 0.25s ease;
@@ -120,13 +185,13 @@
   .app-brand small { font-weight: 500; color: var(--ink-faint); font-size: 13px; }
 
   .theme-toggle {
-    position: relative; width: 44px; height: 24px; border-radius: 6px;
+    position: relative; width: 44px; height: 24px; border-radius: var(--r-md);
     border: 1px solid var(--border-strong); background: var(--accent-soft);
     cursor: pointer; padding: 0; flex-shrink: 0;
     transition: background 0.25s ease, border-color 0.25s ease;
   }
   .theme-toggle-thumb {
-    position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 4px;
+    position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: var(--r-sm);
     background: var(--accent); box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s ease;
   }
@@ -138,7 +203,7 @@
   .btn-login {
     border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink);
     font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
-    padding: 6px 12px; border-radius: 8px; flex-shrink: 0;
+    padding: 6px 12px; border-radius: var(--r-md); flex-shrink: 0;
     transition: background 0.15s ease, border-color 0.15s ease;
   }
   .btn-login:hover { border-color: var(--accent); background: var(--accent-soft); }
@@ -146,7 +211,7 @@
   .user-chip {
     display: flex; align-items: center; gap: 6px;
     border: 1px solid var(--border-soft); background: var(--bg-panel);
-    padding: 3px 4px 3px 3px; border-radius: 999px; flex-shrink: 0;
+    padding: 3px 4px 3px 3px; border-radius: var(--r-pill); flex-shrink: 0;
   }
   .user-avatar {
     width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
@@ -174,13 +239,13 @@
 
   .board-viewonly-tag {
     font-size: 11px; font-weight: 600; color: var(--accent-strong);
-    background: var(--accent-soft); border-radius: 6px; padding: 2px 7px; margin-left: 6px;
+    background: var(--accent-soft); border-radius: var(--r-sm); padding: 2px 7px; margin-left: 6px;
   }
 
   /* ---------- invite codes ---------- */
   .invite-code-row {
     display: flex; align-items: center; justify-content: space-between;
-    border: 1px solid var(--border-soft); border-radius: 8px; padding: 8px 10px;
+    border: 1px solid var(--border-soft); border-radius: var(--r-md); padding: 8px 10px;
     font-size: 13px;
   }
   .invite-code-row.used { opacity: 0.5; }
@@ -197,7 +262,7 @@
 
   /* mobile: classic always-visible card, rounded style */
   .add-card {
-    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
     box-sizing: border-box; box-shadow: var(--shadow-card);
     padding: 14px; margin: 0 0 16px;
   }
@@ -238,7 +303,7 @@
 
   .btn-add-toggle {
     display: flex; align-items: center; justify-content: center;
-    width: 26px; height: 26px; border-radius: 6px;
+    width: 26px; height: 26px; border-radius: var(--r-md);
     border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
     font-size: 15px; font-weight: 400; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
     transition: background 0.15s ease, border-color 0.15s ease;
@@ -252,7 +317,7 @@
 
   #newText {
     width: 100%; min-height: 74px; resize: vertical;
-    border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 12px;
     background: var(--bg-card); color: var(--ink);
     font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none;
     transition: border-color 0.15s ease;
@@ -262,7 +327,7 @@
   
   .md-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
   .md-btn {
-    width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+    width: 30px; height: 30px; border-radius: var(--r-md); border: 1px solid var(--border);
     background: transparent; color: var(--ink); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     font-family: inherit; font-size: 13px; font-weight: 700; padding: 0;
@@ -273,7 +338,7 @@
   .hl-preview {
     background: var(--accent-soft); color: var(--ink);
     font-size: 12px; font-weight: 500; line-height: 1.3;
-    padding: 1px 4px; border-radius: 3px;
+    padding: 1px 4px; border-radius: var(--r-sm);
   }
 
   /* ---------- visibility (private / password) ---------- */
@@ -281,7 +346,7 @@
   .vis-btn {
     border: 1px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
     font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer;
-    padding: 6px 10px; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    padding: 6px 10px; border-radius: var(--r-pill); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
   .vis-btn:hover { border-color: var(--accent); color: var(--ink); }
   .vis-btn.active { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
@@ -296,20 +361,20 @@
   .btn-unlock {
     border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink);
     font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
-    padding: 6px 12px; border-radius: 8px;
+    padding: 6px 12px; border-radius: var(--r-md);
     transition: background 0.15s ease, border-color 0.15s ease;
   }
   .btn-unlock:hover { border-color: var(--accent); background: var(--accent-soft); }
   .note-vis-tag {
     font-size: 11px; font-weight: 600; color: var(--accent-strong);
-    background: var(--accent-soft); border-radius: 6px; padding: 2px 7px;
+    background: var(--accent-soft); border-radius: var(--r-sm); padding: 2px 7px;
     display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 8px 0;
   }
 
   .tag-input-row {
     display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
     margin-top: 8px; padding: 6px 8px;
-    border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-card);
   }
   .tag-input-row input {
     flex: 1; min-width: 90px; border: none; background: transparent; outline: none;
@@ -318,7 +383,7 @@
   .tag-chip {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-strong);
-    padding: 3px 8px; border-radius: 4px; font-size: 11.5px; white-space: nowrap;
+    padding: 3px 8px; border-radius: var(--r-sm); font-size: 11.5px; white-space: nowrap;
   }
   .tag-chip .tag-chip-label::before { content: "#"; }
   .tag-chip button {
@@ -330,7 +395,7 @@
   .add-card-footer { display: flex; justify-content: flex-end; margin-top: 10px; }
   .btn-save {
     border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
-    font-weight: 600; font-size: 13px; padding: 8px 18px; border-radius: 6px; cursor: pointer;
+    font-weight: 600; font-size: 13px; padding: 8px 18px; border-radius: var(--r-md); cursor: pointer;
     transition: background 0.15s ease;
   }
   .btn-save:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
@@ -338,7 +403,7 @@
   /* ---------- search ---------- */
   .search-row { position: relative; }
   .search-row input {
-    border: none; border-radius: 6px;
+    border: none; border-radius: var(--r-md);
     background: var(--bg-panel); color: var(--ink);
     font-family: inherit; outline: none;
     transition: background 0.15s ease, width 0.2s ease, box-shadow 0.15s ease;
@@ -355,7 +420,7 @@
   .filter-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
   .filter-chip {
     border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink-soft);
-    font-size: 12px; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: 8px;
+    font-size: 12px; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: var(--r-md);
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
   .filter-chip.tag-filter::before { content: "#"; }
@@ -376,7 +441,7 @@
     .card-grid { grid-template-columns: repeat(3, 1fr); }
   }
   .note-card {
-    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
     padding: 12px 14px; box-shadow: var(--shadow-card);
     position: relative; contain: layout; transition: border-color 0.15s ease, background 0.25s ease;
     width: 100%; box-sizing: border-box;
@@ -399,7 +464,7 @@
   .note-card:focus-within .note-card-body { margin-top: 28px; }
 
   .icon-btn {
-    width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border);
+    width: 26px; height: 26px; border-radius: var(--r-md); border: 1px solid var(--border);
     background: var(--bg-card); color: var(--ink-soft); cursor: pointer;
     display: flex; align-items: center; justify-content: center; font-size: 13px;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -432,25 +497,25 @@
   .note-text u { text-decoration: underline; }
   .note-text mark {
     background: var(--accent-soft); color: var(--ink);
-    padding: 0 3px; border-radius: 4px;
+    padding: 0 3px; border-radius: var(--r-sm);
   }
   html[data-theme="dark"] .note-text mark { color: var(--ink); }
   .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 30px 8px 0; }
   .note-tag {
     font-size: 11px; color: var(--ink-soft); background: var(--bg-card);
-    border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px;
+    border: 1px solid var(--border); padding: 2px 8px; border-radius: var(--r-sm);
   }
   .note-tag::before { content: "#"; }
 
   .note-edit-area {
     width: 100%; min-height: 70px; resize: vertical; border: 1px solid var(--accent);
-    border-radius: 6px; padding: 8px 10px; background: var(--bg-card); color: var(--ink);
+    border-radius: var(--r-md); padding: 8px 10px; background: var(--bg-card); color: var(--ink);
     font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none; margin-top: 4px;
   }
   .note-edit-footer { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
   .btn-mini {
     border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink);
-    font-size: 12px; padding: 5px 12px; border-radius: 6px; cursor: pointer;
+    font-size: 12px; padding: 5px 12px; border-radius: var(--r-md); cursor: pointer;
   }
   .btn-mini.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
 
@@ -468,7 +533,7 @@
   }
   .toast {
     display: inline-flex; align-items: center; background: var(--bg-panel); color: var(--ink);
-    border: 1px solid var(--border-strong); padding: 9px 16px; border-radius: 999px;
+    border: 1px solid var(--border-strong); padding: 9px 16px; border-radius: var(--r-pill);
     font-size: 12.5px; font-weight: 500; white-space: nowrap; box-shadow: var(--shadow-bar);
     opacity: 0; transform: translateY(-10px) scale(0.96);
     transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1);
@@ -487,7 +552,7 @@
   .note-modal-overlay.open { opacity: 1; pointer-events: auto; }
 
   .note-modal-card {
-    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 12px;
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
     box-shadow: var(--shadow-bar); padding: 44px 22px 22px; width: 100%; max-width: 480px;
     max-height: 80vh; overflow-y: auto; position: relative;
     transform: scale(0.96) translateY(6px); transition: transform 0.2s ease;
@@ -563,10 +628,58 @@
   </div>
 </div>
 
+<div class="note-modal-overlay" id="settingsModalOverlay">
+  <div class="note-modal-card" id="settingsModalCard" style="max-width:420px; padding:40px 22px 22px;">
+    <button type="button" class="icon-btn note-modal-close" id="settingsModalClose" aria-label="닫기" title="닫기">×</button>
+    <div style="font-weight:700; font-size:15px; margin-bottom:14px;">보드 설정</div>
+
+    <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">사이트 이름</div>
+    <div class="tag-input-row" style="margin-bottom:16px;">
+      <input type="text" id="settingsSiteName" placeholder="r♡sie" maxlength="20">
+    </div>
+
+    <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">폰트</div>
+    <select id="settingsFont" style="width:100%; padding:9px 10px; border-radius:var(--r-md); border:1px solid var(--border); background:var(--bg-card); color:var(--ink); font-size:13px; margin-bottom:16px; font-family:inherit;">
+      <option value="">기본 (Pretendard)</option>
+      <option value="IbmPlexSans" style="font-family:'IbmPlexSans';">IBM Plex Sans</option>
+      <option value="NexonLv1Gothic" style="font-family:'NexonLv1Gothic';">넥슨 Lv.1 고딕</option>
+      <option value="CloudSans" style="font-family:'CloudSans';">구름 산스</option>
+      <option value="Aritaburi" style="font-family:'Aritaburi';">아리따부리</option>
+      <option value="ArittaDodum" style="font-family:'ArittaDodum';">아리따돋움</option>
+      <option value="Mona12" style="font-family:'Mona12';">모나12</option>
+      <option value="BoldRound" style="font-family:'BoldRound';">둥근모</option>
+    </select>
+
+    <div style="display:flex; gap:16px; margin-bottom:16px;">
+      <div style="flex:1;">
+        <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">포인트색</div>
+        <input type="color" id="settingsAccent" value="#ff7ebd" style="width:100%; height:36px; border:1px solid var(--border); border-radius:var(--r-md); background:none; cursor:pointer; padding:2px;">
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">배경색</div>
+        <input type="color" id="settingsBg" value="#fef4f8" style="width:100%; height:36px; border:1px solid var(--border); border-radius:var(--r-md); background:none; cursor:pointer; padding:2px;">
+      </div>
+    </div>
+
+    <div style="font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;">모서리</div>
+    <div class="visibility-row" id="settingsRadiusRow" style="margin-top:0; margin-bottom:18px;">
+      <button type="button" class="vis-btn" data-radius="sharp">뾰족하게</button>
+      <button type="button" class="vis-btn" data-radius="normal">보통</button>
+      <button type="button" class="vis-btn" data-radius="round">둥글게</button>
+    </div>
+
+    <div class="add-card-footer" style="justify-content:space-between;">
+      <button type="button" id="settingsResetBtn" class="link-btn">기본값으로</button>
+      <button type="button" class="btn-save" id="settingsSaveBtn">저장</button>
+    </div>
+  </div>
+</div>
+
+
 <div class="wrap">
   <div class="app-header">
     <div class="app-brand">
-      <span>r<span class="heart">♡</span>sie</span>
+      <span id="siteNameLabel">r<span class="heart">♡</span>sie</span>
       <small id="boardLabel">memo</small>
     </div>
     <div class="header-right">
@@ -580,6 +693,7 @@
         <button type="button" id="logoutBtn" class="icon-btn" title="로그아웃">⏻</button>
       </div>
       <button type="button" id="adminBtn" class="icon-btn" title="초대 코드 관리" style="display:none;">🔑</button>
+      <button type="button" id="boardSettingsBtn" class="icon-btn" title="보드 설정" style="display:none;">⚙</button>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
         <span class="theme-toggle-thumb"></span>
       </button>
@@ -746,7 +860,7 @@ async function initView() {
     currentUserHandle = userSnap.exists() ? userSnap.data().handle : null;
     if (!currentUserHandle) {
       viewedUid = null; viewedHandle = null;
-      updateBoardLabel(); updateOwnerUI();
+      updateBoardLabel(); updateOwnerUI(); loadBoardTheme(null);
       openHandleModal();
       return;
     }
@@ -756,7 +870,7 @@ async function initView() {
     const handleSnap = await getDoc(doc(db, 'handles', urlHandle));
     if (!handleSnap.exists()) {
       viewedUid = null; viewedHandle = null;
-      updateBoardLabel(); updateOwnerUI(); subscribeCards();
+      updateBoardLabel(); updateOwnerUI(); loadBoardTheme(null); subscribeCards();
       showToast('존재하지 않는 핸들이에요.', 'danger');
       return;
     }
@@ -778,6 +892,7 @@ async function initView() {
   isOwner = !!(currentUser && viewedUid === currentUser.uid);
   updateBoardLabel();
   updateOwnerUI();
+  loadBoardTheme(viewedUid);
   subscribeCards();
 }
 
@@ -825,8 +940,219 @@ function updateBoardLabel() {
   }
 }
 
+// ---------- board theme (핸들 주인이 커스터마이즈 가능) ----------
+const DEFAULT_SITE_NAME = 'r<span class="heart">♡</span>sie';
+const RADIUS_PRESETS = {
+  sharp:  { lg: '2px',  md: '2px',  sm: '2px',  pill: '4px'   },
+  normal: { lg: '10px', md: '6px',  sm: '4px',  pill: '999px' },
+  round:  { lg: '20px', md: '14px', sm: '8px',  pill: '999px' }
+};
+const customThemeStyleEl = document.createElement('style');
+customThemeStyleEl.id = 'customThemeStyle';
+document.head.appendChild(customThemeStyleEl);
+
+function hexToHsl(hex) {
+  hex = hex.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16) / 255;
+  const g = parseInt(hex.substr(2, 2), 16) / 255;
+  const b = parseInt(hex.substr(4, 2), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+  if (max === min) { h = s = 0; }
+  else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      default: h = (r - g) / d + 4;
+    }
+    h /= 6;
+  }
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+function hslToHex(h, s, l) {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+  const toHex = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function contrastInk(hex) {
+  const { l } = hexToHsl(hex);
+  return l > 55 ? '#3a2a33' : '#ffffff';
+}
+
+function computeThemeCss(accentHex, bgHex) {
+  const a = hexToHsl(accentHex);
+  const b = hexToHsl(bgHex);
+  const light = {
+    '--bg-app': hslToHex(b.h, b.s, b.l),
+    '--bg-panel': hslToHex(b.h, b.s * 0.4, 98),
+    '--bg-card': hslToHex(b.h, b.s * 0.55, clamp(b.l + 3, 90, 97)),
+    '--border-soft': hslToHex(b.h, b.s * 0.6, 94),
+    '--border': hslToHex(b.h, b.s * 0.65, 87),
+    '--border-strong': hslToHex(b.h, b.s * 0.7, 76),
+    '--ink': hslToHex(b.h, Math.min(b.s * 0.4, 30), 27),
+    '--ink-soft': hslToHex(b.h, Math.min(b.s * 0.3, 25), 46),
+    '--ink-faint': hslToHex(b.h, Math.min(b.s * 0.25, 20), 68),
+    '--ink-placeholder': hslToHex(b.h, Math.min(b.s * 0.25, 20), 82),
+    '--accent': hslToHex(a.h, a.s, clamp(a.l + 12, 60, 82)),
+    '--accent-strong': hslToHex(a.h, a.s, clamp(a.l, 45, 68)),
+    '--accent-soft': hslToHex(a.h, a.s * 0.5, 93),
+    '--accent-ink': contrastInk(hslToHex(a.h, a.s, clamp(a.l, 45, 68))),
+    '--heart': hslToHex(a.h, a.s, clamp(a.l, 45, 68))
+  };
+  const dark = {
+    '--bg-app': hslToHex(b.h, Math.min(b.s * 0.35, 22), 10),
+    '--bg-panel': hslToHex(b.h, Math.min(b.s * 0.3, 20), 15),
+    '--bg-card': hslToHex(b.h, Math.min(b.s * 0.3, 20), 18),
+    '--border-soft': hslToHex(b.h, Math.min(b.s * 0.25, 18), 22),
+    '--border': hslToHex(b.h, Math.min(b.s * 0.25, 18), 27),
+    '--border-strong': hslToHex(b.h, Math.min(b.s * 0.3, 20), 35),
+    '--ink': hslToHex(b.h, Math.min(b.s * 0.12, 12), 93),
+    '--ink-soft': hslToHex(b.h, Math.min(b.s * 0.1, 10), 72),
+    '--ink-faint': hslToHex(b.h, Math.min(b.s * 0.1, 10), 52),
+    '--ink-placeholder': hslToHex(b.h, Math.min(b.s * 0.1, 10), 40),
+    '--accent': hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88)),
+    '--accent-strong': hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80)),
+    '--accent-soft': hslToHex(a.h, Math.min(a.s * 0.4, 40), 24),
+    '--accent-ink': '#000000',
+    '--heart': hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80))
+  };
+  const toCssBlock = (sel, vars) => `html[data-theme="${sel}"] { ${Object.entries(vars).map(([k, v]) => `${k}: ${v};`).join(' ')} }`;
+  return toCssBlock('light', light) + '\n' + toCssBlock('dark', dark);
+}
+
+function applyBoardTheme(theme) {
+  const t = theme || {};
+  document.documentElement.style.setProperty('--font-base', t.font ? `'${t.font}'` : `'Pretendard Variable'`);
+  const radius = RADIUS_PRESETS[t.radius] || RADIUS_PRESETS.normal;
+  document.documentElement.style.setProperty('--r-lg', radius.lg);
+  document.documentElement.style.setProperty('--r-md', radius.md);
+  document.documentElement.style.setProperty('--r-sm', radius.sm);
+  document.documentElement.style.setProperty('--r-pill', radius.pill);
+  if (t.accent && t.bg) {
+    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg);
+  } else {
+    customThemeStyleEl.textContent = '';
+  }
+}
+
+function applySiteName(name) {
+  const nameEl = el('siteNameLabel');
+  if (name) {
+    nameEl.textContent = name;
+    document.title = `${name} · memo`;
+  } else {
+    nameEl.innerHTML = DEFAULT_SITE_NAME;
+    document.title = 'r♡siememo';
+  }
+}
+
+let viewedTheme = null;
+let viewedSiteName = null;
+async function loadBoardTheme(uid) {
+  if (!uid) {
+    viewedTheme = null; viewedSiteName = null;
+    applyBoardTheme(null); applySiteName(null);
+    return;
+  }
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    const data = snap.exists() ? snap.data() : {};
+    viewedTheme = data.theme || null;
+    viewedSiteName = data.siteName || null;
+    applyBoardTheme(viewedTheme);
+    applySiteName(viewedSiteName);
+  } catch (e) {
+    viewedTheme = null; viewedSiteName = null;
+    applyBoardTheme(null); applySiteName(null);
+  }
+}
+
+function openSettingsModal() {
+  const t = viewedTheme || {};
+  el('settingsSiteName').value = viewedSiteName || '';
+  el('settingsFont').value = t.font || '';
+  el('settingsAccent').value = t.accent || '#ff7ebd';
+  el('settingsBg').value = t.bg || '#fef4f8';
+  const radiusKey = t.radius || 'normal';
+  el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.radius === radiusKey));
+  el('settingsModalOverlay').classList.add('open');
+}
+function closeSettingsModal() {
+  el('settingsModalOverlay').classList.remove('open');
+}
+el('boardSettingsBtn').addEventListener('click', () => { if (isOwner) openSettingsModal(); });
+el('settingsModalClose').addEventListener('click', closeSettingsModal);
+el('settingsModalOverlay').addEventListener('click', (e) => {
+  if (e.target === el('settingsModalOverlay')) closeSettingsModal();
+});
+let selectedRadiusPreset = 'normal';
+el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedRadiusPreset = btn.dataset.radius;
+    el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b === btn));
+  });
+});
+el('settingsSaveBtn').addEventListener('click', async () => {
+  if (!isOwner || !currentUser) return;
+  const siteName = el('settingsSiteName').value.trim().slice(0, 20);
+  const font = el('settingsFont').value;
+  const accent = el('settingsAccent').value;
+  const bg = el('settingsBg').value;
+  const activeRadiusBtn = el('settingsRadiusRow').querySelector('.vis-btn.active');
+  const radius = activeRadiusBtn ? activeRadiusBtn.dataset.radius : 'normal';
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      siteName: siteName || deleteField(),
+      theme: { font: font || deleteField(), accent, bg, radius }
+    }, { merge: true });
+    viewedSiteName = siteName || null;
+    viewedTheme = { font, accent, bg, radius };
+    applyBoardTheme(viewedTheme);
+    applySiteName(viewedSiteName);
+    closeSettingsModal();
+    showToast('설정이 저장되었습니다.');
+  } catch (e) {
+    showToast('설정 저장에 실패했습니다.', 'danger');
+  }
+});
+el('settingsResetBtn').addEventListener('click', async () => {
+  if (!isOwner || !currentUser) return;
+  try {
+    await updateDoc(doc(db, 'users', currentUser.uid), {
+      siteName: deleteField(), theme: deleteField()
+    });
+    viewedSiteName = null; viewedTheme = null;
+    applyBoardTheme(null); applySiteName(null);
+    closeSettingsModal();
+    showToast('기본값으로 되돌렸습니다.');
+  } catch (e) {
+    showToast('초기화에 실패했습니다.', 'danger');
+  }
+});
+
 function updateOwnerUI() {
   document.body.classList.toggle('view-only', !isOwner);
+  el('boardSettingsBtn').style.display = isOwner ? '' : 'none';
 }
 
 function updateAuthUI() {

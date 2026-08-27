@@ -157,7 +157,7 @@
     max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .user-handle-label:hover { color: var(--accent-strong); text-decoration: underline; }
-  .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; }
+  .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; border-radius: 50%; }
 
   .link-btn {
     border: none; background: none; color: var(--ink-faint);
@@ -176,6 +176,21 @@
     font-size: 11px; font-weight: 600; color: var(--accent-strong);
     background: var(--accent-soft); border-radius: 6px; padding: 2px 7px; margin-left: 6px;
   }
+
+  /* ---------- invite codes ---------- */
+  .invite-code-row {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--border-soft); border-radius: 8px; padding: 8px 10px;
+    font-size: 13px;
+  }
+  .invite-code-row.used { opacity: 0.5; }
+  .invite-code-row .code {
+    font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .invite-code-row:not(.used) .code { cursor: pointer; }
+  .invite-code-row .status { font-size: 11px; font-weight: 600; }
+  .invite-code-row .status.unused { color: var(--accent-strong); }
+  .invite-code-row .status.used-tag { color: var(--ink-faint); }
 
   /* ---------- add card panel ---------- */
   .content-row { display: block; }
@@ -475,6 +490,9 @@
     <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
       친구들과 메모장을 공유할 때 쓰일 이름이에요. 영문/숫자/_ 3~20자, 나중에 바꿀 수 없어요.
     </div>
+    <div class="tag-input-row" style="margin-bottom:8px;">
+      <input type="text" id="inviteCodeInput" placeholder="초대 코드">
+    </div>
     <div class="tag-input-row">
       <input type="text" id="handleInput" placeholder="handle">
     </div>
@@ -484,6 +502,17 @@
     <div style="text-align:center; margin-top:12px;">
       <button type="button" id="handleModalLogout" class="link-btn">다른 계정으로 로그인</button>
     </div>
+  </div>
+</div>
+
+<div class="note-modal-overlay" id="adminModalOverlay">
+  <div class="note-modal-card" id="adminModalCard" style="max-width:420px; padding:40px 22px 22px;">
+    <button type="button" class="icon-btn note-modal-close" id="adminModalClose" aria-label="닫기" title="닫기">×</button>
+    <div style="font-weight:700; font-size:15px; margin-bottom:12px;">초대 코드 관리</div>
+    <div class="add-card-footer" style="justify-content:flex-start; margin-bottom:14px;">
+      <button type="button" class="btn-save" id="genCodeBtn">새 코드 생성</button>
+    </div>
+    <div id="inviteCodeList" style="display:flex; flex-direction:column; gap:6px; max-height:340px; overflow-y:auto;"></div>
   </div>
 </div>
 
@@ -503,6 +532,7 @@
         <span id="userHandleLabel" class="user-handle-label"></span>
         <button type="button" id="logoutBtn" class="icon-btn" title="로그아웃">⏻</button>
       </div>
+      <button type="button" id="adminBtn" class="icon-btn" title="초대 코드 관리" style="display:none;">🔑</button>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
         <span class="theme-toggle-thumb"></span>
       </button>
@@ -569,6 +599,8 @@ const provider = new GoogleAuthProvider();
 
 const el = id => document.getElementById(id);
 const THEME_KEY = 'rosie_ooc_theme';
+const BASE_PATH = '/tea/';
+const RESERVED_HANDLES = ['rose', 'rosie', 'luck', 'justice'];
 
 let cards = [];
 let newTags = [];
@@ -584,7 +616,22 @@ let viewedHandle = null;
 let isOwner = false;
 let unsubscribeCards = null;
 
+// convert a legacy/redirected ?u=handle URL into a pretty /handle path
+(function normalizePrettyUrl() {
+  const params = new URLSearchParams(location.search);
+  const u = params.get('u');
+  if (!u) return;
+  params.delete('u');
+  const restQs = params.toString();
+  const newPath = BASE_PATH + encodeURIComponent(u) + (restQs ? '?' + restQs : '') + location.hash;
+  history.replaceState(null, '', newPath);
+})();
+
 function getUrlHandle() {
+  let path = location.pathname;
+  if (path.startsWith(BASE_PATH)) path = path.slice(BASE_PATH.length);
+  path = path.replace(/^\/+|\/+$/g, '');
+  if (path) return decodeURIComponent(path.split('/')[0]);
   return new URLSearchParams(location.search).get('u');
 }
 
@@ -662,7 +709,92 @@ function updateAuthUI() {
     el('userChip').style.display = 'none';
     currentUserHandle = null;
   }
+  updateAdminUI();
 }
+
+// ---------- admin: invite code management ----------
+const ADMIN_EMAIL = 'rsafrosie@gmail.com';
+let isAdmin = false;
+let unsubscribeInviteCodes = null;
+
+function updateAdminUI() {
+  isAdmin = !!(currentUser && currentUser.email === ADMIN_EMAIL);
+  el('adminBtn').style.display = isAdmin ? '' : 'none';
+}
+
+function openAdminModal() {
+  el('adminModalOverlay').classList.add('open');
+  subscribeInviteCodes();
+}
+function closeAdminModal() {
+  el('adminModalOverlay').classList.remove('open');
+  if (unsubscribeInviteCodes) { unsubscribeInviteCodes(); unsubscribeInviteCodes = null; }
+}
+el('adminBtn').addEventListener('click', () => { if (isAdmin) openAdminModal(); });
+el('adminModalClose').addEventListener('click', closeAdminModal);
+el('adminModalOverlay').addEventListener('click', (e) => {
+  if (e.target === el('adminModalOverlay')) closeAdminModal();
+});
+
+function subscribeInviteCodes() {
+  const q = query(collection(db, 'inviteCodes'), orderBy('createdAt', 'desc'));
+  unsubscribeInviteCodes = onSnapshot(q, (snap) => {
+    renderInviteCodeList(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  }, () => showToast('코드 목록을 불러오지 못했습니다.', 'danger'));
+}
+
+function renderInviteCodeList(list) {
+  const wrap = el('inviteCodeList');
+  wrap.innerHTML = '';
+  if (list.length === 0) {
+    wrap.innerHTML = '<div style="font-size:12.5px; color:var(--ink-faint);">아직 생성된 코드가 없어요.</div>';
+    return;
+  }
+  list.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'invite-code-row' + (item.used ? ' used' : '');
+    row.innerHTML = `
+      <span class="code">${item.id}</span>
+      <span class="status ${item.used ? 'used-tag' : 'unused'}">${item.used ? '사용됨' : '사용 가능'}</span>
+    `;
+    if (!item.used) {
+      const codeEl = row.querySelector('.code');
+      codeEl.title = '클릭해서 복사';
+      codeEl.addEventListener('click', () => {
+        navigator.clipboard.writeText(item.id)
+          .then(() => showToast('코드가 복사되었습니다.'))
+          .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+      });
+    }
+    wrap.appendChild(row);
+  });
+}
+
+function generateInviteCode() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+el('genCodeBtn').addEventListener('click', async () => {
+  if (!isAdmin) return;
+  try {
+    let code = generateInviteCode();
+    for (let i = 0; i < 5; i++) {
+      const snap = await getDoc(doc(db, 'inviteCodes', code));
+      if (!snap.exists()) break;
+      code = generateInviteCode();
+    }
+    await setDoc(doc(db, 'inviteCodes', code), {
+      used: false, createdAt: Date.now(), createdBy: currentUser.uid
+    });
+    navigator.clipboard.writeText(code).catch(() => {});
+    showToast(`코드 생성됨: ${code} (클립보드에 복사됨)`);
+  } catch (e) {
+    showToast('코드 생성에 실패했습니다.', 'danger');
+  }
+});
 
 el('loginBtn').addEventListener('click', async () => {
   try { await signInWithPopup(auth, provider); }
@@ -672,12 +804,12 @@ el('logoutBtn').addEventListener('click', () => signOut(auth));
 el('handleModalLogout').addEventListener('click', () => signOut(auth));
 
 document.querySelector('.app-brand').addEventListener('click', () => {
-  if (getUrlHandle()) location.href = location.pathname;
+  if (getUrlHandle()) location.href = BASE_PATH;
 });
 
 el('userHandleLabel').addEventListener('click', () => {
   if (!isOwner || !viewedHandle) return;
-  const url = `${location.origin}${location.pathname}?u=${viewedHandle}`;
+  const url = `${location.origin}${BASE_PATH}${viewedHandle}`;
   navigator.clipboard.writeText(url)
     .then(() => showToast('공유 링크가 복사되었습니다.'))
     .catch(() => showToast('복사에 실패했습니다.', 'danger'));
@@ -690,17 +822,30 @@ function closeHandleModal() {
   el('handleModalOverlay').classList.remove('open');
 }
 el('handleSaveBtn').addEventListener('click', async () => {
+  const inviteCode = el('inviteCodeInput').value.trim();
   const handle = el('handleInput').value.trim().toLowerCase();
+  if (!inviteCode) {
+    showToast('초대 코드를 입력해주세요.', 'danger');
+    return;
+  }
   if (!/^[a-z0-9_]{3,20}$/.test(handle)) {
     showToast('영문 소문자/숫자/_ 3~20자로 입력해주세요.', 'danger');
     return;
   }
+  if (RESERVED_HANDLES.includes(handle)) {
+    showToast('사용할 수 없는 핸들이에요.', 'danger');
+    return;
+  }
   try {
     await runTransaction(db, async (tx) => {
+      const codeRef = doc(db, 'inviteCodes', inviteCode);
       const handleRef = doc(db, 'handles', handle);
+      const codeSnap = await tx.get(codeRef);
       const handleSnap = await tx.get(handleRef);
+      if (!codeSnap.exists() || codeSnap.data().used) throw new Error('badcode');
       if (handleSnap.exists()) throw new Error('taken');
-      tx.set(handleRef, { uid: currentUser.uid });
+      tx.update(codeRef, { used: true, usedBy: currentUser.uid, usedAt: Date.now() });
+      tx.set(handleRef, { uid: currentUser.uid, inviteCode });
       tx.set(doc(db, 'users', currentUser.uid), {
         handle,
         displayName: currentUser.displayName || '',
@@ -708,12 +853,14 @@ el('handleSaveBtn').addEventListener('click', async () => {
       }, { merge: true });
     });
     el('handleInput').value = '';
+    el('inviteCodeInput').value = '';
     currentUserHandle = handle;
     updateAuthUI();
     await initView();
     showToast('핸들이 생성되었습니다.');
   } catch (e) {
     if (e.message === 'taken') showToast('이미 사용 중인 핸들이에요.', 'danger');
+    else if (e.message === 'badcode') showToast('유효하지 않거나 이미 사용된 초대 코드예요.', 'danger');
     else showToast('오류가 발생했습니다.', 'danger');
   }
 });
@@ -951,10 +1098,8 @@ function copyCardText(text) {
 }
 
 function copyCardLink(id) {
-  const params = new URLSearchParams();
-  if (viewedHandle) params.set('u', viewedHandle);
-  const qs = params.toString();
-  const url = `${location.origin}${location.pathname}${qs ? '?' + qs : ''}#note-${id}`;
+  const handleSeg = viewedHandle ? encodeURIComponent(viewedHandle) : '';
+  const url = `${location.origin}${BASE_PATH}${handleSeg}#note-${id}`;
   navigator.clipboard.writeText(url)
     .then(() => showToast('링크가 복사되었습니다.'))
     .catch(() => showToast('복사에 실패했습니다.', 'danger'));

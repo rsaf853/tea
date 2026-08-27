@@ -427,18 +427,18 @@
   .filter-chip:hover { border-color: var(--accent); color: var(--ink); }
   .filter-chip.active { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--accent-ink); font-weight: 600; }
 
-  /* ---------- card grid ---------- */
+  /* ---------- card grid (masonry via JS column packing) ---------- */
   .card-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    align-items: flex-start;
     gap: 14px;
-    align-items: start;
   }
-  @media (min-width: 560px) {
-    .card-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (min-width: 901px) {
-    .card-grid { grid-template-columns: repeat(3, 1fr); }
+  .masonry-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1 1 0;
+    min-width: 0;
   }
   .note-card {
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
@@ -1701,6 +1701,13 @@ function checkHashForNote() {
 }
 window.addEventListener('hashchange', checkHashForNote);
 
+function getMasonryColumnCount() {
+  const w = window.innerWidth;
+  if (w >= 901) return 3;
+  if (w >= 560) return 2;
+  return 1;
+}
+
 function renderCardGrid() {
   const grid = el('cardGrid');
   const visible = getVisibleCards();
@@ -1712,6 +1719,17 @@ function renderCardGrid() {
     : (!viewedUid
         ? (currentUser ? '핸들을 먼저 만들어주세요.' : '로그인 후 메모를 시작해보세요.')
         : '아직 저장된 카드가 없습니다.');
+
+  // 각 화면 폭에 맞는 열(column) 래퍼를 만들고, 카드가 추가될 때마다
+  // 현재 높이가 가장 낮은 열에 넣어서 진짜 masonry(핀터레스트식) 배치를 만든다.
+  const colCount = getMasonryColumnCount();
+  const cols = [];
+  for (let i = 0; i < colCount; i++) {
+    const colEl = document.createElement('div');
+    colEl.className = 'masonry-col';
+    grid.appendChild(colEl);
+    cols.push({ el: colEl, height: 0 });
+  }
 
   visible.forEach(card => {
     const div = document.createElement('div');
@@ -1906,7 +1924,12 @@ function renderCardGrid() {
       }
     }
 
-    grid.appendChild(div);
+    let shortest = cols[0];
+    for (let i = 1; i < cols.length; i++) {
+      if (cols[i].height < shortest.height) shortest = cols[i];
+    }
+    shortest.el.appendChild(div);
+    shortest.height += div.offsetHeight;
   });
 }
 
@@ -1946,6 +1969,20 @@ function renderAll() {
     localStorage.setItem(THEME_KEY, next);
   });
 })();
+
+// 화면 폭이 바뀌어 masonry 열 개수가 달라질 때만 다시 배치한다.
+let lastMasonryColCount = getMasonryColumnCount();
+let masonryResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(masonryResizeTimer);
+  masonryResizeTimer = setTimeout(() => {
+    const cc = getMasonryColumnCount();
+    if (cc !== lastMasonryColCount) {
+      lastMasonryColCount = cc;
+      renderCardGrid();
+    }
+  }, 150);
+});
 
 renderAll();
 checkHashForNote();

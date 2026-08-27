@@ -132,6 +132,51 @@
   }
   html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(20px); background: var(--accent-strong); }
 
+  /* ---------- auth / handle ---------- */
+  .app-brand { cursor: pointer; }
+
+  .btn-login {
+    border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink);
+    font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+    padding: 6px 12px; border-radius: 8px; flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-login:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border-soft); background: var(--bg-panel);
+    padding: 3px 4px 3px 3px; border-radius: 999px; flex-shrink: 0;
+  }
+  .user-avatar {
+    width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
+    background: var(--accent-soft); flex-shrink: 0;
+  }
+  .user-handle-label {
+    font-size: 12px; font-weight: 600; color: var(--ink); cursor: pointer;
+    max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .user-handle-label:hover { color: var(--accent-strong); text-decoration: underline; }
+  .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; }
+
+  .link-btn {
+    border: none; background: none; color: var(--ink-faint);
+    font-family: inherit; font-size: 12px; cursor: pointer; text-decoration: underline;
+    padding: 0;
+  }
+  .link-btn:hover { color: var(--ink-soft); }
+
+  body.view-only .add-card,
+  body.view-only #addPanelToggle { display: none !important; }
+  @media (min-width: 701px) {
+    body.view-only .wrap { margin-right: 0 !important; }
+  }
+
+  .board-viewonly-tag {
+    font-size: 11px; font-weight: 600; color: var(--accent-strong);
+    background: var(--accent-soft); border-radius: 6px; padding: 2px 7px; margin-left: 6px;
+  }
+
   /* ---------- add card panel ---------- */
   .content-row { display: block; }
 
@@ -424,15 +469,39 @@
   </div>
 </div>
 
+<div class="note-modal-overlay" id="handleModalOverlay">
+  <div class="note-modal-card" id="handleModalCard" style="max-width:360px; padding:36px 22px 22px;">
+    <div style="font-weight:700; font-size:15px; margin-bottom:8px;">나만의 핸들 만들기</div>
+    <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
+      친구들과 메모장을 공유할 때 쓰일 이름이에요. 영문/숫자/_ 3~20자, 나중에 바꿀 수 없어요.
+    </div>
+    <div class="tag-input-row">
+      <input type="text" id="handleInput" placeholder="handle">
+    </div>
+    <div class="add-card-footer" style="margin-top:14px;">
+      <button type="button" class="btn-save" id="handleSaveBtn">만들기</button>
+    </div>
+    <div style="text-align:center; margin-top:12px;">
+      <button type="button" id="handleModalLogout" class="link-btn">다른 계정으로 로그인</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
   <div class="app-header">
     <div class="app-brand">
       <span>r<span class="heart">♡</span>sie</span>
-      <small>memo</small>
+      <small id="boardLabel">memo</small>
     </div>
     <div class="header-right">
       <div class="search-row header-search">
         <input type="text" id="searchInput" placeholder="Search">
+      </div>
+      <button type="button" id="loginBtn" class="btn-login">Google로 로그인</button>
+      <div class="user-chip" id="userChip" style="display:none;">
+        <img id="userAvatar" class="user-avatar" alt="">
+        <span id="userHandleLabel" class="user-handle-label"></span>
+        <button type="button" id="logoutBtn" class="icon-btn" title="로그아웃">⏻</button>
       </div>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
         <span class="theme-toggle-thumb"></span>
@@ -474,9 +543,31 @@
   <footer class="site-footer">by @hard7uck</footer>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy, runTransaction
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDvy-GOWFM3XJps5QsT64GAQcPTpwo93KU",
+  authDomain: "rosie-memo.firebaseapp.com",
+  projectId: "rosie-memo",
+  storageBucket: "rosie-memo.firebasestorage.app",
+  messagingSenderId: "141580936838",
+  appId: "1:141580936838:web:3724d54b108bdd95b95307",
+  measurementId: "G-DK9TQM5Q0T"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
 const el = id => document.getElementById(id);
-const STORAGE_KEY = 'rosie_ooc_cards_v1';
 const THEME_KEY = 'rosie_ooc_theme';
 
 let cards = [];
@@ -485,13 +576,154 @@ let activeFilters = new Set();
 let searchQuery = '';
 let editingId = null;
 
-// ---------- storage ----------
-function loadCards() {
-  try { cards = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { cards = []; }
+// ---------- auth / board state ----------
+let currentUser = null;
+let currentUserHandle = null;
+let viewedUid = null;
+let viewedHandle = null;
+let isOwner = false;
+let unsubscribeCards = null;
+
+function getUrlHandle() {
+  return new URLSearchParams(location.search).get('u');
 }
-function saveCards() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+
+async function initView() {
+  const urlHandle = getUrlHandle();
+
+  if (urlHandle) {
+    const handleSnap = await getDoc(doc(db, 'handles', urlHandle));
+    if (!handleSnap.exists()) {
+      viewedUid = null; viewedHandle = null;
+      updateBoardLabel(); updateOwnerUI(); subscribeCards();
+      showToast('존재하지 않는 핸들이에요.', 'danger');
+      return;
+    }
+    viewedUid = handleSnap.data().uid;
+    viewedHandle = urlHandle;
+  } else if (currentUser) {
+    const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const handle = userSnap.exists() ? userSnap.data().handle : null;
+    currentUserHandle = handle;
+    if (!handle) {
+      viewedUid = null; viewedHandle = null;
+      updateBoardLabel(); updateOwnerUI();
+      openHandleModal();
+      return;
+    }
+    viewedUid = currentUser.uid;
+    viewedHandle = handle;
+  } else {
+    viewedUid = null; viewedHandle = null;
+  }
+
+  closeHandleModal();
+  isOwner = !!(currentUser && viewedUid === currentUser.uid);
+  updateBoardLabel();
+  updateOwnerUI();
+  subscribeCards();
 }
+
+function subscribeCards() {
+  if (unsubscribeCards) { unsubscribeCards(); unsubscribeCards = null; }
+  cards = [];
+  if (!viewedUid) { renderAll(); return; }
+  const q = query(collection(db, 'users', viewedUid, 'cards'), orderBy('createdAt', 'desc'));
+  unsubscribeCards = onSnapshot(q, (snap) => {
+    cards = snap.docs.map(d => ({ id: d.id, ...d.data(), tags: d.data().tags || [] }));
+    renderAll();
+  }, () => {
+    cards = []; renderAll();
+  });
+}
+
+function updateBoardLabel() {
+  const label = el('boardLabel');
+  if (viewedHandle && !isOwner) {
+    label.innerHTML = `@${viewedHandle}<span class="board-viewonly-tag">보기 전용</span>`;
+  } else {
+    label.textContent = 'memo';
+  }
+}
+
+function updateOwnerUI() {
+  document.body.classList.toggle('view-only', !isOwner);
+}
+
+function updateAuthUI() {
+  if (currentUser) {
+    el('loginBtn').style.display = 'none';
+    el('userChip').style.display = 'flex';
+    el('userAvatar').src = currentUser.photoURL || '';
+    el('userHandleLabel').textContent = currentUserHandle ? `@${currentUserHandle}` : (currentUser.displayName || '');
+    el('userHandleLabel').title = currentUserHandle ? '내 공유 링크 복사' : '';
+  } else {
+    el('loginBtn').style.display = '';
+    el('userChip').style.display = 'none';
+    currentUserHandle = null;
+  }
+}
+
+el('loginBtn').addEventListener('click', async () => {
+  try { await signInWithPopup(auth, provider); }
+  catch (e) { showToast('로그인에 실패했습니다.', 'danger'); }
+});
+el('logoutBtn').addEventListener('click', () => signOut(auth));
+el('handleModalLogout').addEventListener('click', () => signOut(auth));
+
+document.querySelector('.app-brand').addEventListener('click', () => {
+  if (getUrlHandle()) location.href = location.pathname;
+});
+
+el('userHandleLabel').addEventListener('click', () => {
+  if (!isOwner || !viewedHandle) return;
+  const url = `${location.origin}${location.pathname}?u=${viewedHandle}`;
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('공유 링크가 복사되었습니다.'))
+    .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+});
+
+function openHandleModal() {
+  el('handleModalOverlay').classList.add('open');
+}
+function closeHandleModal() {
+  el('handleModalOverlay').classList.remove('open');
+}
+el('handleSaveBtn').addEventListener('click', async () => {
+  const handle = el('handleInput').value.trim().toLowerCase();
+  if (!/^[a-z0-9_]{3,20}$/.test(handle)) {
+    showToast('영문 소문자/숫자/_ 3~20자로 입력해주세요.', 'danger');
+    return;
+  }
+  try {
+    await runTransaction(db, async (tx) => {
+      const handleRef = doc(db, 'handles', handle);
+      const handleSnap = await tx.get(handleRef);
+      if (handleSnap.exists()) throw new Error('taken');
+      tx.set(handleRef, { uid: currentUser.uid });
+      tx.set(doc(db, 'users', currentUser.uid), {
+        handle,
+        displayName: currentUser.displayName || '',
+        photoURL: currentUser.photoURL || ''
+      }, { merge: true });
+    });
+    el('handleInput').value = '';
+    currentUserHandle = handle;
+    updateAuthUI();
+    await initView();
+    showToast('핸들이 생성되었습니다.');
+  } catch (e) {
+    if (e.message === 'taken') showToast('이미 사용 중인 핸들이에요.', 'danger');
+    else showToast('오류가 발생했습니다.', 'danger');
+  }
+});
+
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if (!user) currentUserHandle = null;
+  updateAuthUI();
+  await initView();
+});
 
 // ---------- toast ----------
 function showToast(msg, type) {
@@ -579,14 +811,20 @@ document.querySelectorAll('.md-toolbar .md-btn').forEach(btn => {
   });
 });
 
-el('saveNewBtn').addEventListener('click', () => {
+el('saveNewBtn').addEventListener('click', async () => {
+  if (!isOwner || !currentUser) { showToast('로그인 후 이용해주세요.', 'danger'); return; }
   const text = el('newText').value.trim();
   if (!text) { showToast('내용을 입력해주세요.', 'danger'); return; }
-  cards.unshift({ id: Date.now() + Math.random(), text, tags: [...newTags], createdAt: Date.now() });
-  el('newText').value = '';
-  newTags = []; renderNewTagChips();
-  saveCards(); renderAll();
-  showToast('저장되었습니다.');
+  try {
+    await addDoc(collection(db, 'users', currentUser.uid, 'cards'), {
+      text, tags: [...newTags], createdAt: Date.now()
+    });
+    el('newText').value = '';
+    newTags = []; renderNewTagChips();
+    showToast('저장되었습니다.');
+  } catch (e) {
+    showToast('저장에 실패했습니다.', 'danger');
+  }
 });
 
 // ---------- add panel ----------
@@ -713,17 +951,24 @@ function copyCardText(text) {
 }
 
 function copyCardLink(id) {
-  const url = `${location.origin}${location.pathname}#note-${id}`;
+  const params = new URLSearchParams();
+  if (viewedHandle) params.set('u', viewedHandle);
+  const qs = params.toString();
+  const url = `${location.origin}${location.pathname}${qs ? '?' + qs : ''}#note-${id}`;
   navigator.clipboard.writeText(url)
     .then(() => showToast('링크가 복사되었습니다.'))
     .catch(() => showToast('복사에 실패했습니다.', 'danger'));
   location.hash = `note-${id}`;
 }
 
-function deleteCard(id) {
-  cards = cards.filter(c => c.id !== id);
-  saveCards(); renderAll();
-  showToast('삭제되었습니다.');
+async function deleteCard(id) {
+  if (!isOwner || !currentUser) return;
+  try {
+    await deleteDoc(doc(db, 'users', currentUser.uid, 'cards', String(id)));
+    showToast('삭제되었습니다.');
+  } catch (e) {
+    showToast('삭제에 실패했습니다.', 'danger');
+  }
 }
 
 // ---------- note modal ----------
@@ -772,13 +1017,15 @@ function renderCardGrid() {
   hint.style.display = visible.length === 0 ? 'block' : 'none';
   hint.textContent = (searchQuery || activeFilters.size > 0)
     ? '조건에 맞는 카드가 없습니다.'
-    : '아직 저장된 카드가 없습니다.';
+    : (!viewedUid
+        ? (currentUser ? '핸들을 먼저 만들어주세요.' : '로그인 후 메모를 시작해보세요.')
+        : '아직 저장된 카드가 없습니다.');
 
   visible.forEach(card => {
     const div = document.createElement('div');
     div.className = 'note-card';
 
-    if (editingId === card.id) {
+    if (isOwner && editingId === card.id) {
       div.innerHTML = `
         <textarea class="note-edit-area">${escapeHtml(card.text)}</textarea>
         <div class="tag-input-row edit-tag-row"></div>
@@ -841,12 +1088,18 @@ function renderCardGrid() {
       });
 
       div.querySelector('[data-act="cancel"]').addEventListener('click', () => { editingId = null; renderAll(); });
-      div.querySelector('[data-act="save"]').addEventListener('click', () => {
+      div.querySelector('[data-act="save"]').addEventListener('click', async () => {
         const newText = div.querySelector('.note-edit-area').value.trim();
         if (!newText) { showToast('내용을 입력해주세요.', 'danger'); return; }
-        card.text = newText; card.tags = editTags;
-        editingId = null; saveCards(); renderAll();
-        showToast('수정되었습니다.');
+        try {
+          await updateDoc(doc(db, 'users', currentUser.uid, 'cards', String(card.id)), {
+            text: newText, tags: editTags
+          });
+          editingId = null; renderAll();
+          showToast('수정되었습니다.');
+        } catch (e) {
+          showToast('수정에 실패했습니다.', 'danger');
+        }
       });
     } else {
       div.innerHTML = `
@@ -858,8 +1111,8 @@ function renderCardGrid() {
             </svg>
           </button>
           <button type="button" class="icon-btn" data-act="copy" title="복사">⧉</button>
-          <button type="button" class="icon-btn" data-act="edit" title="수정">✎</button>
-          <button type="button" class="icon-btn danger" data-act="delete" title="삭제">×</button>
+          ${isOwner ? '<button type="button" class="icon-btn" data-act="edit" title="수정">✎</button>' : ''}
+          ${isOwner ? '<button type="button" class="icon-btn danger" data-act="delete" title="삭제">×</button>' : ''}
         </div>
         <div class="note-card-body">
           <div class="note-tags"></div>
@@ -875,8 +1128,10 @@ function renderCardGrid() {
       });
       div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
       div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(card.text));
-      div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
-      div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+      if (isOwner) {
+        div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
+        div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+      }
 
       const textEl = div.querySelector('.note-text');
       const bodyEl = div.querySelector('.note-card-body');
@@ -930,7 +1185,6 @@ function renderAll() {
   });
 })();
 
-loadCards();
 renderAll();
 checkHashForNote();
 </script>

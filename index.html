@@ -414,11 +414,10 @@
     border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
     font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
     padding: 7px 14px; border-radius: var(--r-pill);
-    box-shadow: 0 2px 6px color-mix(in srgb, var(--accent-strong) 22%, transparent);
-    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   }
   .btn-unlock svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
-  .btn-unlock:hover { background: var(--accent-strong); border-color: var(--accent-strong); box-shadow: 0 3px 9px color-mix(in srgb, var(--accent-strong) 30%, transparent); }
+  .btn-unlock:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
   .btn-unlock:active { transform: translateY(1px); }
   .note-vis-tag {
     font-size: 11px; font-weight: 600; color: var(--accent-strong);
@@ -465,9 +464,10 @@
     border: none; border-radius: var(--r-md);
     background: var(--bg-panel); color: var(--ink);
     font-family: inherit; outline: none;
+    box-shadow: var(--shadow-btn);
     transition: background 0.15s ease, width 0.2s ease, box-shadow 0.15s ease;
   }
-  .search-row input:focus { box-shadow: 0 0 0 1px var(--accent) inset; }
+  .search-row input:focus { box-shadow: var(--shadow-btn), 0 0 0 1px var(--accent) inset; }
 
   .header-search { flex-shrink: 0; }
   .header-search input {
@@ -541,7 +541,7 @@
 
   .note-title {
     font-size: 13.5px; line-height: 1.6; font-weight: 700; color: var(--ink);
-    word-break: break-word; margin: 0 4px 4px 0;
+    word-break: break-word; margin: 0 4px 2px 0;
   }
   .note-text {
     font-size: 13.5px; line-height: 1.6; color: var(--ink);
@@ -572,7 +572,8 @@
     padding: 0 3px; border-radius: var(--r-sm);
   }
   html[data-theme="dark"] .note-text mark { color: var(--ink); }
-  .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 30px 8px 0; }
+  .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 30px 5px 0; }
+  .note-tags:empty { margin: 0; }
   .note-tag {
     font-size: 11px; color: var(--accent-strong); background: var(--accent-soft);
     border: 1px solid var(--accent-soft); padding: 2px 8px; border-radius: var(--r-sm);
@@ -818,8 +819,8 @@
             <input type="color" id="settingsAccent" value="#ff7ebd">
           </div>
           <div>
-            <div class="settings-field-label">카드</div>
-            <input type="color" id="settingsCard" value="#ffffff">
+            <div class="settings-field-label">배경</div>
+            <input type="color" id="settingsBg" value="#fdf1f6">
           </div>
           <div>
             <div class="settings-field-label">글자</div>
@@ -1220,6 +1221,26 @@ function relLuminance(hex) {
 function contrastInk(hex) {
   return relLuminance(hex) > 0.42 ? '#3a2a33' : '#ffffff';
 }
+// WCAG 스타일 명암비(1~21). 두 색이 실제로 얼마나 구분되어 보이는지를 수치로 잰다.
+function contrastRatio(hex1, hex2) {
+  const l1 = relLuminance(hex1) + 0.05;
+  const l2 = relLuminance(hex2) + 0.05;
+  return l1 > l2 ? l1 / l2 : l2 / l1;
+}
+// 같은 색상(hue)/채도(sat)를 유지한 채 명도(lightness)만 밀어서, bgHex와의 명암비가
+// minRatio 이상이 될 때까지 자동으로 더 밝게(또는 더 어둡게) 보정한다.
+// 어떤 포인트색을 고르더라도 그 위의 글자/태그 텍스트가 묻히지 않도록 하는 안전장치.
+function ensureContrast(h, s, l, bgHex, minRatio, dir) {
+  let hex = hslToHex(h, s, l);
+  let guard = 0;
+  while (contrastRatio(hex, bgHex) < minRatio && guard < 48) {
+    l = clamp(l + dir, 0, 100);
+    hex = hslToHex(h, s, l);
+    guard++;
+    if ((dir > 0 && l >= 100) || (dir < 0 && l <= 0)) break;
+  }
+  return hex;
+}
 // 글자색과 배경색을 t 비율로 섞어서 단계별(진하게~은은하게) 톤을 만들어준다.
 function mixHex(hex1, hex2, t) {
   const c1 = hexToRgb(hex1), c2 = hexToRgb(hex2);
@@ -1254,21 +1275,21 @@ function inkSet(h, s, isLightBg) {
   };
 }
 
-function computeThemeCss(accentHex, cardHex, inkHex, cardOpacity) {
+function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
   const a = hexToHsl(accentHex);
   const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0.4, 1) : 1;
 
-  // 배경색은 따로 고르지 않는다 — 포인트색에서 항상 옅게 자동으로 뽑아낸다.
-  // 이렇게 하면 어떤 포인트색을 골라도(핑크가 아니어도) 배경이 늘 그 색과 어울리고,
-  // 포인트색을 안 바꾸면 예전처럼 옅은 핑크 배경이 그대로 나온다.
-  const lightBgAppHex = hslToHex(a.h, Math.min(a.s * 0.32, 26), 96);
+  // 배경색: 라이트 모드는 사용자가 직접 고른 색을 그대로 쓴다(없으면 포인트색에서 옅게 자동 추출).
+  // 다크 모드는 사용자가 고른 배경색을 무시하고, 포인트색 하나만으로 항상 적절히 어두운
+  // 톤을 자동 계산한다 — 어떤 배경색을 골라도 다크 모드가 밝거나 눈부시게 튀지 않게 하기 위함.
+  const lightBgAppHex = bgHex || hslToHex(a.h, Math.min(a.s * 0.32, 26), 96);
   const darkBgAppHex = hslToHex(a.h, Math.min(a.s * 0.30, 22), 10);
 
-  // 카드색: 사용자가 고른 색(기본은 흰색)을 "투명도"만큼 배경 쪽으로 섞어서,
-  // 카드가 배경과 자연스럽게 어울리는 반투명한 느낌이 나게 만든다.
-  // (투명도 100%면 카드는 고른 색 그대로, 낮을수록 배경에 더 녹아든다)
-  const lightCardBase = cardHex || '#ffffff';
-  const darkCardBase = cardHex || hslToHex(a.h, Math.min(a.s * 0.3, 20), 18);
+  // 카드(메모) 표면색은 사용자가 고르지 않는다 — 포인트색에서 살짝만 물든 흰색/검은색을
+  // 자동으로 만들고, "카드 투명도"만큼 배경색 쪽으로 섞는다. 투명도가 100%면 카드가 또렷한
+  // 흰 종이 느낌으로 뜨고, 낮을수록 사용자가 고른 배경색에 자연스럽게 녹아든다.
+  const lightCardBase = hslToHex(a.h, Math.min(a.s * 0.16, 12), 98);
+  const darkCardBase = hslToHex(a.h, Math.min(a.s * 0.3, 20), 18);
   const lightCardHex = mixHex(lightCardBase, lightBgAppHex, 1 - opacity);
   const darkCardHex = mixHex(darkCardBase, darkBgAppHex, 1 - opacity);
   const lightCardHsl = hexToHsl(lightCardHex);
@@ -1288,9 +1309,9 @@ function computeThemeCss(accentHex, cardHex, inkHex, cardOpacity) {
   }
 
   const lightAccentMain = hslToHex(a.h, a.s, clamp(a.l + 12, 62, 86));
-  const lightAccentStrong = hslToHex(a.h, a.s, clamp(a.l, 50, 72));
+  let lightAccentStrongL = clamp(a.l, 50, 72);
   const darkAccentMain = hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88));
-  const darkAccentStrong = hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80));
+  let darkAccentStrongL = clamp(a.l + 10, 60, 80);
 
   // 태그/필터칩 배경(accent-soft): 배경색의 밝기가 아니라 "실제 카드 밝기" 기준으로
   // 항상 일정 이상 차이 나게 계산한다 — 어떤 포인트/카드 색 조합이든 글자가 묻히지 않는다.
@@ -1298,6 +1319,12 @@ function computeThemeCss(accentHex, cardHex, inkHex, cardOpacity) {
   const lightAccentSoft = hslToHex(a.h, Math.max(a.s * 0.55, 32), lightSoftL);
   const darkSoftL = clamp(darkCardHsl.l + 14, 22, 36);
   const darkAccentSoft = hslToHex(a.h, clamp(a.s * 0.5, 28, 45), darkSoftL);
+
+  // 태그/필터칩 "글자"(accent-strong)가 그 배경(accent-soft) 위에서 항상 또렷이 읽히도록,
+  // 명암비가 부족하면 자동으로 더 진하게(라이트) / 더 밝게(다크) 보정한다.
+  // 이렇게 하면 어떤 포인트색을 고르든 "#태그" 글자가 배경에 묻히는 일이 없다.
+  const lightAccentStrong = ensureContrast(a.h, a.s, lightAccentStrongL, lightAccentSoft, 3.2, -2);
+  const darkAccentStrong = ensureContrast(a.h, a.s * 0.9, darkAccentStrongL, darkAccentSoft, 3.2, 2);
 
   const light = {
     '--bg-app': lightBgAppHex,
@@ -1353,7 +1380,7 @@ function applyBoardTheme(theme) {
   document.documentElement.style.setProperty('--u-line-height', typeof t.lineHeight === 'number' ? t.lineHeight : 1.6);
   document.documentElement.style.setProperty('--u-zoom', typeof t.fontScale === 'number' ? t.fontScale : 1);
   if (t.accent) {
-    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.card, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 1);
+    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 1);
   } else {
     customThemeStyleEl.textContent = '';
   }
@@ -1410,7 +1437,7 @@ function openSettingsModal() {
   el('settingsSiteName').value = viewedSiteName || '';
   el('settingsFont').value = t.font || '';
   el('settingsAccent').value = t.accent || '#ff7ebd';
-  el('settingsCard').value = t.card || '#ffffff';
+  el('settingsBg').value = t.bg || '#fdf1f6';
   el('settingsInk').value = t.ink || '#5c3450';
   const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 1) * 100);
   el('settingsCardOpacity').value = cardOpacityPct;
@@ -1451,7 +1478,7 @@ el('settingsModalOverlay').addEventListener('click', (e) => {
 let selectedRadiusPreset = 'normal';
 let colorsCustomized = false;
 el('settingsAccent').addEventListener('input', () => { colorsCustomized = true; });
-el('settingsCard').addEventListener('input', () => { colorsCustomized = true; });
+el('settingsBg').addEventListener('input', () => { colorsCustomized = true; });
 el('settingsInk').addEventListener('input', () => { colorsCustomized = true; });
 el('settingsCardOpacity').addEventListener('input', (e) => {
   const v = Number(e.target.value);
@@ -1491,7 +1518,7 @@ el('settingsSaveBtn').addEventListener('click', async () => {
   const siteName = el('settingsSiteName').value.trim().slice(0, 20);
   const font = el('settingsFont').value;
   const accent = el('settingsAccent').value;
-  const card = el('settingsCard').value;
+  const bg = el('settingsBg').value;
   const ink = el('settingsInk').value;
   const cardOpacity = Number(el('settingsCardOpacity').value) / 100;
   const fontScale = Number(el('settingsFontScale').value) / 100;
@@ -1503,12 +1530,12 @@ el('settingsSaveBtn').addEventListener('click', async () => {
     const themePayload = { font: font || deleteField(), radius, fontScale, letterSpacing, lineHeight };
     if (colorsCustomized) {
       themePayload.accent = accent;
-      themePayload.card = card;
+      themePayload.bg = bg;
       themePayload.ink = ink;
       themePayload.cardOpacity = cardOpacity;
     } else {
       themePayload.accent = deleteField();
-      themePayload.card = deleteField();
+      themePayload.bg = deleteField();
       themePayload.ink = deleteField();
       themePayload.cardOpacity = deleteField();
     }
@@ -1520,7 +1547,7 @@ el('settingsSaveBtn').addEventListener('click', async () => {
     viewedTheme = {
       font, radius, fontScale, letterSpacing, lineHeight,
       accent: colorsCustomized ? accent : undefined,
-      card: colorsCustomized ? card : undefined,
+      bg: colorsCustomized ? bg : undefined,
       ink: colorsCustomized ? ink : undefined,
       cardOpacity: colorsCustomized ? cardOpacity : undefined
     };
@@ -2320,8 +2347,8 @@ function renderCardGrid() {
         </div>
         <div class="note-card-body">
           ${card.visibility === 'private' ? `<span class="note-vis-tag">${ICONS.lock}나만보기</span>` : (card.visibility === 'password' ? `<span class="note-vis-tag">${ICONS.key}비밀번호</span>` : '')}
-          ${card.title ? `<div class="note-title">${escapeHtml(card.title)}</div>` : ''}
           <div class="note-tags"></div>
+          ${card.title ? `<div class="note-title">${escapeHtml(card.title)}</div>` : ''}
           <div class="note-text"></div>
         </div>
       `;

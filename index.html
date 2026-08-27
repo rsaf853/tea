@@ -13,7 +13,7 @@
     --r-lg: 8px;
     --r-md: 5px;
     --r-sm: 3px;
-    --r-pill: 16px;
+    --r-pill: 10px;
     --font-base: 'Pretendard Variable';
     --u-letter-spacing: 0em;
     --u-line-height: 1.6;
@@ -275,15 +275,6 @@
   .invite-code-row .status { font-size: 11px; font-weight: 600; }
   .invite-code-row .status.unused { color: var(--accent-strong); }
   .invite-code-row .status.used-tag { color: var(--ink-faint); }
-
-  /* ---------- 색상 피커: 스와치가 박스에 꽉 차게 ---------- */
-  #settingsModalCard input[type="color"] {
-    -webkit-appearance: none; appearance: none;
-    padding: 0; border: 1px solid var(--border);
-  }
-  #settingsModalCard input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-  #settingsModalCard input[type="color"]::-webkit-color-swatch { border: none; border-radius: var(--r-md); }
-  #settingsModalCard input[type="color"]::-moz-color-swatch { border: none; border-radius: var(--r-md); }
 
   /* ---------- add card panel ---------- */
   .content-row {
@@ -603,7 +594,7 @@
   #settingsModalCard { max-width: 460px; padding: 34px 18px 18px; }
   .settings-section {
     border: 1px solid var(--border-soft); border-radius: var(--r-lg);
-    background: var(--bg-card); padding: 11px 12px; margin-bottom: 10px;
+    background: var(--bg-panel); padding: 11px 12px; margin-bottom: 10px;
   }
   .settings-section-title {
     font-size: 11.5px; font-weight: 700; color: var(--ink); margin-bottom: 9px;
@@ -624,8 +615,34 @@
     border: 1px solid var(--border); background: var(--bg-panel); color: var(--ink);
     font-size: 12px; font-family: inherit;
   }
-  #settingsModalCard input[type="color"] { height: 28px; border-radius: var(--r-sm); }
-  #settingsModalCard input[type="range"] { display: block; width: 100%; margin: 0; accent-color: var(--accent); }
+  #settingsModalCard input[type="color"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 30px; padding: 0; border: none; outline: none;
+    border-radius: var(--r-sm); background: none; cursor: pointer;
+  }
+  #settingsModalCard input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  #settingsModalCard input[type="color"]::-webkit-color-swatch { border: none; border-radius: var(--r-sm); }
+  #settingsModalCard input[type="color"]::-moz-color-swatch { border: none; border-radius: var(--r-sm); }
+
+  #settingsModalCard input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; border-radius: 999px;
+    background: var(--accent-soft); margin: 4px 0 2px; cursor: pointer;
+  }
+  #settingsModalCard input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: transparent; }
+  #settingsModalCard input[type="range"]::-moz-range-track { height: 6px; border-radius: 999px; background: transparent; }
+  #settingsModalCard input[type="range"]::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--accent); }
+  #settingsModalCard input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 15px; height: 15px; border-radius: 50%; margin-top: -4.5px;
+    background: var(--accent-strong); border: 2px solid var(--bg-panel);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer;
+  }
+  #settingsModalCard input[type="range"]::-moz-range-thumb {
+    width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--bg-panel);
+    background: var(--accent-strong); box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer;
+  }
+
   #settingsModalCard .visibility-row { margin: 0; gap: 5px; }
   #settingsModalCard .vis-btn { padding: 5px 9px; font-size: 10.5px; }
   #settingsModalCard .tag-input-row { margin-top: 0; padding: 5px 7px; }
@@ -1048,7 +1065,7 @@ function updateBoardLabel() {
 const DEFAULT_SITE_NAME = 'r<span class="heart">♡</span>sie';
 const RADIUS_PRESETS = {
   sharp:  { lg: '2px', md: '2px', sm: '2px', pill: '6px'   },
-  normal: { lg: '8px', md: '5px', sm: '3px', pill: '16px'  },
+  normal: { lg: '8px', md: '5px', sm: '3px', pill: '10px'  },
   round:  { lg: '20px', md: '14px', sm: '8px', pill: '999px' }
 };
 const customThemeStyleEl = document.createElement('style');
@@ -1278,6 +1295,13 @@ async function loadBoardTheme(uid) {
   }
 }
 
+// 조정 바(range) 트랙을 테마 포인트색으로 채워서 그린다.
+function paintRangeFill(inputEl) {
+  const min = Number(inputEl.min), max = Number(inputEl.max), val = Number(inputEl.value);
+  const pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
+  inputEl.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--accent-soft) ${pct}%)`;
+}
+
 function openSettingsModal() {
   const t = viewedTheme || {};
   el('settingsSiteName').value = viewedSiteName || '';
@@ -1300,6 +1324,9 @@ function openSettingsModal() {
   el('settingsLetterSpacingVal').textContent = (letterSpacingPct / 100) + 'em';
   el('settingsLineHeight').value = lineHeightPct;
   el('settingsLineHeightVal').textContent = (lineHeightPct / 100).toFixed(2);
+  paintRangeFill(el('settingsFontScale'));
+  paintRangeFill(el('settingsLetterSpacing'));
+  paintRangeFill(el('settingsLineHeight'));
 
   const radiusKey = t.radius || 'normal';
   el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.radius === radiusKey));
@@ -1333,16 +1360,19 @@ el('settingsFontScale').addEventListener('input', (e) => {
   const v = Number(e.target.value);
   el('settingsFontScaleVal').textContent = v + '%';
   document.documentElement.style.setProperty('--u-zoom', v / 100);
+  paintRangeFill(e.target);
 });
 el('settingsLetterSpacing').addEventListener('input', (e) => {
   const v = Number(e.target.value);
   el('settingsLetterSpacingVal').textContent = (v / 100) + 'em';
   document.documentElement.style.setProperty('--u-letter-spacing', (v / 100) + 'em');
+  paintRangeFill(e.target);
 });
 el('settingsLineHeight').addEventListener('input', (e) => {
   const v = Number(e.target.value);
   el('settingsLineHeightVal').textContent = (v / 100).toFixed(2);
   document.documentElement.style.setProperty('--u-line-height', v / 100);
+  paintRangeFill(e.target);
 });
 
 el('settingsSaveBtn').addEventListener('click', async () => {

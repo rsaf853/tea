@@ -206,18 +206,17 @@
 
   .theme-toggle {
     position: relative; width: 46px; height: 26px; border-radius: var(--r-pill);
-    border: 1px solid var(--border); background: var(--bg-panel);
-    box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 12%, transparent);
+    border: 1px solid var(--border); background: color-mix(in srgb, var(--accent-soft) 65%, var(--bg-panel) 35%);
     cursor: pointer; padding: 0; flex-shrink: 0;
     transition: background 0.25s ease, border-color 0.25s ease;
   }
   .theme-toggle-thumb {
     position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: var(--r-pill);
     background: var(--accent-strong);
-    box-shadow: 0 2px 6px color-mix(in srgb, var(--accent-strong) 55%, transparent);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--accent-strong) 35%, transparent);
     transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s ease, border-radius 0.2s ease;
   }
-  html[data-theme="dark"] .theme-toggle { background: var(--bg-card); border-color: var(--border-strong); }
+  html[data-theme="dark"] .theme-toggle { background: color-mix(in srgb, var(--accent-soft) 50%, var(--bg-card) 50%); }
   html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(22px); background: var(--accent-strong); }
 
   /* ---------- auth / handle ---------- */
@@ -400,10 +399,11 @@
     border: 1px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
     font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer;
     padding: 6px 10px; border-radius: var(--r-pill); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    display: inline-flex; align-items: center; justify-content: center; line-height: 1;
   }
   .vis-btn:hover { border-color: var(--accent); color: var(--ink); }
   .vis-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
-  .vis-btn .icon-label { pointer-events: none; }
+  .vis-btn .icon-label { pointer-events: none; line-height: 1; }
 
   .note-card.locked-card { cursor: default; }
   .locked-body {
@@ -425,9 +425,10 @@
   .note-vis-tag {
     font-size: 11px; font-weight: 600; color: var(--accent-strong);
     background: var(--accent-soft); border-radius: var(--r-md); padding: 2px 8px;
-    display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 8px 0;
+    display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 13px 0;
   }
   .note-vis-tag svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
+  .note-vis-tag.vis-tag-private svg { width: 11px; height: 11px; }
   .locked-body .locked-msg svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
 
   .tag-input-row {
@@ -479,10 +480,10 @@
   .header-search:focus-within input { width: 150px; }
 
   /* ---------- tag filter bar ---------- */
-  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
   .filter-chip {
     border: 1px solid var(--border-soft); background: var(--bg-card); color: var(--ink-faint);
-    font-size: 13px; font-family: inherit; cursor: pointer; padding: 7px 15px; border-radius: var(--r-pill);
+    font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: var(--r-md);
     box-shadow: none;
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
@@ -577,11 +578,12 @@
     padding: 0 3px; border-radius: var(--r-sm);
   }
   html[data-theme="dark"] .note-text mark { color: var(--ink); }
-  .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 30px 5px 0; }
+  .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 30px 10px 0; }
   .note-tags:empty { margin: 0; }
   .note-tag {
-    font-size: 11px; color: var(--accent-strong); background: var(--accent-soft);
-    border: 1px solid var(--accent-soft); padding: 2px 8px; border-radius: var(--r-sm);
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 600; color: var(--accent-strong); background: var(--accent-soft);
+    padding: 2px 8px; border-radius: var(--r-md);
   }
   .note-tag::before { content: "#"; }
 
@@ -972,8 +974,8 @@
       </div>
       <div class="visibility-row" id="newVisibilityRow">
         <button type="button" class="vis-btn active" data-vis="public">공개</button>
-        <button type="button" class="vis-btn" data-vis="private"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>나만보기</span></button>
-        <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>비밀번호</span></button>
+        <button type="button" class="vis-btn" data-vis="private"><span class="icon-label vis-icon-heart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.6s-7.3-4.4-9.9-8.9C.5 8.4 1.5 4.2 5.1 2.9c2.5-.9 5.1 0 6.6 2.1L12 5.6l.3-.6c1.5-2.1 4.1-3 6.6-2.1 3.6 1.3 4.6 5.5 3 8.8-2.6 4.5-9.9 8.9-9.9 8.9Z"></path></svg>나만보기</span></button>
+        <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>비밀글</span></button>
       </div>
       <div class="tag-input-row" id="newPasswordRow" style="display:none;">
         <input type="password" id="newPasswordInput" placeholder="비밀번호 설정 (4자 이상)">
@@ -2294,8 +2296,8 @@ function renderCardGrid() {
         <div class="tag-input-row edit-tag-row"></div>
         <div class="visibility-row edit-vis-row">
           <button type="button" class="vis-btn" data-vis="public">공개</button>
-          <button type="button" class="vis-btn" data-vis="private"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>나만보기</span></button>
-          <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>비밀번호</span></button>
+          <button type="button" class="vis-btn" data-vis="private"><span class="icon-label vis-icon-heart">${ICONS.heart}나만보기</span></button>
+          <button type="button" class="vis-btn" data-vis="password"><span class="icon-label">${ICONS.lock}비밀글</span></button>
         </div>
         <div class="tag-input-row edit-password-row" style="display:none;">
           <input type="password" class="edit-password-input" placeholder="비밀번호 변경 (비워두면 기존 비밀번호 유지)">
@@ -2415,7 +2417,7 @@ function renderCardGrid() {
             ${isOwner ? `<button type="button" class="icon-btn danger" data-act="delete" title="삭제">${ICONS.close}</button>` : ''}
           </div>
           <div class="locked-body">
-            <div class="locked-msg">${ICONS.heart}비밀글입니다</div>
+            <div class="locked-msg">${ICONS.lock}비밀글입니다</div>
             ${isPw ? '' : '<div class="locked-sub">작성자만 볼 수 있어요.</div>'}
             ${isPw ? `<button type="button" class="btn-unlock" data-act="unlock">잠금 해제</button>` : ''}
           </div>
@@ -2438,7 +2440,7 @@ function renderCardGrid() {
           ${isOwner ? `<button type="button" class="icon-btn danger" data-act="delete" title="삭제">${ICONS.close}</button>` : ''}
         </div>
         <div class="note-card-body">
-          ${card.visibility === 'private' ? `<span class="note-vis-tag">${ICONS.heart}나만보기</span>` : (card.visibility === 'password' ? `<span class="note-vis-tag">${ICONS.heart}비밀번호</span>` : '')}
+          ${card.visibility === 'private' ? `<span class="note-vis-tag vis-tag-private">${ICONS.heart}나만보기</span>` : (card.visibility === 'password' ? `<span class="note-vis-tag">${ICONS.lock}비밀글</span>` : '')}
           <div class="note-tags"></div>
           ${card.title ? `<div class="note-title">${escapeHtml(card.title)}</div>` : ''}
           <div class="note-text"></div>

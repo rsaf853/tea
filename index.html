@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>r♡siememo</title>
-<link rel="icon" type="image/png" href="images/favi3.png">
-<link rel="apple-touch-icon" href="images/icon1.png">
+<link rel="icon" type="image/png" href="images/favi3.png" id="faviconLink">
+<link rel="apple-touch-icon" href="images/icon1.png" id="appleTouchIconLink">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <style>
   :root {
@@ -147,6 +147,8 @@
     -webkit-font-smoothing: antialiased;
     transition: background 0.25s ease, color 0.25s ease;
   }
+  /* sticky 헤더가 뷰포트 맨 위에 딱 붙어 보이지 않도록 아주 살짝 여백을 준다. */
+  body { padding-top: 8px; }
 
   ::placeholder { color: var(--ink-placeholder); opacity: 1; }
 
@@ -176,15 +178,35 @@
   @media (min-width: 901px) {
     .wrap { max-width: 1000px; }
   }
+  @media (min-width: 1320px) {
+    .wrap { max-width: 1120px; }
+  }
 
   /* ---------- header ---------- */
+  /* app-header 자체는 뷰포트 전체 폭(full-width)으로 깔리는 sticky 바이고,
+     실제 내용(로고/버튼들)은 안쪽의 header-inner가 .wrap과 같은 max-width로
+     정렬을 맞춘다 — 그래야 배경만 꽉 차고 내용 정렬은 본문과 그대로 일치한다. */
   .app-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 4px 0 18px; margin-bottom: 12.5px;
-    border-bottom: 1px solid var(--border-soft);
     position: sticky; top: 0; z-index: 30;
+    width: 100%;
+    margin-bottom: 12.5px;
+    border-bottom: 1px solid var(--border-soft);
     background: var(--bg-app);
     transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 100%; margin: 0 auto; padding: 4px 16px 18px; box-sizing: border-box;
+    transition: margin-right 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  @media (min-width: 701px) {
+    .header-inner { max-width: 640px; }
+  }
+  @media (min-width: 901px) {
+    .header-inner { max-width: 1000px; }
+  }
+  @media (min-width: 1320px) {
+    .header-inner { max-width: 1120px; }
   }
   .header-right { display: flex; align-items: center; gap: 8px; }
   #boardSettingsBtn {
@@ -214,9 +236,10 @@
   .app-brand { cursor: pointer; }
 
   .btn-login {
-    border: 1px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
+    border: 1px solid var(--border-soft); background: var(--bg-panel); color: var(--ink-soft);
     font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     padding: 6px 12px; border-radius: var(--r-md); flex-shrink: 0;
+    box-shadow: var(--shadow-btn);
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
   .btn-login:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
@@ -233,16 +256,17 @@
     background: var(--accent-soft); flex-shrink: 0; cursor: pointer;
   }
   .user-handle-label {
-    font-size: 12px; font-weight: 600; color: var(--ink); cursor: pointer;
+    font-size: 12px; font-weight: 600; color: var(--ink-soft); cursor: pointer;
     max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .user-handle-label:hover { color: var(--accent-strong); text-decoration: underline; }
   .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; border-radius: var(--r-pill); }
-  /* 로그아웃 버튼: 그림자 없는 플랫 스타일 + 아주 은은한 배경색 */
+  /* 로그아웃 버튼: 다른 아이콘 버튼들과 같은 톤(플랫 배경 + ink-soft)으로 맞춰서
+     혼자 칙칙하게 붕 떠 보이지 않게 한다. */
   #logoutBtn {
     box-shadow: none; border-color: transparent;
-    background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg-panel) 45%);
-    color: color-mix(in srgb, var(--accent-strong) 60%, var(--ink-faint) 40%);
+    background: var(--bg-panel);
+    color: var(--ink-soft);
   }
   #logoutBtn:hover { background: var(--danger-bg); border-color: transparent; color: var(--danger); transform: none; }
   #logoutBtn:active { transform: none; }
@@ -332,10 +356,12 @@
 
   .btn-add-toggle {
     display: flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: var(--r-pill);
+    /* 진하게 채워진 색 때문에 실제 치수보다 커 보여서, 왼쪽 토글과 비슷한 존재감으로
+       보이도록 치수와 그림자를 살짝 줄였다 (정확한 px보다 시각적 크기감 기준). */
+    width: 25px; height: 25px; border-radius: var(--r-pill);
     border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
-    box-shadow: var(--shadow-btn);
-    font-size: 15px; font-weight: 500; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--accent-strong) 30%, transparent);
+    font-size: 13px; font-weight: 500; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   }
   .btn-add-toggle:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--accent-ink); transform: translateY(-1px); }
@@ -457,13 +483,19 @@
   /* ---------- search ---------- */
   .search-row { position: relative; }
   .search-row input {
-    border: none; border-radius: var(--r-md);
-    background: var(--bg-panel); color: var(--ink);
+    /* ink 톤 대신 포인트색을 살짝 섞어서, 옆 버튼들과는 다르게 그림자 없이도
+       칙칙하지 않고 파스텔감 있게 살짝 진하게 보이도록. */
+    border: 1px solid transparent; border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--accent) 9%, var(--bg-app) 91%); color: var(--ink);
     font-family: inherit; outline: none;
-    box-shadow: var(--shadow-btn);
-    transition: background 0.15s ease, width 0.2s ease, box-shadow 0.15s ease;
+    box-shadow: none;
+    transition: background 0.15s ease, width 0.2s ease, border-color 0.15s ease;
   }
-  .search-row input:focus { box-shadow: var(--shadow-btn), 0 0 0 1px var(--accent) inset; }
+  .search-row input:focus { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--bg-app) 86%); }
+  .search-row input::placeholder {
+    /* 기본 플레이스홀더보다는 채도 있게, 하지만 너무 진하지 않게 살짝만. */
+    color: color-mix(in srgb, var(--accent-strong) 18%, var(--ink-faint) 82%);
+  }
 
   .header-search { flex-shrink: 0; }
   .header-search input {
@@ -482,6 +514,9 @@
   .filter-chip.tag-filter::before { content: "#"; }
   .filter-chip:hover { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
   .filter-chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
+  /* "전체" 칩만 선택됐을 때는 나만보기 태그와 같은 진한 톤으로 — 기본 화면임을 뚜렷하게 보여준다.
+     다른 태그 칩이 선택된 경우는 위의 연한 active 스타일을 그대로 유지. */
+  .filter-chip.all-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
 
   /* ---------- card grid (masonry via JS column packing) ---------- */
   .card-grid {
@@ -735,23 +770,42 @@
   #settingsModalCard input[type="color"]::-webkit-color-swatch { border: none; border-radius: var(--r-sm); }
   #settingsModalCard input[type="color"]::-moz-color-swatch { border: none; border-radius: var(--r-sm); }
 
+  /* ---------- favicon upload ---------- */
+  .favicon-upload-row { display: flex; align-items: center; gap: 8px; }
+  .favicon-preview {
+    width: 30px; height: 30px; border-radius: var(--r-sm); flex-shrink: 0;
+    border: 1px solid var(--border); background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .favicon-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .btn-favicon-upload {
+    border: 1px solid var(--border); background: var(--bg-panel); color: var(--ink-soft);
+    font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer;
+    padding: 6px 10px; border-radius: var(--r-md);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-favicon-upload:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+
   #settingsModalCard input[type="range"] {
     -webkit-appearance: none; appearance: none;
-    width: 100%; height: 6px; border-radius: var(--r-pill);
-    background: var(--accent-soft); margin: 4px 0 2px; cursor: pointer;
+    width: 100%; height: 9px; border-radius: var(--r-pill);
+    background: var(--accent-soft); margin: 6px 0 4px; cursor: pointer;
   }
-  #settingsModalCard input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: var(--r-pill); background: transparent; }
-  #settingsModalCard input[type="range"]::-moz-range-track { height: 6px; border-radius: var(--r-pill); background: transparent; }
-  #settingsModalCard input[type="range"]::-moz-range-progress { height: 6px; border-radius: var(--r-pill); background: var(--accent); }
+  #settingsModalCard input[type="range"]::-webkit-slider-runnable-track { height: 9px; border-radius: var(--r-pill); background: transparent; }
+  #settingsModalCard input[type="range"]::-moz-range-track { height: 9px; border-radius: var(--r-pill); background: transparent; }
+  #settingsModalCard input[type="range"]::-moz-range-progress { height: 9px; border-radius: var(--r-pill); background: var(--accent); }
   #settingsModalCard input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
-    width: 15px; height: 15px; border-radius: var(--r-pill); margin-top: -4.5px;
-    background: var(--accent-strong); border: none;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer;
+    width: 21px; height: 21px; border-radius: 50%; margin-top: -6px;
+    background: var(--accent-strong); border: 2px solid var(--bg-panel);
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--accent-strong) 45%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent-strong) 25%, transparent);
+    cursor: pointer;
   }
   #settingsModalCard input[type="range"]::-moz-range-thumb {
-    width: 15px; height: 15px; border-radius: var(--r-pill); border: none;
-    background: var(--accent-strong); box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer;
+    width: 21px; height: 21px; border-radius: 50%; border: 2px solid var(--bg-panel);
+    background: var(--accent-strong);
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--accent-strong) 45%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent-strong) 25%, transparent);
+    cursor: pointer;
   }
 
   #settingsModalCard .visibility-row { margin: 0; gap: 5px; }
@@ -776,7 +830,7 @@
 <div class="note-modal-overlay" id="unlockModalOverlay">
   <div class="note-modal-card" id="unlockModalCard" style="max-width:340px; padding:32px 22px 22px;">
     <button type="button" class="icon-btn note-modal-close" id="unlockModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
-    <div class="icon-label" style="font-weight:700; font-size:15px; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.6s-7.3-4.4-9.9-8.9C.5 8.4 1.5 4.2 5.1 2.9c2.5-.9 5.1 0 6.6 2.1L12 5.6l.3-.6c1.5-2.1 4.1-3 6.6-2.1 3.6 1.3 4.6 5.5 3 8.8-2.6 4.5-9.9 8.9-9.9 8.9Z"></path></svg>비밀글이에요</div>
+    <div class="icon-label" style="font-weight:700; font-size:15px; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>비밀글이에요</div>
     <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
       비밀번호를 입력하면 내용을 볼 수 있어요.
     </div>
@@ -833,6 +887,16 @@
         <div class="settings-field-label">사이트 이름</div>
         <input type="text" id="settingsSiteName" placeholder="r♡sie" maxlength="60">
         <div class="settings-field-hint">상단 왼쪽에 표시되는 보드 이름이에요</div>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">파비콘</div>
+        <div class="favicon-upload-row">
+          <div class="favicon-preview" id="faviconPreview"><img id="faviconPreviewImg" alt="" style="display:none;"></div>
+          <label class="btn-favicon-upload" for="faviconFileInput">이미지 선택</label>
+          <input type="file" accept="image/*" id="faviconFileInput" style="display:none;">
+          <button type="button" class="link-btn" id="faviconRemoveBtn" style="display:none;">제거</button>
+        </div>
+        <div class="settings-field-hint">브라우저 탭에 표시되는 아이콘이에요 (정사각형 이미지 권장)</div>
       </div>
       <div class="settings-field">
         <div class="settings-field-label">폰트</div>
@@ -925,8 +989,8 @@
 </div>
 
 
-<div class="wrap">
-  <div class="app-header">
+<div class="app-header">
+  <div class="header-inner">
     <div class="app-brand">
       <span id="siteNameLabel">r<span class="heart">♡</span>sie</span>
       <small id="boardLabel">memo</small>
@@ -949,7 +1013,9 @@
       <button type="button" id="addPanelToggle" class="btn-add-toggle" aria-label="메모 추가" title="메모 추가">+</button>
     </div>
   </div>
+</div>
 
+<div class="wrap">
   <div class="content-row" id="contentRow">
     <div class="add-card" id="addPanel">
       <div class="resize-handle" id="resizeHandle"></div>
@@ -1316,12 +1382,27 @@ function mixHex(hex1, hex2, t) {
 // 배경색 조합을 고르든 탁해지지 않고 파스텔감을 유지하도록 한다.
 function mixHexHsl(hex1, hex2, t) {
   const c1 = hexToHsl(hex1), c2 = hexToHsl(hex2);
-  let dh = c2.h - c1.h;
-  if (dh > 180) dh -= 360;
-  if (dh < -180) dh += 360;
-  let h = c1.h + dh * t;
-  if (h < 0) h += 360;
-  if (h >= 360) h -= 360;
+  // 채도가 아주 낮은(거의 흰색/회색인) 색은 hue 값 자체가 미세한 반올림 오차에 좌우되어
+  // 사실상 의미가 없다. 이런 색끼리 hue를 그대로 선형보간하면 서로 무관한 hue가 섞여
+  // 들어가면서 탁한/칙칙한 색이 튀어나온다 (예: 카드 투명도를 낮출 때). 그래서 둘 중
+  // 채도가 있는 쪽의 hue를 그대로 쓰고, 둘 다 거의 무채색이면 보간하지 않는다 —
+  // 이렇게 하면 투명도를 낮춰도 항상 같은 파스텔 색상(hue) 위에서만 밝기가 바뀐다.
+  const NEUTRAL_S = 6;
+  let h;
+  if (c1.s < NEUTRAL_S && c2.s < NEUTRAL_S) {
+    h = c1.h;
+  } else if (c1.s < NEUTRAL_S) {
+    h = c2.h;
+  } else if (c2.s < NEUTRAL_S) {
+    h = c1.h;
+  } else {
+    let dh = c2.h - c1.h;
+    if (dh > 180) dh -= 360;
+    if (dh < -180) dh += 360;
+    h = c1.h + dh * t;
+    if (h < 0) h += 360;
+    if (h >= 360) h -= 360;
+  }
   const s = c1.s + (c2.s - c1.s) * t;
   const l = c1.l + (c2.l - c1.l) * t;
   return hslToHex(h, s, l);
@@ -1391,10 +1472,13 @@ function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
 
   // 태그/필터칩 배경(accent-soft): 배경색의 밝기가 아니라 "실제 카드 밝기" 기준으로
   // 항상 일정 이상 차이 나게 계산한다 — 어떤 포인트/카드 색 조합이든 글자가 묻히지 않는다.
+  // 단, 포인트색이 무채색(회색)일 때는 채도를 강제로 끌어올리면 hue가 정의되지 않은
+  // 상태(보통 0=빨강)로 색이 섞여 들어가 버리므로, 무채색은 무채색 그대로 유지한다.
+  const isAchromatic = a.s < 2;
   const lightSoftL = clamp(lightCardHsl.l - 16, 74, 91);
-  const lightAccentSoft = hslToHex(a.h, Math.max(a.s * 0.65, 38), lightSoftL);
+  const lightAccentSoft = hslToHex(a.h, isAchromatic ? 0 : Math.max(a.s * 0.65, 38), lightSoftL);
   const darkSoftL = clamp(darkCardHsl.l + 16, 26, 40);
-  const darkAccentSoft = hslToHex(a.h, clamp(a.s * 0.6, 35, 55), darkSoftL);
+  const darkAccentSoft = hslToHex(a.h, isAchromatic ? 0 : clamp(a.s * 0.6, 35, 55), darkSoftL);
 
   // 태그/필터칩 "글자"(accent-strong)가 그 배경(accent-soft) 위에서 항상 또렷이 읽히도록,
   // 명암비가 부족하면 자동으로 더 진하게(라이트) / 더 밝게(다크) 보정한다.
@@ -1444,6 +1528,11 @@ function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
   return toCssBlock('light', light) + '\n' + toCssBlock('dark', dark);
 }
 
+function applyFavicon(dataUrl) {
+  el('faviconLink').setAttribute('href', dataUrl || 'images/favi3.png');
+  el('appleTouchIconLink').setAttribute('href', dataUrl || 'images/icon1.png');
+}
+
 function applyBoardTheme(theme) {
   const t = theme || {};
   document.documentElement.style.setProperty('--font-base', t.font ? `'${t.font}'` : `'Pretendard Variable'`);
@@ -1461,6 +1550,7 @@ function applyBoardTheme(theme) {
   } else {
     customThemeStyleEl.textContent = '';
   }
+  applyFavicon(t.favicon || null);
 }
 
 function applySiteName(name) {
@@ -1528,6 +1618,9 @@ function openSettingsModal() {
   // 그래야 모서리만 바꾸고 저장해도 기본 팔레트가 계산된 커스텀 팔레트로
   // 덮어써지지 않는다.
   colorsCustomized = !!t.accent;
+  pendingFavicon = { changed: false, dataUrl: null };
+  originalFaviconValue = t.favicon || null;
+  setFaviconPreview(originalFaviconValue);
 
   const fontScalePct = Math.round((typeof t.fontScale === 'number' ? t.fontScale : 1) * 100);
   const letterSpacingPct = Math.round((typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) * 100);
@@ -1558,6 +1651,49 @@ el('settingsModalOverlay').addEventListener('click', (e) => {
 });
 let selectedRadiusPreset = 'normal';
 let colorsCustomized = false;
+// 파비콘: 파일을 고르면 즉시 정사각형으로 리사이즈해 미리보기 + 실제 탭 아이콘까지
+// 바로 반영한다. 저장을 눌러야만 실제로 서버에 반영되고, 취소하면 원래 값으로 되돌아간다.
+let pendingFavicon = { changed: false, dataUrl: null };
+let originalFaviconValue = null;
+function setFaviconPreview(url) {
+  const img = el('faviconPreviewImg');
+  if (url) {
+    img.src = url; img.style.display = 'block';
+    el('faviconRemoveBtn').style.display = '';
+  } else {
+    img.src = ''; img.style.display = 'none';
+    el('faviconRemoveBtn').style.display = 'none';
+  }
+}
+el('faviconFileInput').addEventListener('change', () => {
+  const file = el('faviconFileInput').files && el('faviconFileInput').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 128;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.max(size / img.width, size / img.height);
+      const dw = img.width * scale, dh = img.height * scale;
+      ctx.drawImage(img, (size - dw) / 2, (size - dh) / 2, dw, dh);
+      const dataUrl = canvas.toDataURL('image/png');
+      pendingFavicon = { changed: true, dataUrl };
+      setFaviconPreview(dataUrl);
+      applyFavicon(dataUrl);
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  el('faviconFileInput').value = '';
+});
+el('faviconRemoveBtn').addEventListener('click', () => {
+  pendingFavicon = { changed: true, dataUrl: null };
+  setFaviconPreview(null);
+  applyFavicon(null);
+});
 // 색상 입력은 저장 전까지 화면에 반영되지 않아서, 어떤 조합이 나올지 모른 채
 // 저장을 누르고서야 확인하게 되는 문제가 있었다. 드래그하는 즉시 실제 팔레트를
 // 계산해 전체 화면(과 미리보기 카드)에 바로 반영해서 결과를 보면서 고를 수 있게 한다.
@@ -1641,6 +1777,10 @@ el('settingsSaveBtn').addEventListener('click', async () => {
       themePayload.ink = deleteField();
       themePayload.cardOpacity = deleteField();
     }
+    const finalFavicon = pendingFavicon.changed ? pendingFavicon.dataUrl : originalFaviconValue;
+    if (pendingFavicon.changed) {
+      themePayload.favicon = pendingFavicon.dataUrl || deleteField();
+    }
     await setDoc(doc(db, 'users', currentUser.uid), {
       siteName: siteName || deleteField(),
       theme: themePayload
@@ -1651,7 +1791,8 @@ el('settingsSaveBtn').addEventListener('click', async () => {
       accent: colorsCustomized ? accent : undefined,
       bg: colorsCustomized ? bg : undefined,
       ink: colorsCustomized ? ink : undefined,
-      cardOpacity: colorsCustomized ? cardOpacity : undefined
+      cardOpacity: colorsCustomized ? cardOpacity : undefined,
+      favicon: finalFavicon || undefined
     };
     applyBoardTheme(viewedTheme);
     applySiteName(viewedSiteName);
@@ -2001,6 +2142,7 @@ const addPanel = el('addPanel');
 const addPanelToggle = el('addPanelToggle');
 const resizeHandle = el('resizeHandle');
 const wrapEl = document.querySelector('.wrap');
+const headerInnerEl = document.querySelector('.header-inner');
 const DEFAULT_PANEL_WIDTH = 340;
 const MIN_PANEL_WIDTH = 280;
 const MAX_PANEL_WIDTH = 620;
@@ -2012,11 +2154,9 @@ function isDesktop() { return window.innerWidth >= 701; }
 if (isDesktop()) addPanel.style.width = panelWidth + 'px';
 
 function syncWrapMargin() {
-  if (isDesktop() && addPanel.classList.contains('open')) {
-    wrapEl.style.marginRight = panelWidth + 'px';
-  } else {
-    wrapEl.style.marginRight = '';
-  }
+  const mr = (isDesktop() && addPanel.classList.contains('open')) ? panelWidth + 'px' : '';
+  wrapEl.style.marginRight = mr;
+  if (headerInnerEl) headerInnerEl.style.marginRight = mr;
 }
 
 function updateToggleIcon() {
@@ -2082,7 +2222,7 @@ function renderFilterBar() {
   const bar = el('filterBar');
   bar.innerHTML = '';
   const allBtn = document.createElement('button');
-  allBtn.type = 'button'; allBtn.className = 'filter-chip' + (activeFilters.size === 0 ? ' active' : '');
+  allBtn.type = 'button'; allBtn.className = 'filter-chip all-filter' + (activeFilters.size === 0 ? ' active' : '');
   allBtn.textContent = '전체';
   allBtn.addEventListener('click', () => { activeFilters.clear(); renderAll(); });
   bar.appendChild(allBtn);
@@ -2265,6 +2405,7 @@ window.addEventListener('hashchange', checkHashForNote);
 
 function getMasonryColumnCount() {
   const w = window.innerWidth;
+  if (w >= 1320) return 4;
   if (w >= 901) return 3;
   if (w >= 560) return 2;
   return 1;

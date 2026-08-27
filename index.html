@@ -748,6 +748,10 @@ async function initView() {
     }
     viewedUid = handleSnap.data().uid;
     viewedHandle = urlHandle;
+    // 본인 핸들 주소로 바로 들어온 경우에도 헤더의 @핸들 표시가 정상 동작하도록 채워준다
+    if (currentUser && viewedUid === currentUser.uid) {
+      currentUserHandle = urlHandle;
+    }
   } else if (currentUser) {
     const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
     const handle = userSnap.exists() ? userSnap.data().handle : null;
@@ -784,9 +788,13 @@ function subscribeCards() {
   // (Firestore 보안 규칙과 짝을 맞춰야 실제로 서버 단에서도 막힘 — 콘솔에 규칙 반영 필요)
   const q = isOwner
     ? query(collection(db, 'users', viewedUid, 'cards'), orderBy('createdAt', 'desc'))
-    : query(collection(db, 'users', viewedUid, 'cards'), where('visibility', 'in', ['public', 'password']), orderBy('createdAt', 'desc'));
+    : query(collection(db, 'users', viewedUid, 'cards'), where('visibility', 'in', ['public', 'password']));
   unsubscribeCards = onSnapshot(q, (snap) => {
     cards = snap.docs.map(d => ({ id: d.id, ...d.data(), tags: d.data().tags || [] }));
+    if (!isOwner) {
+      // 방문자 쿼리는 orderBy 없이 받아오므로(복합 색인 회피) 여기서 최신순 정렬
+      cards.sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0));
+    }
     renderAll();
     checkHashForNote();
     if (isOwner) migrateLegacyVisibility(snap);

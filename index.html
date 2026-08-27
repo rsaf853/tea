@@ -517,11 +517,11 @@
     content: "";
     position: absolute; left: 0; right: 0; bottom: 0; height: 110px;
     background: linear-gradient(to bottom,
-      color-mix(in srgb, var(--bg-panel) 0%, transparent) 0%,
-      color-mix(in srgb, var(--bg-panel) 22%, transparent) 28%,
-      color-mix(in srgb, var(--bg-panel) 50%, transparent) 52%,
-      color-mix(in srgb, var(--bg-panel) 82%, transparent) 78%,
-      var(--bg-panel) 100%);
+      color-mix(in srgb, var(--bg-card) 0%, transparent) 0%,
+      color-mix(in srgb, var(--bg-card) 22%, transparent) 28%,
+      color-mix(in srgb, var(--bg-card) 50%, transparent) 52%,
+      color-mix(in srgb, var(--bg-card) 82%, transparent) 78%,
+      var(--bg-card) 100%);
     pointer-events: none;
   }
   .note-text strong { font-weight: 700; }
@@ -1123,38 +1123,48 @@ function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
     darkInk = inkSet(b.h, b.s, false);
   }
 
+  const lightAccentMain = hslToHex(a.h, a.s, clamp(a.l + 12, 60, 82));
   const lightAccentStrong = hslToHex(a.h, a.s, clamp(a.l, 45, 68));
+  const darkAccentMain = hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88));
   const darkAccentStrong = hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80));
 
+  // 테두리는 배경색 자체의 채도에 기대지 않고(무채색 배경을 고르면 그냥 회색이 돼버림),
+  // 포인트색을 배경 쪽으로 옅게 섞어서 만든다 — 어떤 색 조합을 골라도 늘 포인트색이
+  // 은은하게 묻어나서 붕 뜨거나 칙칙해지지 않는다.
+  const lightCardHex = cardHex || hslToHex(b.h, b.s * 0.55, clamp(b.l + 3, 90, 97));
+  const darkCardHex = cardHex || hslToHex(b.h, Math.min(b.s * 0.3, 20), 18);
+
   const light = {
-    '--bg-app': hslToHex(b.h, b.s, b.l),
-    '--bg-panel': hslToHex(b.h, b.s * 0.4, 98),
-    '--bg-card': cardHex || hslToHex(b.h, b.s * 0.55, clamp(b.l + 3, 90, 97)),
-    '--border-soft': hslToHex(b.h, b.s * 0.6, 94),
-    '--border': hslToHex(b.h, b.s * 0.65, 87),
-    '--border-strong': hslToHex(b.h, b.s * 0.7, 76),
+    '--bg-app': lightBgAppHex,
+    // 패널(검색창/유저칩/모달 등)도 카드색과 배경색 사이 톤으로 묶어서, 카드색을
+    // 바꿔도 패널만 하얗게 따로 떠 보이지 않게 한다.
+    '--bg-panel': mixHex(lightBgAppHex, lightCardHex, 0.5),
+    '--bg-card': lightCardHex,
+    '--border-soft': mixHex(lightAccentMain, lightBgAppHex, 0.9),
+    '--border': mixHex(lightAccentMain, lightBgAppHex, 0.78),
+    '--border-strong': mixHex(lightAccentMain, lightBgAppHex, 0.55),
     '--ink': lightInk.ink,
     '--ink-soft': lightInk.inkSoft,
     '--ink-faint': lightInk.inkFaint,
     '--ink-placeholder': lightInk.inkPlaceholder,
-    '--accent': hslToHex(a.h, a.s, clamp(a.l + 12, 60, 82)),
+    '--accent': lightAccentMain,
     '--accent-strong': lightAccentStrong,
     '--accent-soft': hslToHex(a.h, a.s * 0.5, 93),
     '--accent-ink': contrastInk(lightAccentStrong),
     '--heart': lightAccentStrong
   };
   const dark = {
-    '--bg-app': hslToHex(b.h, Math.min(b.s * 0.35, 22), 10),
-    '--bg-panel': hslToHex(b.h, Math.min(b.s * 0.3, 20), 15),
-    '--bg-card': cardHex || hslToHex(b.h, Math.min(b.s * 0.3, 20), 18),
-    '--border-soft': hslToHex(b.h, Math.min(b.s * 0.25, 18), 22),
-    '--border': hslToHex(b.h, Math.min(b.s * 0.25, 18), 27),
-    '--border-strong': hslToHex(b.h, Math.min(b.s * 0.3, 20), 35),
+    '--bg-app': darkBgAppHex,
+    '--bg-panel': mixHex(darkBgAppHex, darkCardHex, 0.5),
+    '--bg-card': darkCardHex,
+    '--border-soft': mixHex(darkAccentMain, darkBgAppHex, 0.82),
+    '--border': mixHex(darkAccentMain, darkBgAppHex, 0.7),
+    '--border-strong': mixHex(darkAccentMain, darkBgAppHex, 0.5),
     '--ink': darkInk.ink,
     '--ink-soft': darkInk.inkSoft,
     '--ink-faint': darkInk.inkFaint,
     '--ink-placeholder': darkInk.inkPlaceholder,
-    '--accent': hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88)),
+    '--accent': darkAccentMain,
     '--accent-strong': darkAccentStrong,
     '--accent-soft': hslToHex(a.h, Math.min(a.s * 0.4, 40), 24),
     // 예전엔 항상 검정으로 고정돼 있어서, 다크 모드에서 어둡고 채도 낮은 포인트색을

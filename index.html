@@ -101,16 +101,6 @@
     font-weight: 700; font-display: swap;
   }
   @font-face {
-    font-family: 'CloudSans';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-regular.woff2') format('woff2');
-    font-weight: 400; font-display: swap;
-  }
-  @font-face {
-    font-family: 'CloudSans';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408@1.0/goorm-sans-bold.woff2') format('woff2');
-    font-weight: 700; font-display: swap;
-  }
-  @font-face {
     font-family: 'Aritaburi';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
     font-weight: 400; font-display: swap;
@@ -138,12 +128,12 @@
     font-weight: 700; font-display: swap;
   }
   @font-face {
+    /* 실제 "보통 굵기" 둥근모 파일 — 이전엔 Bold 파일이 400에도 걸려 있어서 항상 두껍게 보였음 */
     font-family: 'BoldRound';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2507-2@1.0/BoldDungGeunMo.woff2') format('woff2');
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
     font-weight: 400; font-display: swap;
   }
   @font-face {
-    /* 700(굵게) 웨이트도 같은 파일로 등록 — 합성 볼드로 인한 과도한 두꺼움 방지 */
     font-family: 'BoldRound';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2507-2@1.0/BoldDungGeunMo.woff2') format('woff2');
     font-weight: 700; font-display: swap;
@@ -190,7 +180,7 @@
   /* ---------- header ---------- */
   .app-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 4px 0 18px; margin-bottom: 20px;
+    padding: 4px 0 18px; margin-bottom: 12.5px;
     border-bottom: 1px solid var(--border-soft);
     position: sticky; top: 0; z-index: 30;
     background: var(--bg-app);
@@ -545,6 +535,7 @@
   /* ---------- unified inline svg icons (텍스트 옆 아이콘) ---------- */
   .icon-label { display: inline-flex; align-items: center; gap: 4px; }
   .icon-label svg { width: 15px; height: 15px; flex-shrink: 0; display: block; }
+  .vis-icon-heart svg { width: 12px; height: 12px; }
   .user-chip .icon-btn svg { width: 12px; height: 12px; }
 
   .note-title {
@@ -849,7 +840,6 @@
           <option value="">프리텐다드</option>
           <option value="IbmPlexSans" style="font-family:'IbmPlexSans';">IBM Plex Sans</option>
           <option value="NexonLv1Gothic" style="font-family:'NexonLv1Gothic';">넥슨 Lv.1 고딕</option>
-          <option value="CloudSans" style="font-family:'CloudSans';">구름 산스</option>
           <option value="Aritaburi" style="font-family:'Aritaburi';">아리따부리</option>
           <option value="ArittaDodum" style="font-family:'ArittaDodum';">아리따돋움</option>
           <option value="Mona12" style="font-family:'Mona12';">모나12</option>
@@ -1674,11 +1664,12 @@ el('settingsSaveBtn').addEventListener('click', async () => {
 el('settingsResetBtn').addEventListener('click', async () => {
   if (!isOwner || !currentUser) return;
   try {
+    // 사이트 이름은 "기본값으로" 초기화 대상에서 제외 — 테마(색/폰트/모서리 등)만 초기화한다.
     await updateDoc(doc(db, 'users', currentUser.uid), {
-      siteName: deleteField(), theme: deleteField()
+      theme: deleteField()
     });
-    viewedSiteName = null; viewedTheme = null;
-    applyBoardTheme(null); applySiteName(null);
+    viewedTheme = null;
+    applyBoardTheme(null);
     closeSettingsModal();
     showToast('기본값으로 되돌렸습니다.');
   } catch (e) {

@@ -193,6 +193,7 @@
     border-bottom: 1px solid var(--border-soft);
     position: sticky; top: 0; z-index: 30;
     background: var(--bg-app);
+    transition: background 0.25s ease, border-color 0.25s ease;
   }
   .header-right { display: flex; align-items: center; gap: 8px; }
   #boardSettingsBtn {
@@ -232,6 +233,7 @@
     border: 1px solid var(--border-soft); background: var(--bg-panel);
     box-shadow: var(--shadow-btn);
     padding: 3px 4px 3px 3px; border-radius: var(--r-pill); flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease;
   }
   .user-avatar {
     width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
@@ -296,6 +298,7 @@
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
     box-sizing: border-box; box-shadow: var(--shadow-card);
     padding: 14px; margin: 0 0 16px;
+    transition: background 0.25s ease, border-color 0.25s ease;
   }
 
   @media (min-width: 701px) {
@@ -307,12 +310,12 @@
       background: var(--bg-panel); box-shadow: var(--shadow-bar); overflow-y: auto; overflow-x: hidden;
       z-index: 50;
       transform: translateX(105%);
-      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1), background 0.25s ease, border-color 0.25s ease;
     }
     .add-card.open {
       transform: translateX(0);
     }
-    .add-card.resizing { transition: none; }
+    .add-card.resizing { transition: background 0.25s ease, border-color 0.25s ease; }
 
     .resize-handle {
       position: absolute; top: 0; left: 0; width: 6px; height: 100%;
@@ -556,6 +559,7 @@
       color-mix(in srgb, var(--bg-card) 82%, transparent) 78%,
       var(--bg-card) 100%);
     pointer-events: none;
+    transition: background 0.25s ease;
   }
   .note-text strong { font-weight: 700; }
   .note-text em { font-style: italic; }
@@ -594,6 +598,13 @@
     text-align: center; font-size: 11px; color: var(--ink-faint);
     opacity: 0.55; padding: 26px 0 4px;
   }
+  /* 데스크탑에서 메모 추가 패널이 열려 있을 땐, 패널 오른쪽 아래에 고정 표시 */
+  @media (min-width: 701px) {
+    .content-row:has(.add-card.open) ~ .site-footer {
+      position: fixed; right: 18px; bottom: 14px; left: auto;
+      padding: 0; margin: 0; z-index: 51;
+    }
+  }
 
   /* ---------- toast ---------- */
   #toastStack {
@@ -624,7 +635,8 @@
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
     box-shadow: var(--shadow-bar); padding: 44px 22px 22px; width: 100%; max-width: 480px;
     max-height: 80vh; overflow-y: auto; position: relative;
-    transform: scale(0.96) translateY(6px); transition: transform 0.2s ease;
+    transform: scale(0.96) translateY(6px);
+    transition: transform 0.2s ease, background 0.25s ease, border-color 0.25s ease;
   }
   .note-modal-overlay.open .note-modal-card { transform: scale(1) translateY(0); }
 
@@ -1236,13 +1248,7 @@ function inkSet(h, s, isLightBg) {
 }
 
 function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
-  let a = hexToHsl(accentHex);
-  // 채도가 거의 없는 흰색/회색/검정 계열을 포인트색으로 고르면 색조가 통째로 사라져
-  // 밋밋하고 칙칙한 무채색 버튼이 되어버린다. 이럴 땐 밝기(l)는 그대로 존중하되
-  // 브랜드 핑크 색조를 살짝 얹어서 은은한 톤을 유지한다.
-  if (a.s < 6) {
-    a = { h: 339, s: 22, l: a.l };
-  }
+  const a = hexToHsl(accentHex);
   const b = hexToHsl(bgHex);
 
   // 라이트 모드는 사용자가 고른 배경색을 그대로 쓰기 때문에, 실제로 밝은지 어두운지 보고

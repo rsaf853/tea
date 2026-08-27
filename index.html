@@ -18,16 +18,17 @@
     --u-letter-spacing: 0em;
     --u-line-height: 1.6;
     --u-zoom: 1;
+    --shadow-alpha: 1; /* 그림자 진하기 배수 (설정 > 그림자 슬라이더에서 조절) */
   }
   :root,
   html[data-theme="light"] {
     --bg-app: #fdf1f6;
     --bg-panel: #ffffff;
-    --bg-card: #ffffff;
+    --bg-card: color-mix(in srgb, #ffffff 50%, var(--bg-app) 50%);
 
-    --border-soft: #ffe9f3;
-    --border: #ffd9ea;
-    --border-strong: #ffb6d9;
+    --border-soft: #ffedf5;
+    --border: #ffe0ef;
+    --border-strong: #ffc3dd;
 
     --ink: #5c3450;
     --ink-soft: #96677f;
@@ -44,19 +45,19 @@
     --danger-border: #f5c6da;
     --heart: #ff7ebd;
 
-    --shadow-bar: 0 4px 14px color-mix(in srgb, var(--accent-strong) 10%, transparent), 0 1px 2px color-mix(in srgb, var(--accent-strong) 6%, transparent);
-    --shadow-card: 0 3px 16px color-mix(in srgb, var(--accent-strong) 14%, transparent), 0 1px 3px color-mix(in srgb, var(--accent-strong) 8%, transparent);
-    --shadow-btn: 0 1px 4px color-mix(in srgb, var(--accent-strong) 16%, transparent), 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent);
+    --shadow-bar: 0 4px 11px color-mix(in srgb, var(--accent-strong) calc(10% * var(--shadow-alpha)), transparent), 0 1px 2px color-mix(in srgb, var(--accent-strong) calc(6% * var(--shadow-alpha)), transparent);
+    --shadow-card: 0 3px 12px color-mix(in srgb, var(--accent-strong) calc(14% * var(--shadow-alpha)), transparent), 0 1px 2px color-mix(in srgb, var(--accent-strong) calc(8% * var(--shadow-alpha)), transparent);
+    --shadow-btn: 0 1px 3px color-mix(in srgb, var(--accent-strong) calc(16% * var(--shadow-alpha)), transparent), 0 1px 2px color-mix(in srgb, var(--ink) calc(5% * var(--shadow-alpha)), transparent);
   }
 
   html[data-theme="dark"] {
     --bg-app: #121212;
     --bg-panel: #1e1e1e;
-    --bg-card: #252525;
+    --bg-card: color-mix(in srgb, #252525 50%, var(--bg-app) 50%);
 
-    --border-soft: #2a2a2a;
-    --border: #333333;
-    --border-strong: #444444;
+    --border-soft: #232323;
+    --border: #2a2a2a;
+    --border-strong: #383838;
 
     --ink: #eeeeee;
     --ink-soft: #aaaaaa;
@@ -73,9 +74,9 @@
     --danger-border: #5c3540;
     --heart: #ffa3d1;
 
-    --shadow-bar: 0 6px 20px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
-    --shadow-btn: 0 1px 4px rgba(0, 0, 0, 0.35);
+    --shadow-bar: 0 6px 16px rgba(0, 0, 0, calc(0.6 * var(--shadow-alpha))), 0 1px 2px rgba(0, 0, 0, calc(0.4 * var(--shadow-alpha)));
+    --shadow-card: 0 2px 9px rgba(0, 0, 0, calc(0.4 * var(--shadow-alpha)));
+    --shadow-btn: 0 1px 3px rgba(0, 0, 0, calc(0.35 * var(--shadow-alpha)));
   }
 
   /* ---------- 커스텀 폰트 (핸들 주인이 설정 가능) ---------- */
@@ -189,7 +190,7 @@
   /* ---------- header ---------- */
   .app-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 4px 0 16px; margin-bottom: 6px;
+    padding: 4px 0 18px; margin-bottom: 20px;
     border-bottom: 1px solid var(--border-soft);
     position: sticky; top: 0; z-index: 30;
     background: var(--bg-app);
@@ -205,14 +206,14 @@
   .app-brand small { font-weight: 500; color: color-mix(in srgb, var(--ink-faint) 55%, var(--bg-app) 45%); font-size: 13px; }
 
   .theme-toggle {
-    position: relative; width: 46px; height: 26px; border-radius: var(--r-pill);
-    border: 1px solid var(--border); background: color-mix(in srgb, var(--accent-soft) 65%, var(--bg-panel) 35%);
+    position: relative; width: 46px; height: 26px; border-radius: calc(var(--r-pill) * 0.6);
+    border: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 22%, var(--accent-soft) 78%);
     cursor: pointer; padding: 0; flex-shrink: 0;
-    transition: background 0.25s ease, border-color 0.25s ease;
+    transition: background 0.25s ease, border-color 0.25s ease, border-radius 0.2s ease;
   }
   .theme-toggle-thumb {
-    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: var(--r-pill);
-    background: var(--accent-strong);
+    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: calc(var(--r-pill) * 0.6);
+    background: color-mix(in srgb, var(--accent-strong) 78%, white 22%);
     box-shadow: 0 1px 4px color-mix(in srgb, var(--accent-strong) 35%, transparent);
     transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s ease, border-radius 0.2s ease;
   }
@@ -250,8 +251,8 @@
   /* 로그아웃 버튼: 그림자 없는 플랫 스타일 + 아주 은은한 배경색 */
   #logoutBtn {
     box-shadow: none; border-color: transparent;
-    background: color-mix(in srgb, var(--accent-soft) 40%, var(--bg-panel) 60%);
-    color: var(--ink-faint);
+    background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg-panel) 45%);
+    color: color-mix(in srgb, var(--accent-strong) 60%, var(--ink-faint) 40%);
   }
   #logoutBtn:hover { background: var(--danger-bg); border-color: transparent; color: var(--danger); transform: none; }
   #logoutBtn:active { transform: none; }
@@ -423,10 +424,11 @@
   .btn-unlock:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
   .btn-unlock:active { transform: translateY(1px); }
   .note-vis-tag {
-    font-size: 11px; font-weight: 600; color: var(--accent-strong);
-    background: var(--accent-soft); border-radius: var(--r-md); padding: 2px 8px;
-    display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 13px 0;
+    font-size: 11px; font-weight: 700; color: var(--accent-ink);
+    background: var(--accent-strong); border-radius: var(--r-md); padding: 2px 8px;
+    display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 6px 0;
   }
+  .note-vis-tag.vis-tag-private { background: var(--heart); }
   .note-vis-tag svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
   .note-vis-tag.vis-tag-private svg { width: 11px; height: 11px; }
   .locked-body .locked-msg svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
@@ -442,7 +444,7 @@
   }
   .tag-chip {
     display: inline-flex; align-items: center; gap: 5px;
-    background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-strong);
+    background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-soft);
     padding: 2px 7px; border-radius: var(--r-sm); font-size: 11px; white-space: nowrap;
   }
   .tag-chip .tag-chip-label::before { content: "#"; }
@@ -879,8 +881,12 @@
         </div>
       </div>
       <div class="settings-field">
-        <div class="settings-field-label"><span>카드 투명도</span><span class="val" id="settingsCardOpacityVal">100%</span></div>
-        <input type="range" id="settingsCardOpacity" min="40" max="100" step="5" value="100">
+        <div class="settings-field-label"><span>카드 투명도</span><span class="val" id="settingsCardOpacityVal">50%</span></div>
+        <input type="range" id="settingsCardOpacity" min="0" max="100" step="5" value="50">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>그림자 진하기</span><span class="val" id="settingsShadowAlphaVal">100%</span></div>
+        <input type="range" id="settingsShadowAlpha" min="0" max="150" step="10" value="100">
       </div>
       <div class="settings-field">
         <div class="settings-field-label">모서리</div>
@@ -1357,7 +1363,7 @@ function inkSet(h, s, isLightBg) {
 
 function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
   const a = hexToHsl(accentHex);
-  const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0.4, 1) : 1;
+  const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0, 1) : 0.5;
 
   // 배경색: 라이트 모드는 사용자가 직접 고른 색을 그대로 쓴다(없으면 포인트색에서 옅게 자동 추출).
   // 다크 모드는 사용자가 고른 배경색을 무시하고, 포인트색 하나만으로 항상 적절히 어두운
@@ -1396,9 +1402,9 @@ function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
   // 태그/필터칩 배경(accent-soft): 배경색의 밝기가 아니라 "실제 카드 밝기" 기준으로
   // 항상 일정 이상 차이 나게 계산한다 — 어떤 포인트/카드 색 조합이든 글자가 묻히지 않는다.
   const lightSoftL = clamp(lightCardHsl.l - 16, 74, 91);
-  const lightAccentSoft = hslToHex(a.h, Math.max(a.s * 0.55, 32), lightSoftL);
-  const darkSoftL = clamp(darkCardHsl.l + 14, 22, 36);
-  const darkAccentSoft = hslToHex(a.h, clamp(a.s * 0.5, 28, 45), darkSoftL);
+  const lightAccentSoft = hslToHex(a.h, Math.max(a.s * 0.65, 38), lightSoftL);
+  const darkSoftL = clamp(darkCardHsl.l + 16, 26, 40);
+  const darkAccentSoft = hslToHex(a.h, clamp(a.s * 0.6, 35, 55), darkSoftL);
 
   // 태그/필터칩 "글자"(accent-strong)가 그 배경(accent-soft) 위에서 항상 또렷이 읽히도록,
   // 명암비가 부족하면 자동으로 더 진하게(라이트) / 더 밝게(다크) 보정한다.
@@ -1412,9 +1418,9 @@ function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
     // 바꿔도 패널만 하얗게 따로 떠 보이지 않게 한다.
     '--bg-panel': mixHexHsl(lightBgAppHex, lightCardHex, 0.5),
     '--bg-card': lightCardHex,
-    '--border-soft': mixHexHsl(lightAccentMain, lightBgAppHex, 0.9),
-    '--border': mixHexHsl(lightAccentMain, lightBgAppHex, 0.78),
-    '--border-strong': mixHexHsl(lightAccentMain, lightBgAppHex, 0.55),
+    '--border-soft': mixHexHsl(lightAccentMain, lightBgAppHex, 0.94),
+    '--border': mixHexHsl(lightAccentMain, lightBgAppHex, 0.85),
+    '--border-strong': mixHexHsl(lightAccentMain, lightBgAppHex, 0.65),
     '--ink': lightInk.ink,
     '--ink-soft': lightInk.inkSoft,
     '--ink-faint': lightInk.inkFaint,
@@ -1429,9 +1435,9 @@ function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
     '--bg-app': darkBgAppHex,
     '--bg-panel': mixHexHsl(darkBgAppHex, darkCardHex, 0.5),
     '--bg-card': darkCardHex,
-    '--border-soft': mixHexHsl(darkAccentMain, darkBgAppHex, 0.82),
-    '--border': mixHexHsl(darkAccentMain, darkBgAppHex, 0.7),
-    '--border-strong': mixHexHsl(darkAccentMain, darkBgAppHex, 0.5),
+    '--border-soft': mixHexHsl(darkAccentMain, darkBgAppHex, 0.91),
+    '--border': mixHexHsl(darkAccentMain, darkBgAppHex, 0.82),
+    '--border-strong': mixHexHsl(darkAccentMain, darkBgAppHex, 0.66),
     '--ink': darkInk.ink,
     '--ink-soft': darkInk.inkSoft,
     '--ink-faint': darkInk.inkFaint,
@@ -1459,6 +1465,7 @@ function applyBoardTheme(theme) {
   document.documentElement.style.setProperty('--u-letter-spacing', (typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) + 'em');
   document.documentElement.style.setProperty('--u-line-height', typeof t.lineHeight === 'number' ? t.lineHeight : 1.6);
   document.documentElement.style.setProperty('--u-zoom', typeof t.fontScale === 'number' ? t.fontScale : 1);
+  document.documentElement.style.setProperty('--shadow-alpha', typeof t.shadowAlpha === 'number' ? t.shadowAlpha : 1);
   if (t.accent) {
     customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 1);
   } else {
@@ -1519,10 +1526,14 @@ function openSettingsModal() {
   el('settingsAccent').value = t.accent || '#ff7ebd';
   el('settingsBg').value = t.bg || '#fdf1f6';
   el('settingsInk').value = t.ink || '#5c3450';
-  const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 1) * 100);
+  const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 0.5) * 100);
   el('settingsCardOpacity').value = cardOpacityPct;
   el('settingsCardOpacityVal').textContent = cardOpacityPct + '%';
   paintRangeFill(el('settingsCardOpacity'));
+  const shadowAlphaPct = Math.round((typeof t.shadowAlpha === 'number' ? t.shadowAlpha : 1) * 100);
+  el('settingsShadowAlpha').value = shadowAlphaPct;
+  el('settingsShadowAlphaVal').textContent = shadowAlphaPct + '%';
+  paintRangeFill(el('settingsShadowAlpha'));
   // 이미 저장된 커스텀 색상이 있을 때만 "색상을 직접 정했다"고 간주한다.
   // 그래야 모서리만 바꾸고 저장해도 기본 팔레트가 계산된 커스텀 팔레트로
   // 덮어써지지 않는다.
@@ -1580,6 +1591,12 @@ el('settingsCardOpacity').addEventListener('input', (e) => {
   paintRangeFill(e.target);
   previewCustomTheme();
 });
+el('settingsShadowAlpha').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsShadowAlphaVal').textContent = v + '%';
+  document.documentElement.style.setProperty('--shadow-alpha', v / 100);
+  paintRangeFill(e.target);
+});
 el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     selectedRadiusPreset = btn.dataset.radius;
@@ -1615,13 +1632,14 @@ el('settingsSaveBtn').addEventListener('click', async () => {
   const bg = el('settingsBg').value;
   const ink = el('settingsInk').value;
   const cardOpacity = Number(el('settingsCardOpacity').value) / 100;
+  const shadowAlpha = Number(el('settingsShadowAlpha').value) / 100;
   const fontScale = Number(el('settingsFontScale').value) / 100;
   const letterSpacing = Number(el('settingsLetterSpacing').value) / 100;
   const lineHeight = Number(el('settingsLineHeight').value) / 100;
   const activeRadiusBtn = el('settingsRadiusRow').querySelector('.vis-btn.active');
   const radius = activeRadiusBtn ? activeRadiusBtn.dataset.radius : 'normal';
   try {
-    const themePayload = { font: font || deleteField(), radius, fontScale, letterSpacing, lineHeight };
+    const themePayload = { font: font || deleteField(), radius, fontScale, letterSpacing, lineHeight, shadowAlpha };
     if (colorsCustomized) {
       themePayload.accent = accent;
       themePayload.bg = bg;
@@ -1639,7 +1657,7 @@ el('settingsSaveBtn').addEventListener('click', async () => {
     }, { merge: true });
     viewedSiteName = siteName || null;
     viewedTheme = {
-      font, radius, fontScale, letterSpacing, lineHeight,
+      font, radius, fontScale, letterSpacing, lineHeight, shadowAlpha,
       accent: colorsCustomized ? accent : undefined,
       bg: colorsCustomized ? bg : undefined,
       ink: colorsCustomized ? ink : undefined,

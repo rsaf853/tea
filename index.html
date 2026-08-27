@@ -169,7 +169,7 @@
   body.view-only .add-card,
   body.view-only #addPanelToggle { display: none !important; }
   @media (min-width: 701px) {
-    body.view-only .wrap { margin-right: 0 !important; }
+    body.view-only .wrap { margin-right: auto !important; }
   }
 
   .board-viewonly-tag {
@@ -274,6 +274,36 @@
     background: var(--accent-soft); color: var(--ink);
     font-size: 12px; font-weight: 500; line-height: 1.3;
     padding: 1px 4px; border-radius: 3px;
+  }
+
+  /* ---------- visibility (private / password) ---------- */
+  .visibility-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .vis-btn {
+    border: 1px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
+    font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer;
+    padding: 6px 10px; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .vis-btn:hover { border-color: var(--accent); color: var(--ink); }
+  .vis-btn.active { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  .note-card.locked-card { cursor: default; }
+  .locked-body {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    padding: 6px 2px 2px; color: var(--ink-faint);
+  }
+  .locked-body .locked-msg { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .locked-body .locked-sub { font-size: 11.5px; color: var(--ink-faint); }
+  .btn-unlock {
+    border: 1px solid var(--border-strong); background: var(--bg-panel); color: var(--ink);
+    font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+    padding: 6px 12px; border-radius: 8px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-unlock:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .note-vis-tag {
+    font-size: 11px; font-weight: 600; color: var(--accent-strong);
+    background: var(--accent-soft); border-radius: 6px; padding: 2px 7px;
+    display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 8px 0;
   }
 
   .tag-input-row {
@@ -484,17 +514,33 @@
   </div>
 </div>
 
+<div class="note-modal-overlay" id="unlockModalOverlay">
+  <div class="note-modal-card" id="unlockModalCard" style="max-width:340px; padding:32px 22px 22px;">
+    <button type="button" class="icon-btn note-modal-close" id="unlockModalClose" aria-label="닫기" title="닫기">×</button>
+    <div style="font-weight:700; font-size:15px; margin-bottom:8px;">🔑 비밀글이에요</div>
+    <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
+      비밀번호를 입력하면 내용을 볼 수 있어요.
+    </div>
+    <div class="tag-input-row">
+      <input type="password" id="unlockPasswordInput" placeholder="비밀번호">
+    </div>
+    <div class="add-card-footer" style="margin-top:14px;">
+      <button type="button" class="btn-save" id="unlockSubmitBtn">잠금 해제</button>
+    </div>
+  </div>
+</div>
+
 <div class="note-modal-overlay" id="handleModalOverlay">
   <div class="note-modal-card" id="handleModalCard" style="max-width:360px; padding:36px 22px 22px;">
     <div style="font-weight:700; font-size:15px; margin-bottom:8px;">나만의 핸들 만들기</div>
     <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
-      친구들과 메모장을 공유할 때 쓰일 이름이에요. 영문/숫자/_ 3~20자, 나중에 바꿀 수 없어요.
+      친구들과 메모장을 공유할 때 쓰일 이름이에요. 나중에 바꿀 수 없어요.
     </div>
     <div class="tag-input-row" style="margin-bottom:8px;">
       <input type="text" id="inviteCodeInput" placeholder="초대 코드">
     </div>
     <div class="tag-input-row">
-      <input type="text" id="handleInput" placeholder="handle">
+      <input type="text" id="handleInput" placeholder="영문/숫자/_ 3~20자">
     </div>
     <div class="add-card-footer" style="margin-top:14px;">
       <button type="button" class="btn-save" id="handleSaveBtn">만들기</button>
@@ -557,6 +603,14 @@
       <div class="tag-input-row" id="newTagRow">
         <input type="text" id="newTagInput" placeholder="태그 입력">
       </div>
+      <div class="visibility-row" id="newVisibilityRow">
+        <button type="button" class="vis-btn active" data-vis="public">공개</button>
+        <button type="button" class="vis-btn" data-vis="private">🔒 나만보기</button>
+        <button type="button" class="vis-btn" data-vis="password">🔑 비밀번호</button>
+      </div>
+      <div class="tag-input-row" id="newPasswordRow" style="display:none;">
+        <input type="password" id="newPasswordInput" placeholder="비밀번호 설정 (4자 이상)">
+      </div>
       <div class="add-card-footer">
         <button type="button" class="btn-save" id="saveNewBtn">저장</button>
       </div>
@@ -580,7 +634,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy, runTransaction
+  onSnapshot, query, where, orderBy, runTransaction, deleteField
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -602,8 +656,54 @@ const THEME_KEY = 'rosie_ooc_theme';
 const BASE_PATH = '/tea/';
 const RESERVED_HANDLES = ['rose', 'rosie', 'luck', 'justice'];
 
+// ---------- password-note crypto helpers ----------
+function b64FromBuf(buf) {
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  bytes.forEach(b => { bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+function bufFromB64(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+async function deriveAesKey(password, saltBytes) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: saltBytes, iterations: 150000, hash: 'SHA-256' },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+async function encryptNoteText(text, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveAesKey(password, salt);
+  const cipherBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(text));
+  return { cipher: b64FromBuf(cipherBuf), iv: b64FromBuf(iv), salt: b64FromBuf(salt) };
+}
+async function decryptNoteText(card, password) {
+  try {
+    const salt = new Uint8Array(bufFromB64(card.salt));
+    const iv = new Uint8Array(bufFromB64(card.iv));
+    const key = await deriveAesKey(password, salt);
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, bufFromB64(card.cipher));
+    return new TextDecoder().decode(plainBuf);
+  } catch (e) {
+    return null; // 비밀번호가 틀렸거나 데이터가 손상됨
+  }
+}
+// cardId -> { text, password } (세션 동안만 메모리에 유지, 새로고침하면 다시 잠김)
+const unlockedCards = new Map();
+
 let cards = [];
 let newTags = [];
+let newVisibility = 'public'; // 'public' | 'private' | 'password'
 let activeFilters = new Set();
 let searchQuery = '';
 let editingId = null;
@@ -680,13 +780,28 @@ function subscribeCards() {
   if (unsubscribeCards) { unsubscribeCards(); unsubscribeCards = null; }
   cards = [];
   if (!viewedUid) { renderAll(); return; }
-  const q = query(collection(db, 'users', viewedUid, 'cards'), orderBy('createdAt', 'desc'));
+  // 소유자는 전체(비공개 포함)를 보고, 방문자는 '나만보기' 글은 쿼리 단계에서부터 제외한다.
+  // (Firestore 보안 규칙과 짝을 맞춰야 실제로 서버 단에서도 막힘 — 콘솔에 규칙 반영 필요)
+  const q = isOwner
+    ? query(collection(db, 'users', viewedUid, 'cards'), orderBy('createdAt', 'desc'))
+    : query(collection(db, 'users', viewedUid, 'cards'), where('visibility', 'in', ['public', 'password']), orderBy('createdAt', 'desc'));
   unsubscribeCards = onSnapshot(q, (snap) => {
     cards = snap.docs.map(d => ({ id: d.id, ...d.data(), tags: d.data().tags || [] }));
     renderAll();
     checkHashForNote();
+    if (isOwner) migrateLegacyVisibility(snap);
   }, () => {
     cards = []; renderAll();
+  });
+}
+
+// 예전에 만들어진 카드(visibility 필드 없음)를 'public'으로 채워 넣어,
+// 방문자용 where('visibility','in',[...]) 쿼리에서 누락되지 않도록 한다.
+function migrateLegacyVisibility(snap) {
+  snap.docs.forEach(d => {
+    if (d.data().visibility === undefined) {
+      updateDoc(doc(db, 'users', currentUser.uid, 'cards', d.id), { visibility: 'public' }).catch(() => {});
+    }
   });
 }
 
@@ -964,16 +1079,44 @@ document.querySelectorAll('.md-toolbar .md-btn').forEach(btn => {
   });
 });
 
+// ---------- new card visibility (공개 / 나만보기 / 비밀번호) ----------
+const newVisibilityRow = el('newVisibilityRow');
+const newPasswordRow = el('newPasswordRow');
+const newPasswordInput = el('newPasswordInput');
+function setNewVisibility(vis) {
+  newVisibility = vis;
+  newVisibilityRow.querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.vis === vis));
+  newPasswordRow.style.display = vis === 'password' ? 'flex' : 'none';
+}
+newVisibilityRow.querySelectorAll('.vis-btn').forEach(btn => {
+  btn.addEventListener('click', () => setNewVisibility(btn.dataset.vis));
+});
+
 el('saveNewBtn').addEventListener('click', async () => {
   if (!isOwner || !currentUser) { showToast('로그인 후 이용해주세요.', 'danger'); return; }
   const text = el('newText').value.trim();
   if (!text) { showToast('내용을 입력해주세요.', 'danger'); return; }
+
+  let payload = { tags: [...newTags], createdAt: Date.now(), visibility: newVisibility };
+
+  if (newVisibility === 'password') {
+    const pw = newPasswordInput.value;
+    if (!pw || pw.length < 4) { showToast('비밀번호는 4자 이상으로 입력해주세요.', 'danger'); return; }
+    const { cipher, iv, salt } = await encryptNoteText(text, pw);
+    payload = { ...payload, text: '', cipher, iv, salt };
+  } else {
+    payload = { ...payload, text };
+  }
+
   try {
-    await addDoc(collection(db, 'users', currentUser.uid, 'cards'), {
-      text, tags: [...newTags], createdAt: Date.now()
-    });
+    const ref = await addDoc(collection(db, 'users', currentUser.uid, 'cards'), payload);
+    if (newVisibility === 'password') {
+      unlockedCards.set(ref.id, { text, password: newPasswordInput.value });
+    }
     el('newText').value = '';
     newTags = []; renderNewTagChips();
+    newPasswordInput.value = '';
+    setNewVisibility('public');
     showToast('저장되었습니다.');
   } catch (e) {
     showToast('저장에 실패했습니다.', 'danger');
@@ -1089,10 +1232,11 @@ function getVisibleCards() {
   let list = cards;
   if (activeFilters.size > 0) list = list.filter(c => c.tags.some(t => activeFilters.has(t)));
   if (searchQuery) {
-    list = list.filter(c =>
-      c.text.toLowerCase().includes(searchQuery) ||
-      c.tags.some(t => t.toLowerCase().includes(searchQuery))
-    );
+    list = list.filter(c => {
+      const searchableText = isCardLocked(c) ? '' : getCardDisplayText(c);
+      return searchableText.toLowerCase().includes(searchQuery) ||
+        c.tags.some(t => t.toLowerCase().includes(searchQuery));
+    });
   }
   return list;
 }
@@ -1122,6 +1266,57 @@ async function deleteCard(id) {
   }
 }
 
+// ---------- lock helpers ----------
+function isCardLocked(card) {
+  if (card.visibility === 'private') return !isOwner;
+  if (card.visibility === 'password') return !unlockedCards.has(card.id);
+  return false;
+}
+function getCardDisplayText(card) {
+  if (card.visibility === 'password') {
+    const u = unlockedCards.get(card.id);
+    return u ? u.text : '';
+  }
+  return card.text;
+}
+
+// ---------- unlock (password) modal ----------
+const unlockModalOverlay = el('unlockModalOverlay');
+const unlockModalClose = el('unlockModalClose');
+const unlockPasswordInput = el('unlockPasswordInput');
+let unlockTargetId = null;
+let unlockThen = null;
+
+function openUnlockModal(cardId, then) {
+  unlockTargetId = cardId;
+  unlockThen = then || null;
+  unlockPasswordInput.value = '';
+  unlockModalOverlay.classList.add('open');
+  setTimeout(() => unlockPasswordInput.focus(), 50);
+}
+function closeUnlockModal() {
+  unlockModalOverlay.classList.remove('open');
+  unlockTargetId = null; unlockThen = null;
+}
+unlockModalClose.addEventListener('click', closeUnlockModal);
+unlockModalOverlay.addEventListener('click', (e) => { if (e.target === unlockModalOverlay) closeUnlockModal(); });
+
+async function attemptUnlock() {
+  const card = cards.find(c => String(c.id) === String(unlockTargetId));
+  if (!card) { closeUnlockModal(); return; }
+  const pw = unlockPasswordInput.value;
+  if (!pw) { showToast('비밀번호를 입력해주세요.', 'danger'); return; }
+  const plain = await decryptNoteText(card, pw);
+  if (plain === null) { showToast('비밀번호가 올바르지 않아요.', 'danger'); return; }
+  unlockedCards.set(card.id, { text: plain, password: pw });
+  const cb = unlockThen;
+  closeUnlockModal();
+  renderAll();
+  if (cb) cb();
+}
+el('unlockSubmitBtn').addEventListener('click', attemptUnlock);
+unlockPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptUnlock(); });
+
 // ---------- note modal ----------
 const noteModalOverlay = el('noteModalOverlay');
 const noteModalClose = el('noteModalClose');
@@ -1129,6 +1324,15 @@ const noteModalClose = el('noteModalClose');
 function openNoteModal(id) {
   const card = cards.find(c => String(c.id) === String(id));
   if (!card) return;
+  if (card.visibility === 'private' && !isOwner) {
+    showToast('비공개 메모예요.', 'danger');
+    if (location.hash.startsWith('#note-')) history.replaceState(null, '', location.pathname + location.search);
+    return;
+  }
+  if (card.visibility === 'password' && !unlockedCards.has(card.id)) {
+    openUnlockModal(card.id, () => openNoteModal(id));
+    return;
+  }
   const tagsWrap = el('noteModalTags');
   tagsWrap.innerHTML = '';
   card.tags.forEach(tag => {
@@ -1136,7 +1340,7 @@ function openNoteModal(id) {
     span.className = 'note-tag'; span.textContent = tag;
     tagsWrap.appendChild(span);
   });
-  el('noteModalText').innerHTML = renderMarkdown(card.text);
+  el('noteModalText').innerHTML = renderMarkdown(getCardDisplayText(card));
   noteModalOverlay.classList.add('open');
   if (location.hash !== `#note-${id}`) location.hash = `note-${id}`;
 }
@@ -1177,9 +1381,18 @@ function renderCardGrid() {
     div.className = 'note-card';
 
     if (isOwner && editingId === card.id) {
+      const displayText = getCardDisplayText(card);
       div.innerHTML = `
-        <textarea class="note-edit-area">${escapeHtml(card.text)}</textarea>
+        <textarea class="note-edit-area">${escapeHtml(displayText)}</textarea>
         <div class="tag-input-row edit-tag-row"></div>
+        <div class="visibility-row edit-vis-row">
+          <button type="button" class="vis-btn" data-vis="public">공개</button>
+          <button type="button" class="vis-btn" data-vis="private">🔒 나만보기</button>
+          <button type="button" class="vis-btn" data-vis="password">🔑 비밀번호</button>
+        </div>
+        <div class="tag-input-row edit-password-row" style="display:none;">
+          <input type="password" class="edit-password-input" placeholder="비밀번호 변경 (비워두면 기존 비밀번호 유지)">
+        </div>
         <div class="note-edit-footer">
           <button type="button" class="btn-mini" data-act="cancel">취소</button>
           <button type="button" class="btn-mini primary" data-act="save">저장</button>
@@ -1238,14 +1451,43 @@ function renderCardGrid() {
         }
       });
 
+      // 공개범위 (공개 / 나만보기 / 비밀번호)
+      let editVisibility = card.visibility || 'public';
+      const editVisRow = div.querySelector('.edit-vis-row');
+      const editPasswordRow = div.querySelector('.edit-password-row');
+      function setEditVisibility(vis) {
+        editVisibility = vis;
+        editVisRow.querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.vis === vis));
+        editPasswordRow.style.display = vis === 'password' ? 'flex' : 'none';
+      }
+      editVisRow.querySelectorAll('.vis-btn').forEach(btn => {
+        btn.addEventListener('click', () => setEditVisibility(btn.dataset.vis));
+      });
+      setEditVisibility(editVisibility);
+
       div.querySelector('[data-act="cancel"]').addEventListener('click', () => { editingId = null; renderAll(); });
       div.querySelector('[data-act="save"]').addEventListener('click', async () => {
         const newText = div.querySelector('.note-edit-area').value.trim();
         if (!newText) { showToast('내용을 입력해주세요.', 'danger'); return; }
         try {
-          await updateDoc(doc(db, 'users', currentUser.uid, 'cards', String(card.id)), {
-            text: newText, tags: editTags
-          });
+          let payload = { tags: editTags, visibility: editVisibility };
+          if (editVisibility === 'password') {
+            const pwInput = div.querySelector('.edit-password-input');
+            let pw = pwInput ? pwInput.value : '';
+            if (!pw) {
+              const cached = unlockedCards.get(card.id);
+              pw = cached ? cached.password : '';
+            }
+            if (!pw || pw.length < 4) { showToast('비밀번호는 4자 이상으로 입력해주세요.', 'danger'); return; }
+            const { cipher, iv, salt } = await encryptNoteText(newText, pw);
+            payload.text = ''; payload.cipher = cipher; payload.iv = iv; payload.salt = salt;
+            unlockedCards.set(card.id, { text: newText, password: pw });
+          } else {
+            payload.text = newText;
+            payload.cipher = deleteField(); payload.iv = deleteField(); payload.salt = deleteField();
+            unlockedCards.delete(card.id);
+          }
+          await updateDoc(doc(db, 'users', currentUser.uid, 'cards', String(card.id)), payload);
           editingId = null; renderAll();
           showToast('수정되었습니다.');
         } catch (e) {
@@ -1253,7 +1495,36 @@ function renderCardGrid() {
         }
       });
     } else {
-      div.innerHTML = `
+      const locked = isCardLocked(card);
+
+      if (locked) {
+        div.classList.add('locked-card');
+        const isPw = card.visibility === 'password';
+        div.innerHTML = `
+          <div class="note-card-actions">
+            <button type="button" class="icon-btn" data-act="link" title="링크 복사">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
+            </button>
+            ${isOwner ? '<button type="button" class="icon-btn danger" data-act="delete" title="삭제">×</button>' : ''}
+          </div>
+          <div class="locked-body">
+            <div class="locked-msg">${isPw ? '🔑' : '🔒'} 비밀글입니다</div>
+            <div class="locked-sub">${isPw ? '비밀번호를 알아야 볼 수 있어요.' : '작성자만 볼 수 있어요.'}</div>
+            ${isPw ? '<button type="button" class="btn-unlock" data-act="unlock">잠금 해제</button>' : ''}
+          </div>
+        `;
+        div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
+        if (isOwner) {
+          div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+        }
+        if (isPw) {
+          div.querySelector('[data-act="unlock"]').addEventListener('click', () => openUnlockModal(card.id));
+        }
+      } else {
+        div.innerHTML = `
         <div class="note-card-actions">
           <button type="button" class="icon-btn" data-act="link" title="링크 복사">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1266,11 +1537,13 @@ function renderCardGrid() {
           ${isOwner ? '<button type="button" class="icon-btn danger" data-act="delete" title="삭제">×</button>' : ''}
         </div>
         <div class="note-card-body">
+          ${card.visibility === 'private' ? '<span class="note-vis-tag">🔒 나만보기</span>' : (card.visibility === 'password' ? '<span class="note-vis-tag">🔑 비밀번호</span>' : '')}
           <div class="note-tags"></div>
           <div class="note-text"></div>
         </div>
       `;
-      div.querySelector('.note-text').innerHTML = renderMarkdown(card.text);
+      const displayText = getCardDisplayText(card);
+      div.querySelector('.note-text').innerHTML = renderMarkdown(displayText);
       const tagsWrap = div.querySelector('.note-tags');
       card.tags.forEach(tag => {
         const span = document.createElement('span');
@@ -1278,7 +1551,7 @@ function renderCardGrid() {
         tagsWrap.appendChild(span);
       });
       div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
-      div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(card.text));
+      div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(displayText));
       if (isOwner) {
         div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
         div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
@@ -1293,6 +1566,7 @@ function renderCardGrid() {
           textEl.classList.add('truncated');
         }
       });
+      }
     }
 
     grid.appendChild(div);

@@ -180,13 +180,10 @@
 
   .wrap { max-width: 100%; margin: 0 auto; padding: 18px 16px 60px; }
   @media (min-width: 701px) {
-    .wrap { max-width: 92%; transition: margin-right 0.38s cubic-bezier(0.32, 0.72, 0, 1); }
+    .wrap { max-width: 640px; transition: margin-right 0.38s cubic-bezier(0.32, 0.72, 0, 1); }
   }
   @media (min-width: 901px) {
-    .wrap { max-width: 78%; }
-  }
-  @media (min-width: 1200px) {
-    .wrap { max-width: 1080px; }
+    .wrap { max-width: 1000px; }
   }
 
   /* ---------- header ---------- */
@@ -246,6 +243,12 @@
   }
   .user-handle-label:hover { color: var(--accent-strong); text-decoration: underline; }
   .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; border-radius: var(--r-pill); }
+  /* 로그아웃 버튼: 그림자 없는 플랫 스타일 + 은은한 배경색 */
+  #logoutBtn {
+    box-shadow: none; border-color: transparent; background: var(--accent-soft); color: var(--ink-soft);
+  }
+  #logoutBtn:hover { background: var(--danger-bg); border-color: transparent; color: var(--danger); transform: none; }
+  #logoutBtn:active { transform: none; }
 
   .link-btn {
     border: none; background: none; color: var(--ink-faint);
@@ -331,7 +334,7 @@
 
   .btn-add-toggle {
     display: flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 10px;
+    width: 28px; height: 28px; border-radius: var(--r-md);
     border: 1px solid var(--accent-strong); background: var(--accent-strong); color: var(--accent-ink);
     box-shadow: 0 2px 6px rgba(255, 100, 165, 0.35);
     font-size: 16px; font-weight: 500; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
@@ -344,6 +347,16 @@
   }
 
 
+  .note-title-input {
+    width: 100%; border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 8px 10px; margin-bottom: 8px;
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 13.5px; font-weight: 700; outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .note-title-input:focus { border-color: var(--accent); }
+  .note-title-input::placeholder { font-weight: 500; }
+
   #newText {
     width: 100%; min-height: 74px; resize: vertical;
     border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 12px;
@@ -352,6 +365,9 @@
     transition: border-color 0.15s ease;
   }
   #newText:focus { border-color: var(--accent); }
+  @media (min-width: 701px) {
+    #newText { min-height: 150px; }
+  }
 
   
   .md-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
@@ -518,6 +534,10 @@
   .icon-label svg { width: 15px; height: 15px; flex-shrink: 0; display: block; }
   .user-chip .icon-btn svg { width: 12px; height: 12px; }
 
+  .note-title {
+    font-size: 13.5px; line-height: 1.6; font-weight: 700; color: var(--ink);
+    word-break: break-word; margin: 0 4px 4px 0;
+  }
   .note-text {
     font-size: 13.5px; line-height: 1.6; color: var(--ink);
     white-space: pre-wrap; word-break: break-word; margin: 0 4px 4px 0;
@@ -611,9 +631,11 @@
   .note-modal-close {
     position: absolute; top: 14px; right: 14px;
   }
-  .note-modal-card .note-text {
+  .note-modal-card .note-text,
+  .note-modal-card .note-title {
     font-size: 14px; line-height: 1.7;
   }
+  .note-modal-actions { display: flex; gap: 6px; margin: 0 34px 12px 0; }
 
   /* ---------- settings modal (compact, sectioned) ---------- */
   #settingsModalCard { max-width: 460px; padding: 34px 18px 18px; }
@@ -685,6 +707,8 @@
 <div class="note-modal-overlay" id="noteModalOverlay">
   <div class="note-modal-card" id="noteModalCard">
     <button type="button" class="icon-btn note-modal-close" id="noteModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
+    <div class="note-modal-actions" id="noteModalActions"></div>
+    <div class="note-title" id="noteModalTitle" style="display:none;"></div>
     <div class="note-tags" id="noteModalTags"></div>
     <div class="note-text" id="noteModalText"></div>
   </div>
@@ -693,7 +717,7 @@
 <div class="note-modal-overlay" id="unlockModalOverlay">
   <div class="note-modal-card" id="unlockModalCard" style="max-width:340px; padding:32px 22px 22px;">
     <button type="button" class="icon-btn note-modal-close" id="unlockModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
-    <div class="icon-label" style="font-weight:700; font-size:15px; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="16" r="5"></circle><rect x="11.5" y="2.5" width="4" height="13" rx="2" transform="rotate(45 13.5 9)"></rect></svg>비밀글이에요</div>
+    <div class="icon-label" style="font-weight:700; font-size:15px; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>비밀글이에요</div>
     <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
       비밀번호를 입력하면 내용을 볼 수 있어요.
     </div>
@@ -838,7 +862,7 @@
         <span id="userHandleLabel" class="user-handle-label"></span>
         <button type="button" id="logoutBtn" class="icon-btn" title="로그아웃"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a1.6 1.6 0 0 1 1.6 1.6v6a1.6 1.6 0 0 1-3.2 0v-6A1.6 1.6 0 0 1 12 2.5Z"></path><path d="M6.95 6.25a1.5 1.5 0 0 1 .1 2.11 6.5 6.5 0 1 0 9.9 0 1.5 1.5 0 1 1 2.27-1.96 9.5 9.5 0 1 1-14.44 0 1.5 1.5 0 0 1 2.17-.15Z"></path></svg></button>
       </div>
-      <button type="button" id="adminBtn" class="icon-btn" title="초대 코드 관리" style="display:none;"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="16" r="5"></circle><rect x="11.5" y="2.5" width="4" height="13" rx="2" transform="rotate(45 13.5 9)"></rect></svg></button>
+      <button type="button" id="adminBtn" class="icon-btn" title="초대 코드 관리" style="display:none;"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9.5" cy="8" r="4"></circle><path d="M2.5 20.3a7 7 0 0 1 14 0 1 1 0 0 1-1 1.1h-12a1 1 0 0 1-1-1.1Z"></path><path d="M18.5 6.5a1.25 1.25 0 0 1 1.25 1.25v2.25h2.25a1.25 1.25 0 1 1 0 2.5h-2.25v2.25a1.25 1.25 0 1 1-2.5 0v-2.25h-2.25a1.25 1.25 0 1 1 0-2.5h2.25V7.75A1.25 1.25 0 0 1 18.5 6.5Z"></path></svg></button>
       <button type="button" id="boardSettingsBtn" class="icon-btn" title="보드 설정" style="display:none;"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="8.2" cy="7.5" r="3.1"></circle><rect x="3" y="15" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="15.8" cy="16.5" r="3.1"></circle></svg></button>
       <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
         <span class="theme-toggle-thumb"></span>
@@ -853,6 +877,7 @@
       <div class="add-panel-header">
         <span>메모 추가</span>
       </div>
+      <input type="text" id="newTitle" class="note-title-input" placeholder="제목 (선택)">
       <div class="md-toolbar">
         <button type="button" class="md-btn" data-wrap="**" title="굵게">B</button>
         <button type="button" class="md-btn" data-wrap="_" title="기울임"><i>I</i></button>
@@ -867,7 +892,7 @@
       <div class="visibility-row" id="newVisibilityRow">
         <button type="button" class="vis-btn active" data-vis="public">공개</button>
         <button type="button" class="vis-btn" data-vis="private"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>나만보기</span></button>
-        <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="16" r="5"></circle><rect x="11.5" y="2.5" width="4" height="13" rx="2" transform="rotate(45 13.5 9)"></rect></svg>비밀번호</span></button>
+        <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>비밀번호</span></button>
       </div>
       <div class="tag-input-row" id="newPasswordRow" style="display:none;">
         <input type="password" id="newPasswordInput" placeholder="비밀번호 설정 (4자 이상)">
@@ -918,7 +943,9 @@ const THEME_KEY = 'rosie_ooc_theme';
 // ---------- 아이콘 (전부 SVG로 통일 — 크기/두께 일관되게) ----------
 const ICONS = {
   lock: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>',
-  key: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="16" r="5"></circle><rect x="11.5" y="2.5" width="4" height="13" rx="2" transform="rotate(45 13.5 9)"></rect></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>',
+  admin: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9.5" cy="8" r="4"></circle><path d="M2.5 20.3a7 7 0 0 1 14 0 1 1 0 0 1-1 1.1h-12a1 1 0 0 1-1-1.1Z"></path><path d="M18.5 6.5a1.25 1.25 0 0 1 1.25 1.25v2.25h2.25a1.25 1.25 0 1 1 0 2.5h-2.25v2.25a1.25 1.25 0 1 1-2.5 0v-2.25h-2.25a1.25 1.25 0 1 1 0-2.5h2.25V7.75A1.25 1.25 0 0 1 18.5 6.5Z"></path></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.1 4.9a5 5 0 0 1 7.07 7.07l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77l2.5-2.5a2.5 2.5 0 0 0-3.53-3.53l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77Z"></path><path d="M9.9 19.1a5 5 0 0 1-7.07-7.07l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77l-2.5 2.5a2.5 2.5 0 0 0 3.53 3.53l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77Z"></path></svg>',
   gear: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="8.2" cy="7.5" r="3.1"></circle><rect x="3" y="15" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="15.8" cy="16.5" r="3.1"></circle></svg>',
   power: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a1.6 1.6 0 0 1 1.6 1.6v6a1.6 1.6 0 0 1-3.2 0v-6A1.6 1.6 0 0 1 12 2.5Z"></path><path d="M6.95 6.25a1.5 1.5 0 0 1 .1 2.11 6.5 6.5 0 1 0 9.9 0 1.5 1.5 0 1 1 2.27-1.96 9.5 9.5 0 1 1-14.44 0 1.5 1.5 0 0 1 2.17-.15Z"></path></svg>',
   edit: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.4 2.4a2.7 2.7 0 0 1 3.2 4.2l-.8.8-3.6-3.6.8-.8a2.7 2.7 0 0 1 .4-.6Z"></path><path d="M16.1 4.5 19.9 8.3 9.1 19.1a2 2 0 0 1-.95.53l-4.2 1a1 1 0 0 1-1.19-1.19l1-4.2a2 2 0 0 1 .53-.95Z"></path></svg>',
@@ -1155,10 +1182,6 @@ function hslToHex(h, s, l) {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-function contrastInk(hex) {
-  const { l } = hexToHsl(hex);
-  return l > 55 ? '#3a2a33' : '#ffffff';
-}
 function hexToRgb(hex) {
   hex = hex.replace('#', '');
   return {
@@ -1166,6 +1189,17 @@ function hexToRgb(hex) {
     g: parseInt(hex.substr(2, 2), 16),
     b: parseInt(hex.substr(4, 2), 16)
   };
+}
+// 색상의 실제 상대 휘도(perceived luminance)를 계산해서 검정/흰색 글자 중 어느 쪽이
+// 더 잘 보이는지 판단한다. HSL의 lightness만 보면 색상(hue)에 따라 실제 밝기 인상이
+// 크게 달라서(예: 노랑은 밝아 보이고 파랑은 어두워 보임) 대비가 틀어지는 문제가 있었음.
+function relLuminance(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+function contrastInk(hex) {
+  return relLuminance(hex) > 0.42 ? '#3a2a33' : '#ffffff';
 }
 // 글자색과 배경색을 t 비율로 섞어서 단계별(진하게~은은하게) 톤을 만들어준다.
 function mixHex(hex1, hex2, t) {
@@ -1202,7 +1236,13 @@ function inkSet(h, s, isLightBg) {
 }
 
 function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
-  const a = hexToHsl(accentHex);
+  let a = hexToHsl(accentHex);
+  // 채도가 거의 없는 흰색/회색/검정 계열을 포인트색으로 고르면 색조가 통째로 사라져
+  // 밋밋하고 칙칙한 무채색 버튼이 되어버린다. 이럴 땐 밝기(l)는 그대로 존중하되
+  // 브랜드 핑크 색조를 살짝 얹어서 은은한 톤을 유지한다.
+  if (a.s < 6) {
+    a = { h: 339, s: 22, l: a.l };
+  }
   const b = hexToHsl(bgHex);
 
   // 라이트 모드는 사용자가 고른 배경색을 그대로 쓰기 때문에, 실제로 밝은지 어두운지 보고
@@ -1225,8 +1265,8 @@ function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
     darkInk = inkSet(b.h, b.s, false);
   }
 
-  const lightAccentMain = hslToHex(a.h, a.s, clamp(a.l + 12, 60, 82));
-  const lightAccentStrong = hslToHex(a.h, a.s, clamp(a.l, 45, 68));
+  const lightAccentMain = hslToHex(a.h, a.s, clamp(a.l + 12, 62, 86));
+  const lightAccentStrong = hslToHex(a.h, a.s, clamp(a.l, 50, 72));
   const darkAccentMain = hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88));
   const darkAccentStrong = hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80));
 
@@ -1760,7 +1800,7 @@ el('saveNewBtn').addEventListener('click', async () => {
   const text = el('newText').value.trim();
   if (!text) { showToast('내용을 입력해주세요.', 'danger'); return; }
 
-  let payload = { tags: [...newTags], createdAt: Date.now(), visibility: newVisibility };
+  let payload = { tags: [...newTags], title: el('newTitle').value.trim(), createdAt: Date.now(), visibility: newVisibility };
 
   if (newVisibility === 'password') {
     const pw = newPasswordInput.value;
@@ -1777,6 +1817,7 @@ el('saveNewBtn').addEventListener('click', async () => {
       unlockedCards.set(ref.id, { text, password: newPasswordInput.value });
     }
     el('newText').value = '';
+    el('newTitle').value = '';
     newTags = []; renderNewTagChips();
     newPasswordInput.value = '';
     setNewVisibility('public');
@@ -1983,6 +2024,26 @@ unlockPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') 
 // ---------- note modal ----------
 const noteModalOverlay = el('noteModalOverlay');
 const noteModalClose = el('noteModalClose');
+let modalCardId = null;
+
+el('noteModalActions').innerHTML = `
+  <button type="button" class="icon-btn" id="noteModalCopyBtn" title="복사">${ICONS.copy}</button>
+  <button type="button" class="icon-btn" id="noteModalShareBtn" title="공유">${ICONS.share}</button>
+  <button type="button" class="icon-btn" id="noteModalEditBtn" title="수정" style="display:none;">${ICONS.edit}</button>
+`;
+el('noteModalCopyBtn').addEventListener('click', () => {
+  const card = cards.find(c => String(c.id) === String(modalCardId));
+  if (card) copyCardText(getCardDisplayText(card));
+});
+el('noteModalShareBtn').addEventListener('click', () => {
+  if (modalCardId != null) copyCardLink(modalCardId);
+});
+el('noteModalEditBtn').addEventListener('click', () => {
+  if (modalCardId == null) return;
+  editingId = modalCardId;
+  closeNoteModal();
+  renderAll();
+});
 
 function openNoteModal(id) {
   const card = cards.find(c => String(c.id) === String(id));
@@ -1996,6 +2057,11 @@ function openNoteModal(id) {
     openUnlockModal(card.id, () => openNoteModal(id));
     return;
   }
+  modalCardId = card.id;
+  const titleEl = el('noteModalTitle');
+  if (card.title) { titleEl.textContent = card.title; titleEl.style.display = 'block'; }
+  else { titleEl.textContent = ''; titleEl.style.display = 'none'; }
+  el('noteModalEditBtn').style.display = isOwner ? 'flex' : 'none';
   const tagsWrap = el('noteModalTags');
   tagsWrap.innerHTML = '';
   card.tags.forEach(tag => {
@@ -2009,6 +2075,7 @@ function openNoteModal(id) {
 }
 function closeNoteModal() {
   noteModalOverlay.classList.remove('open');
+  modalCardId = null;
   if (location.hash.startsWith('#note-')) {
     history.replaceState(null, '', location.pathname + location.search);
   }
@@ -2064,12 +2131,13 @@ function renderCardGrid() {
     if (isOwner && editingId === card.id) {
       const displayText = getCardDisplayText(card);
       div.innerHTML = `
+        <input type="text" class="note-title-input edit-title-input" value="${escapeHtml(card.title || '')}" placeholder="제목 (선택)">
         <textarea class="note-edit-area">${escapeHtml(displayText)}</textarea>
         <div class="tag-input-row edit-tag-row"></div>
         <div class="visibility-row edit-vis-row">
           <button type="button" class="vis-btn" data-vis="public">공개</button>
           <button type="button" class="vis-btn" data-vis="private"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>나만보기</span></button>
-          <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="16" r="5"></circle><rect x="11.5" y="2.5" width="4" height="13" rx="2" transform="rotate(45 13.5 9)"></rect></svg>비밀번호</span></button>
+          <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>비밀번호</span></button>
         </div>
         <div class="tag-input-row edit-password-row" style="display:none;">
           <input type="password" class="edit-password-input" placeholder="비밀번호 변경 (비워두면 기존 비밀번호 유지)">
@@ -2151,7 +2219,7 @@ function renderCardGrid() {
         const newText = div.querySelector('.note-edit-area').value.trim();
         if (!newText) { showToast('내용을 입력해주세요.', 'danger'); return; }
         try {
-          let payload = { tags: editTags, visibility: editVisibility };
+          let payload = { tags: editTags, title: div.querySelector('.edit-title-input').value.trim(), visibility: editVisibility };
           if (editVisibility === 'password') {
             const pwInput = div.querySelector('.edit-password-input');
             let pw = pwInput ? pwInput.value : '';
@@ -2213,6 +2281,7 @@ function renderCardGrid() {
         </div>
         <div class="note-card-body">
           ${card.visibility === 'private' ? `<span class="note-vis-tag">${ICONS.lock}나만보기</span>` : (card.visibility === 'password' ? `<span class="note-vis-tag">${ICONS.key}비밀번호</span>` : '')}
+          ${card.title ? `<div class="note-title">${escapeHtml(card.title)}</div>` : ''}
           <div class="note-tags"></div>
           <div class="note-text"></div>
         </div>

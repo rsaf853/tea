@@ -2,7 +2,25 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>r♡sie memo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<style>
+  html, body {
+    margin: 0; height: 100%;
+    background: #fef4f8; color: #5c3450;
+    font-family: 'Pretendard Variable', -apple-system, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .loading-brand {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .loading-brand .brand {
+    font-size: 20px; font-weight: 700; letter-spacing: -0.02em;
+  }
+  .loading-brand .brand .heart { color: #ff7ebd; margin: 0 1px; }
+  .loading-brand .msg { font-size: 13px; color: #96677f; }
+</style>
 <script>
   // GitHub Pages는 존재하지 않는 경로면 이 파일을 보여줌.
   // /tea/핸들 형태의 경로를 index.html이 이해하는 ?u=핸들 쿼리로 바꿔서 리다이렉트.
@@ -18,5 +36,10 @@
   location.replace(BASE_PATH + (qs ? '?' + qs : '') + location.hash);
 </script>
 </head>
-<body></body>
+<body>
+  <div class="loading-brand">
+    <div class="brand">r<span class="heart">♡</span>sie<span style="font-weight:500; color:#96677f;"> memo</span></div>
+    <div class="msg">이동 중...</div>
+  </div>
+</body>
 </html>

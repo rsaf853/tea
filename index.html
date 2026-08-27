@@ -263,7 +263,7 @@
   .md-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
   .md-btn {
     width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
-    background: var(--bg-card); color: var(--ink); cursor: pointer;
+    background: transparent; color: var(--ink); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     font-family: inherit; font-size: 13px; font-weight: 700; padding: 0;
     transition: background 0.15s ease, border-color 0.15s ease;
@@ -472,7 +472,7 @@
 
 </style>
 </head>
-<body>
+<body class="view-only">
 
 <div id="toastStack"></div>
 
@@ -660,6 +660,11 @@ async function initView() {
     }
     viewedUid = currentUser.uid;
     viewedHandle = handle;
+    // 로그인 직후(또는 핸들 생성 직후) 주소를 /핸들 형태로 맞춰준다
+    const prettyPath = BASE_PATH + encodeURIComponent(handle);
+    if (location.pathname !== prettyPath) {
+      history.replaceState(null, '', prettyPath + location.search + location.hash);
+    }
   } else {
     viewedUid = null; viewedHandle = null;
   }
@@ -679,6 +684,7 @@ function subscribeCards() {
   unsubscribeCards = onSnapshot(q, (snap) => {
     cards = snap.docs.map(d => ({ id: d.id, ...d.data(), tags: d.data().tags || [] }));
     renderAll();
+    checkHashForNote();
   }, () => {
     cards = []; renderAll();
   });
@@ -868,8 +874,8 @@ el('handleSaveBtn').addEventListener('click', async () => {
 onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   if (!user) currentUserHandle = null;
-  updateAuthUI();
   await initView();
+  updateAuthUI();
 });
 
 // ---------- toast ----------

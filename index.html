@@ -364,22 +364,23 @@
 
   /* ---------- card grid ---------- */
   .card-grid {
-    column-count: 1;
-    column-gap: 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    align-items: start;
   }
   @media (min-width: 560px) {
-    .card-grid { column-count: 2; }
+    .card-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (min-width: 901px) {
-    .card-grid { column-count: 3; }
+    .card-grid { grid-template-columns: repeat(3, 1fr); }
   }
   .note-card {
     background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: 10px;
     padding: 12px 14px; box-shadow: var(--shadow-card);
     position: relative; contain: layout; transition: border-color 0.15s ease, background 0.25s ease;
-    display: inline-block; width: 100%; box-sizing: border-box;
-    break-inside: avoid; -webkit-column-break-inside: avoid;
-    margin: 0 0 14px;
+    width: 100%; box-sizing: border-box;
+    margin: 0;
   }
   .note-card:hover { border-color: var(--border-strong); }
 
@@ -534,7 +535,7 @@
   <div class="note-modal-card" id="handleModalCard" style="max-width:360px; padding:36px 22px 22px;">
     <div style="font-weight:700; font-size:15px; margin-bottom:8px;">나만의 핸들 만들기</div>
     <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
-      친구들과 메모장을 공유할 때 쓰일 이름이에요. 나중에 바꿀 수 없어요.
+      친구들과 메모장을 공유할 때 쓰일 이름이에요.<br>나중에 바꿀 수 없어요.
     </div>
     <div class="tag-input-row" style="margin-bottom:8px;">
       <input type="text" id="inviteCodeInput" placeholder="초대 코드">
@@ -738,6 +739,19 @@ function getUrlHandle() {
 async function initView() {
   const urlHandle = getUrlHandle();
 
+  // 로그인한 사용자는 지금 어떤 주소(다른 사람의 보드 포함)를 보고 있든
+  // 자기 핸들이 없으면 핸들 생성부터 안내한다.
+  if (currentUser) {
+    const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
+    currentUserHandle = userSnap.exists() ? userSnap.data().handle : null;
+    if (!currentUserHandle) {
+      viewedUid = null; viewedHandle = null;
+      updateBoardLabel(); updateOwnerUI();
+      openHandleModal();
+      return;
+    }
+  }
+
   if (urlHandle) {
     const handleSnap = await getDoc(doc(db, 'handles', urlHandle));
     if (!handleSnap.exists()) {
@@ -748,24 +762,11 @@ async function initView() {
     }
     viewedUid = handleSnap.data().uid;
     viewedHandle = urlHandle;
-    // 본인 핸들 주소로 바로 들어온 경우에도 헤더의 @핸들 표시가 정상 동작하도록 채워준다
-    if (currentUser && viewedUid === currentUser.uid) {
-      currentUserHandle = urlHandle;
-    }
   } else if (currentUser) {
-    const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
-    const handle = userSnap.exists() ? userSnap.data().handle : null;
-    currentUserHandle = handle;
-    if (!handle) {
-      viewedUid = null; viewedHandle = null;
-      updateBoardLabel(); updateOwnerUI();
-      openHandleModal();
-      return;
-    }
     viewedUid = currentUser.uid;
-    viewedHandle = handle;
+    viewedHandle = currentUserHandle;
     // 로그인 직후(또는 핸들 생성 직후) 주소를 /핸들 형태로 맞춰준다
-    const prettyPath = BASE_PATH + encodeURIComponent(handle);
+    const prettyPath = BASE_PATH + encodeURIComponent(currentUserHandle);
     if (location.pathname !== prettyPath) {
       history.replaceState(null, '', prettyPath + location.search + location.hash);
     }
@@ -798,8 +799,10 @@ function subscribeCards() {
     renderAll();
     checkHashForNote();
     if (isOwner) migrateLegacyVisibility(snap);
-  }, () => {
+  }, (err) => {
     cards = []; renderAll();
+    console.error('cards 구독 실패:', err.code, err.message);
+    showToast(`카드 목록을 불러오지 못했어요 (${err.code || err.message})`, 'danger');
   });
 }
 
@@ -1520,7 +1523,7 @@ function renderCardGrid() {
           </div>
           <div class="locked-body">
             <div class="locked-msg">${isPw ? '🔑' : '🔒'} 비밀글입니다</div>
-            <div class="locked-sub">${isPw ? '비밀번호를 알아야 볼 수 있어요.' : '작성자만 볼 수 있어요.'}</div>
+            ${isPw ? '' : '<div class="locked-sub">작성자만 볼 수 있어요.</div>'}
             ${isPw ? '<button type="button" class="btn-unlock" data-act="unlock">잠금 해제</button>' : ''}
           </div>
         `;

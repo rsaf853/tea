@@ -403,14 +403,21 @@
   .note-title-input:focus { border-color: var(--accent); }
   .note-title-input::placeholder { font-weight: 500; }
 
-  #newText {
-    width: 100%; min-height: 74px; resize: vertical;
+  #newText, .rich-editable {
+    width: 100%; min-height: 74px; resize: vertical; overflow-y: auto;
     border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 12px;
     background: var(--bg-card); color: var(--ink);
     font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none;
     transition: border-color 0.15s ease;
+    white-space: pre-wrap; word-break: break-word;
   }
-  #newText:focus { border-color: var(--accent); }
+  #newText:focus, .rich-editable:focus { border-color: var(--accent); }
+  /* contenteditable은 placeholder 속성을 지원하지 않아서 :empty 상태일 때 흉내낸다. */
+  .rich-editable:empty:before {
+    content: attr(data-placeholder);
+    color: var(--ink-placeholder);
+    pointer-events: none;
+  }
   @media (min-width: 701px) {
     #newText { min-height: 150px; }
   }
@@ -551,6 +558,9 @@
   /* "전체" 칩만 선택됐을 때는 나만보기 태그와 같은 진한 톤으로 — 기본 화면임을 뚜렷하게 보여준다.
      다른 태그 칩이 선택된 경우는 위의 연한 active 스타일을 그대로 유지. */
   .filter-chip.all-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
+  .filter-chip.icon-only { display: inline-flex; align-items: center; justify-content: center; padding: 5px 10px; }
+  .filter-chip.icon-only svg { width: 13px; height: 13px; display: block; }
+  .filter-chip.private-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
 
   /* ---------- card grid (masonry via JS column packing) ---------- */
   .card-grid {
@@ -649,9 +659,8 @@
   .note-tag::before { content: "#"; }
 
   .note-edit-area {
-    width: 100%; min-height: 160px; resize: vertical; border: 1px solid var(--accent);
-    border-radius: var(--r-md); padding: 8px 10px; background: var(--bg-card); color: var(--ink);
-    font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none; margin-top: 4px;
+    min-height: 160px; border: 1px solid var(--accent);
+    margin-top: 4px;
   }
   .note-edit-footer { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
   .btn-mini {
@@ -885,7 +894,7 @@
     <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
       친구들과 메모장을 공유할 때 쓰일 이름이에요.<br>나중에 바꿀 수 없어요.
     </div>
-    <div class="tag-input-row" style="margin-bottom:8px;">
+    <div class="tag-input-row" id="inviteCodeRow" style="margin-bottom:8px;">
       <input type="text" id="inviteCodeInput" placeholder="초대 코드">
     </div>
     <div class="tag-input-row">
@@ -1060,13 +1069,13 @@
       </div>
       <input type="text" id="newTitle" class="note-title-input" placeholder="제목 (선택)">
       <div class="md-toolbar">
-        <button type="button" class="md-btn" data-wrap="**" title="굵게">B</button>
-        <button type="button" class="md-btn" data-wrap="_" title="기울임"><i>I</i></button>
-        <button type="button" class="md-btn" data-wrap="++" title="밑줄"><u>U</u></button>
-        <button type="button" class="md-btn" data-wrap="~~" title="취소선"><s>S</s></button>
-        <button type="button" class="md-btn" data-wrap="==" title="하이라이트"><span class="hl-preview">가</span></button>
+        <button type="button" class="md-btn" data-cmd="bold" title="굵게">B</button>
+        <button type="button" class="md-btn" data-cmd="italic" title="기울임"><i>I</i></button>
+        <button type="button" class="md-btn" data-cmd="underline" title="밑줄"><u>U</u></button>
+        <button type="button" class="md-btn" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
+        <button type="button" class="md-btn" data-cmd="highlight" title="하이라이트"><span class="hl-preview">가</span></button>
       </div>
-      <textarea id="newText" placeholder="**굵게**  _기울임_  ++밑줄++  ~~취소선~~  ==하이라이트=="></textarea>
+      <div id="newText" class="rich-editable" contenteditable="true" data-placeholder="내용을 입력하세요"></div>
       <div class="tag-input-row" id="newTagRow">
         <input type="text" id="newTagInput" placeholder="태그 입력">
       </div>
@@ -1137,6 +1146,8 @@ const ICONS = {
 };
 const BASE_PATH = '/tea/';
 const RESERVED_HANDLES = ['rose', 'rosie', 'luck', 'justice'];
+// 초대 코드 없이도 가입 가능하게 하려면 false, 다시 초대 코드가 필요해지면 true로 바꾸면 됨.
+const REQUIRE_INVITE_CODE = false;
 
 // ---------- password-note crypto helpers ----------
 function b64FromBuf(buf) {
@@ -1187,6 +1198,7 @@ let cards = [];
 let newTags = [];
 let newVisibility = 'public'; // 'public' | 'private' | 'password'
 let activeFilters = new Set();
+let privateOnlyFilter = false;
 let searchQuery = '';
 let editingId = null;
 
@@ -1989,6 +2001,7 @@ el('userAvatar').addEventListener('click', () => {
 });
 
 function openHandleModal() {
+  el('inviteCodeRow').style.display = REQUIRE_INVITE_CODE ? 'flex' : 'none';
   el('handleModalOverlay').classList.add('open');
 }
 function closeHandleModal() {
@@ -1997,7 +2010,7 @@ function closeHandleModal() {
 el('handleSaveBtn').addEventListener('click', async () => {
   const inviteCode = el('inviteCodeInput').value.trim();
   const handle = el('handleInput').value.trim().toLowerCase();
-  if (!inviteCode) {
+  if (REQUIRE_INVITE_CODE && !inviteCode) {
     showToast('초대 코드를 입력해주세요.', 'danger');
     return;
   }
@@ -2011,14 +2024,21 @@ el('handleSaveBtn').addEventListener('click', async () => {
   }
   try {
     await runTransaction(db, async (tx) => {
-      const codeRef = doc(db, 'inviteCodes', inviteCode);
       const handleRef = doc(db, 'handles', handle);
-      const codeSnap = await tx.get(codeRef);
-      const handleSnap = await tx.get(handleRef);
-      if (!codeSnap.exists() || codeSnap.data().used) throw new Error('badcode');
-      if (handleSnap.exists()) throw new Error('taken');
-      tx.update(codeRef, { used: true, usedBy: currentUser.uid, usedAt: Date.now() });
-      tx.set(handleRef, { uid: currentUser.uid, inviteCode });
+      let codeRef = null;
+      if (REQUIRE_INVITE_CODE) {
+        codeRef = doc(db, 'inviteCodes', inviteCode);
+        const codeSnap = await tx.get(codeRef);
+        const handleSnap = await tx.get(handleRef);
+        if (!codeSnap.exists() || codeSnap.data().used) throw new Error('badcode');
+        if (handleSnap.exists()) throw new Error('taken');
+        tx.update(codeRef, { used: true, usedBy: currentUser.uid, usedAt: Date.now() });
+        tx.set(handleRef, { uid: currentUser.uid, inviteCode });
+      } else {
+        const handleSnap = await tx.get(handleRef);
+        if (handleSnap.exists()) throw new Error('taken');
+        tx.set(handleRef, { uid: currentUser.uid });
+      }
       tx.set(doc(db, 'users', currentUser.uid), {
         handle,
         displayName: currentUser.displayName || '',
@@ -2111,25 +2131,102 @@ newTagInputEl.addEventListener('keydown', (e) => {
   }
 });
 
-// ---------- markdown toolbar ----------
-function applyMarkdownWrap(textarea, marker) {
-  const start = textarea.selectionStart;
-  const end = textarea.selectionEnd;
-  const value = textarea.value;
-  const selected = value.slice(start, end);
-  const before = value.slice(0, start);
-  const after = value.slice(end);
-  textarea.value = before + marker + selected + marker + after;
-  const cursorPos = selected ? start + marker.length + selected.length + marker.length : start + marker.length;
-  textarea.focus();
-  textarea.setSelectionRange(cursorPos, cursorPos);
+// ---------- rich text 서식 (버튼으로만 적용, 마크다운 문법 입력은 인식하지 않음) ----------
+// Enter를 눌렀을 때 각 줄이 <div>로 감싸이지 않고 <br>만 추가되도록 해서
+// 기존 textarea의 줄바꿈 방식과 최대한 비슷하게 유지한다.
+try { document.execCommand('defaultParagraphSeparator', false, 'br'); } catch (e) {}
+
+function toggleMarkWrap() {
+  const sel = window.getSelection();
+  if (!sel.rangeCount || sel.isCollapsed) return;
+  const range = sel.getRangeAt(0);
+  let container = range.commonAncestorContainer;
+  if (container.nodeType === 3) container = container.parentNode;
+  const markAncestor = container.closest && container.closest('mark');
+  if (markAncestor) {
+    const parent = markAncestor.parentNode;
+    while (markAncestor.firstChild) parent.insertBefore(markAncestor.firstChild, markAncestor);
+    parent.removeChild(markAncestor);
+    return;
+  }
+  const mark = document.createElement('mark');
+  try {
+    range.surroundContents(mark);
+  } catch (e) {
+    // 선택 영역이 여러 엘리먼트에 걸쳐 있으면 surroundContents가 실패해서 대체 방식 사용
+    const frag = range.extractContents();
+    mark.appendChild(frag);
+    range.insertNode(mark);
+  }
+  sel.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(mark);
+  sel.addRange(newRange);
 }
 
-document.querySelectorAll('.md-toolbar .md-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    applyMarkdownWrap(el('newText'), btn.dataset.wrap);
-  });
+function applyRichFormat(editable, cmd) {
+  editable.focus();
+  if (cmd === 'highlight') {
+    toggleMarkWrap();
+  } else {
+    try { document.execCommand(cmd); } catch (e) {}
+  }
+}
+
+// 툴바가 새 메모 작성 패널과, 카드마다 동적으로 생기는 수정 폼 양쪽에 다 있어서
+// 위임 방식으로 한 번만 등록 — 클릭된 툴바와 같은 부모 안에 있는 .rich-editable을 찾아 적용한다.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.md-toolbar .md-btn[data-cmd]');
+  if (!btn) return;
+  const toolbar = btn.closest('.md-toolbar');
+  const container = toolbar.parentElement;
+  const editable = container ? container.querySelector('.rich-editable') : null;
+  if (!editable) return;
+  applyRichFormat(editable, btn.dataset.cmd);
 });
+// 내용을 전부 지워도 브라우저가 빈 <br> 하나를 남겨두는 경우가 있어서,
+// 그럴 땐 진짜로 비워줘야 placeholder(:empty)가 다시 보인다.
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.classList && t.classList.contains('rich-editable')) {
+    if (t.innerHTML === '<br>' || t.textContent.trim() === '' && !t.querySelector('img')) {
+      if (t.innerHTML !== '') t.innerHTML = '';
+    }
+  }
+});
+
+// 허용된 서식 태그만 남기고(속성 포함) 나머지는 벗겨내는 sanitizer.
+// 저장 전/렌더링 전 양쪽에 적용해서, 예전 마크다운 문법으로 저장된 글자(예: **텍스트**)는
+// 더 이상 굵게 해석되지 않고 글자 그대로 보이게 된다.
+const RICH_ALLOWED_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, S: 1, STRIKE: 1, DEL: 1, MARK: 1, BR: 1 };
+function sanitizeRichHtml(html) {
+  const src = document.createElement('div');
+  src.innerHTML = html || '';
+  const out = document.createElement('div');
+  (function build(sourceNode, targetParent) {
+    sourceNode.childNodes.forEach(child => {
+      if (child.nodeType === 3) {
+        targetParent.appendChild(document.createTextNode(child.textContent));
+      } else if (child.nodeType === 1) {
+        if (RICH_ALLOWED_TAGS[child.tagName]) {
+          const clone = document.createElement(child.tagName);
+          build(child, clone);
+          targetParent.appendChild(clone);
+        } else {
+          // 허용 안 된 태그(div 등)는 태그만 벗기고 안의 내용은 그대로 살린다
+          build(child, targetParent);
+        }
+      }
+    });
+  })(src, out);
+  return out.innerHTML;
+}
+// 검색/복사용 — 태그를 다 떼고 순수 텍스트만 뽑아낸다.
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  return tmp.textContent || '';
+}
 
 // ---------- new card visibility (공개 / 나만보기 / 비밀번호) ----------
 const newVisibilityRow = el('newVisibilityRow');
@@ -2146,8 +2243,9 @@ newVisibilityRow.querySelectorAll('.vis-btn').forEach(btn => {
 
 el('saveNewBtn').addEventListener('click', async () => {
   if (!isOwner || !currentUser) { showToast('로그인 후 이용해주세요.', 'danger'); return; }
-  const text = el('newText').value.trim();
-  if (!text) { showToast('내용을 입력해주세요.', 'danger'); return; }
+  const newTextEl = el('newText');
+  if (!newTextEl.textContent.trim()) { showToast('내용을 입력해주세요.', 'danger'); return; }
+  const text = sanitizeRichHtml(newTextEl.innerHTML);
 
   let payload = { tags: [...newTags], title: el('newTitle').value.trim(), createdAt: Date.now(), visibility: newVisibility };
 
@@ -2165,7 +2263,7 @@ el('saveNewBtn').addEventListener('click', async () => {
     if (newVisibility === 'password') {
       unlockedCards.set(ref.id, { text, password: newPasswordInput.value });
     }
-    el('newText').value = '';
+    newTextEl.innerHTML = '';
     el('newTitle').value = '';
     newTags = []; renderNewTagChips();
     newPasswordInput.value = '';
@@ -2261,10 +2359,24 @@ function renderFilterBar() {
   const bar = el('filterBar');
   bar.innerHTML = '';
   const allBtn = document.createElement('button');
-  allBtn.type = 'button'; allBtn.className = 'filter-chip all-filter' + (activeFilters.size === 0 ? ' active' : '');
+  allBtn.type = 'button'; allBtn.className = 'filter-chip all-filter' + (activeFilters.size === 0 && !privateOnlyFilter ? ' active' : '');
   allBtn.textContent = '전체';
-  allBtn.addEventListener('click', () => { activeFilters.clear(); renderAll(); });
+  allBtn.addEventListener('click', () => { activeFilters.clear(); privateOnlyFilter = false; renderAll(); });
   bar.appendChild(allBtn);
+
+  // 나만보기 글만 모아보기 — 사이트 주인이 자기 사이트를 볼 때만 노출
+  if (isOwner) {
+    const privBtn = document.createElement('button');
+    privBtn.type = 'button';
+    privBtn.className = 'filter-chip private-filter icon-only' + (privateOnlyFilter ? ' active' : '');
+    privBtn.title = '나만보기';
+    privBtn.innerHTML = ICONS.heart;
+    privBtn.addEventListener('click', () => {
+      privateOnlyFilter = !privateOnlyFilter;
+      renderAll();
+    });
+    bar.appendChild(privBtn);
+  }
 
   getAllTags().forEach(tag => {
     const btn = document.createElement('button');
@@ -2282,10 +2394,11 @@ function renderFilterBar() {
 // ---------- card grid ----------
 function getVisibleCards() {
   let list = cards;
+  if (privateOnlyFilter) list = list.filter(c => c.visibility === 'private');
   if (activeFilters.size > 0) list = list.filter(c => c.tags.some(t => activeFilters.has(t)));
   if (searchQuery) {
     list = list.filter(c => {
-      const searchableText = isCardLocked(c) ? '' : getCardDisplayText(c);
+      const searchableText = isCardLocked(c) ? '' : stripHtml(getCardDisplayText(c));
       return searchableText.toLowerCase().includes(searchQuery) ||
         c.tags.some(t => t.toLowerCase().includes(searchQuery));
     });
@@ -2381,7 +2494,7 @@ el('noteModalActions').innerHTML = `
 `;
 el('noteModalCopyBtn').addEventListener('click', () => {
   const card = cards.find(c => String(c.id) === String(modalCardId));
-  if (card) copyCardText(getCardDisplayText(card));
+  if (card) copyCardText(stripHtml(getCardDisplayText(card)));
 });
 el('noteModalShareBtn').addEventListener('click', () => {
   if (modalCardId != null) copyCardLink(modalCardId);
@@ -2417,7 +2530,7 @@ function openNoteModal(id) {
     span.className = 'note-tag'; span.textContent = tag;
     tagsWrap.appendChild(span);
   });
-  el('noteModalText').innerHTML = renderMarkdown(getCardDisplayText(card));
+  el('noteModalText').innerHTML = sanitizeRichHtml(getCardDisplayText(card));
   noteModalOverlay.classList.add('open');
   if (location.hash !== `#note-${id}`) location.hash = `note-${id}`;
 }
@@ -2481,7 +2594,14 @@ function renderCardGrid() {
       const displayText = getCardDisplayText(card);
       div.innerHTML = `
         <input type="text" class="note-title-input edit-title-input" value="${escapeHtml(card.title || '')}" placeholder="제목 (선택)">
-        <textarea class="note-edit-area">${escapeHtml(displayText)}</textarea>
+        <div class="md-toolbar">
+          <button type="button" class="md-btn" data-cmd="bold" title="굵게">B</button>
+          <button type="button" class="md-btn" data-cmd="italic" title="기울임"><i>I</i></button>
+          <button type="button" class="md-btn" data-cmd="underline" title="밑줄"><u>U</u></button>
+          <button type="button" class="md-btn" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
+          <button type="button" class="md-btn" data-cmd="highlight" title="하이라이트"><span class="hl-preview">가</span></button>
+        </div>
+        <div class="note-edit-area rich-editable" contenteditable="true" data-placeholder="내용을 입력하세요">${sanitizeRichHtml(displayText)}</div>
         <div class="tag-input-row edit-tag-row"></div>
         <div class="visibility-row edit-vis-row">
           <button type="button" class="vis-btn" data-vis="public">공개</button>
@@ -2565,8 +2685,9 @@ function renderCardGrid() {
 
       div.querySelector('[data-act="cancel"]').addEventListener('click', () => { editingId = null; renderAll(); });
       div.querySelector('[data-act="save"]').addEventListener('click', async () => {
-        const newText = div.querySelector('.note-edit-area').value.trim();
-        if (!newText) { showToast('내용을 입력해주세요.', 'danger'); return; }
+        const editAreaEl = div.querySelector('.note-edit-area');
+        if (!editAreaEl.textContent.trim()) { showToast('내용을 입력해주세요.', 'danger'); return; }
+        const newText = sanitizeRichHtml(editAreaEl.innerHTML);
         try {
           let payload = { tags: editTags, title: div.querySelector('.edit-title-input').value.trim(), visibility: editVisibility };
           if (editVisibility === 'password') {
@@ -2606,7 +2727,7 @@ function renderCardGrid() {
             ${isOwner ? `<button type="button" class="icon-btn danger" data-act="delete" title="삭제">${ICONS.close}</button>` : ''}
           </div>
           <div class="locked-body">
-            <div class="locked-msg">${ICONS.lock}비밀글입니다</div>
+            <div class="locked-msg">${ICONS.lock}${card.title ? escapeHtml(card.title) : '비밀글입니다'}</div>
             ${isPw ? '' : '<div class="locked-sub">작성자만 볼 수 있어요.</div>'}
             ${isPw ? `<button type="button" class="btn-unlock" data-act="unlock">잠금 해제</button>` : ''}
           </div>
@@ -2636,7 +2757,7 @@ function renderCardGrid() {
         </div>
       `;
       const displayText = getCardDisplayText(card);
-      div.querySelector('.note-text').innerHTML = renderMarkdown(displayText);
+      div.querySelector('.note-text').innerHTML = sanitizeRichHtml(displayText);
       const tagsWrap = div.querySelector('.note-tags');
       card.tags.forEach(tag => {
         const span = document.createElement('span');
@@ -2644,7 +2765,7 @@ function renderCardGrid() {
         tagsWrap.appendChild(span);
       });
       div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
-      div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(displayText));
+      div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(stripHtml(displayText)));
       if (isOwner) {
         div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
         div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
@@ -2673,16 +2794,6 @@ function renderCardGrid() {
 
 function escapeHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function renderMarkdown(raw) {
-  let s = escapeHtml(raw);
-  s = s.replace(/==([^=\n]+?)==/g, '<mark>$1</mark>');
-  s = s.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>');
-  s = s.replace(/~~([^~\n]+?)~~/g, '<del>$1</del>');
-  s = s.replace(/\+\+([^\+\n]+?)\+\+/g, '<u>$1</u>');
-  s = s.replace(/_([^_\n]+?)_/g, '<em>$1</em>');
-  return s;
 }
 
 function renderAll() {

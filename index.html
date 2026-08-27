@@ -44,9 +44,9 @@
     --danger-border: #f5c6da;
     --heart: #ff7ebd;
 
-    --shadow-bar: 0 4px 14px rgba(255, 120, 185, 0.10), 0 1px 2px rgba(255, 120, 185, 0.06);
-    --shadow-card: 0 3px 16px rgba(255, 130, 190, 0.14), 0 1px 3px rgba(255, 130, 190, 0.08);
-    --shadow-btn: 0 1px 4px rgba(255, 130, 190, 0.16), 0 1px 2px rgba(92, 52, 80, 0.05);
+    --shadow-bar: 0 4px 14px color-mix(in srgb, var(--accent-strong) 10%, transparent), 0 1px 2px color-mix(in srgb, var(--accent-strong) 6%, transparent);
+    --shadow-card: 0 3px 16px color-mix(in srgb, var(--accent-strong) 14%, transparent), 0 1px 3px color-mix(in srgb, var(--accent-strong) 8%, transparent);
+    --shadow-btn: 0 1px 4px color-mix(in srgb, var(--accent-strong) 16%, transparent), 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent);
   }
 
   html[data-theme="dark"] {
@@ -211,11 +211,11 @@
   }
   .theme-toggle-thumb {
     position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: var(--r-pill);
-    background: linear-gradient(155deg, #ffc2e2, var(--accent-strong));
-    box-shadow: 0 2px 5px rgba(255, 110, 175, 0.45);
+    background: linear-gradient(155deg, var(--accent-soft), var(--accent-strong));
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--accent-strong) 45%, transparent);
     transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s ease, border-radius 0.2s ease;
   }
-  html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(20px); background: linear-gradient(155deg, #ffe0f0, var(--accent-strong)); }
+  html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(20px); background: linear-gradient(155deg, var(--accent-soft), var(--accent-strong)); }
 
   /* ---------- auth / handle ---------- */
   .app-brand { cursor: pointer; }
@@ -237,7 +237,7 @@
   }
   .user-avatar {
     width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
-    background: var(--accent-soft); flex-shrink: 0;
+    background: var(--accent-soft); flex-shrink: 0; cursor: pointer;
   }
   .user-handle-label {
     font-size: 12px; font-weight: 600; color: var(--ink); cursor: pointer;
@@ -414,11 +414,11 @@
     border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
     font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
     padding: 7px 14px; border-radius: var(--r-pill);
-    box-shadow: 0 2px 6px rgba(255, 130, 190, 0.22);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--accent-strong) 22%, transparent);
     transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
   }
   .btn-unlock svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
-  .btn-unlock:hover { background: var(--accent-strong); border-color: var(--accent-strong); box-shadow: 0 3px 9px rgba(255, 130, 190, 0.3); }
+  .btn-unlock:hover { background: var(--accent-strong); border-color: var(--accent-strong); box-shadow: 0 3px 9px color-mix(in srgb, var(--accent-strong) 30%, transparent); }
   .btn-unlock:active { transform: translateY(1px); }
   .note-vis-tag {
     font-size: 11px; font-weight: 600; color: var(--accent-strong);
@@ -649,7 +649,10 @@
   .note-modal-card .note-title {
     font-size: 14px; line-height: 1.7;
   }
-  .note-modal-actions { display: flex; gap: 6px; margin: 0 34px 12px 0; }
+  .note-modal-actions {
+    position: absolute; top: 14px; right: 50px;
+    display: flex; gap: 6px; margin: 0;
+  }
 
   /* ---------- settings modal (compact, sectioned) ---------- */
   #settingsModalCard { max-width: 460px; padding: 34px 18px 18px; }
@@ -670,6 +673,8 @@
   .settings-field-label .val { color: var(--ink-faint); font-weight: 400; }
   .settings-grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
   .settings-grid4 .settings-field-label { font-size: 10px; }
+  .settings-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .settings-grid3 .settings-field-label { font-size: 10px; }
   #settingsModalCard input[type="text"],
   #settingsModalCard select {
     width: 100%; padding: 7px 9px; border-radius: var(--r-md);
@@ -807,24 +812,24 @@
     <div class="settings-section">
       <div class="settings-section-title">색상 &amp; 모양</div>
       <div class="settings-field">
-        <div class="settings-grid4">
+        <div class="settings-grid3">
           <div>
             <div class="settings-field-label">포인트</div>
             <input type="color" id="settingsAccent" value="#ff7ebd">
           </div>
           <div>
-            <div class="settings-field-label">배경</div>
-            <input type="color" id="settingsBg" value="#fef4f8">
-          </div>
-          <div>
             <div class="settings-field-label">카드</div>
-            <input type="color" id="settingsCard" value="#fef8fb">
+            <input type="color" id="settingsCard" value="#ffffff">
           </div>
           <div>
             <div class="settings-field-label">글자</div>
             <input type="color" id="settingsInk" value="#5c3450">
           </div>
         </div>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>카드 투명도</span><span class="val" id="settingsCardOpacityVal">100%</span></div>
+        <input type="range" id="settingsCardOpacity" min="40" max="100" step="5" value="100">
       </div>
       <div class="settings-field">
         <div class="settings-field-label">모서리</div>
@@ -957,7 +962,7 @@ const THEME_KEY = 'rosie_ooc_theme';
 // ---------- 아이콘 (전부 SVG로 통일 — 크기/두께 일관되게) ----------
 const ICONS = {
   lock: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>',
-  key: '<svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(45 12 12)"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1.7a4.3 4.3 0 1 0 0 8.6 4.3 4.3 0 0 0 0-8.6Zm0 2.3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"></path><rect x="9.3" y="4.8" width="11.7" height="2.4" rx="1"></rect><rect x="15.3" y="7.2" width="2.2" height="3.6" rx="0.6"></rect><rect x="18.8" y="7.2" width="2.2" height="2.6" rx="0.6"></rect></g></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.6s-7.3-4.4-9.9-8.9C.5 8.4 1.5 4.2 5.1 2.9c2.5-.9 5.1 0 6.6 2.1L12 5.6l.3-.6c1.5-2.1 4.1-3 6.6-2.1 3.6 1.3 4.6 5.5 3 8.8-2.6 4.5-9.9 8.9-9.9 8.9Z"></path></svg>',
   admin: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9.5" cy="8" r="4"></circle><path d="M2.5 20.3a7 7 0 0 1 14 0 1 1 0 0 1-1 1.1h-12a1 1 0 0 1-1-1.1Z"></path><path d="M18.5 6.5a1.25 1.25 0 0 1 1.25 1.25v2.25h2.25a1.25 1.25 0 1 1 0 2.5h-2.25v2.25a1.25 1.25 0 1 1-2.5 0v-2.25h-2.25a1.25 1.25 0 1 1 0-2.5h2.25V7.75A1.25 1.25 0 0 1 18.5 6.5Z"></path></svg>',
   share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.1 4.9a5 5 0 0 1 7.07 7.07l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77l2.5-2.5a2.5 2.5 0 0 0-3.53-3.53l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77Z"></path><path d="M9.9 19.1a5 5 0 0 1-7.07-7.07l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77l-2.5 2.5a2.5 2.5 0 0 0 3.53 3.53l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77Z"></path></svg>',
   gear: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="8.2" cy="7.5" r="3.1"></circle><rect x="3" y="15" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="15.8" cy="16.5" r="3.1"></circle></svg>',
@@ -1249,16 +1254,25 @@ function inkSet(h, s, isLightBg) {
   };
 }
 
-function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
+function computeThemeCss(accentHex, cardHex, inkHex, cardOpacity) {
   const a = hexToHsl(accentHex);
-  const b = hexToHsl(bgHex);
+  const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0.4, 1) : 1;
 
-  // 라이트 모드는 사용자가 고른 배경색을 그대로 쓰기 때문에, 실제로 밝은지 어두운지 보고
-  // 글자색(흰/검 계열)을 그때그때 맞춰준다. 다크 모드는 배경 자체를 항상 어둡게 강제하므로
-  // 어두운 배경용 글자색 세트를 그대로 쓰면 된다.
-  const lightBgIsLight = b.l >= 50;
-  const lightBgAppHex = hslToHex(b.h, b.s, b.l);
-  const darkBgAppHex = hslToHex(b.h, Math.min(b.s * 0.35, 22), 10);
+  // 배경색은 따로 고르지 않는다 — 포인트색에서 항상 옅게 자동으로 뽑아낸다.
+  // 이렇게 하면 어떤 포인트색을 골라도(핑크가 아니어도) 배경이 늘 그 색과 어울리고,
+  // 포인트색을 안 바꾸면 예전처럼 옅은 핑크 배경이 그대로 나온다.
+  const lightBgAppHex = hslToHex(a.h, Math.min(a.s * 0.32, 26), 96);
+  const darkBgAppHex = hslToHex(a.h, Math.min(a.s * 0.30, 22), 10);
+
+  // 카드색: 사용자가 고른 색(기본은 흰색)을 "투명도"만큼 배경 쪽으로 섞어서,
+  // 카드가 배경과 자연스럽게 어울리는 반투명한 느낌이 나게 만든다.
+  // (투명도 100%면 카드는 고른 색 그대로, 낮을수록 배경에 더 녹아든다)
+  const lightCardBase = cardHex || '#ffffff';
+  const darkCardBase = cardHex || hslToHex(a.h, Math.min(a.s * 0.3, 20), 18);
+  const lightCardHex = mixHex(lightCardBase, lightBgAppHex, 1 - opacity);
+  const darkCardHex = mixHex(darkCardBase, darkBgAppHex, 1 - opacity);
+  const lightCardHsl = hexToHsl(lightCardHex);
+  const darkCardHsl = hexToHsl(darkCardHex);
 
   let lightInk, darkInk;
   if (inkHex) {
@@ -1269,8 +1283,8 @@ function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
     lightInk = customInkSet(inkHex, lightBgAppHex);
     darkInk = customInkSet(darkVariantHex, darkBgAppHex);
   } else {
-    lightInk = inkSet(b.h, b.s, lightBgIsLight);
-    darkInk = inkSet(b.h, b.s, false);
+    lightInk = inkSet(a.h, a.s, true);
+    darkInk = inkSet(a.h, a.s, false);
   }
 
   const lightAccentMain = hslToHex(a.h, a.s, clamp(a.l + 12, 62, 86));
@@ -1278,11 +1292,12 @@ function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
   const darkAccentMain = hslToHex(a.h, a.s * 0.9, clamp(a.l + 22, 70, 88));
   const darkAccentStrong = hslToHex(a.h, a.s * 0.9, clamp(a.l + 10, 60, 80));
 
-  // 테두리는 배경색 자체의 채도에 기대지 않고(무채색 배경을 고르면 그냥 회색이 돼버림),
-  // 포인트색을 배경 쪽으로 옅게 섞어서 만든다 — 어떤 색 조합을 골라도 늘 포인트색이
-  // 은은하게 묻어나서 붕 뜨거나 칙칙해지지 않는다.
-  const lightCardHex = cardHex || hslToHex(b.h, b.s * 0.55, clamp(b.l + 3, 90, 97));
-  const darkCardHex = cardHex || hslToHex(b.h, Math.min(b.s * 0.3, 20), 18);
+  // 태그/필터칩 배경(accent-soft): 배경색의 밝기가 아니라 "실제 카드 밝기" 기준으로
+  // 항상 일정 이상 차이 나게 계산한다 — 어떤 포인트/카드 색 조합이든 글자가 묻히지 않는다.
+  const lightSoftL = clamp(lightCardHsl.l - 16, 74, 91);
+  const lightAccentSoft = hslToHex(a.h, Math.max(a.s * 0.55, 32), lightSoftL);
+  const darkSoftL = clamp(darkCardHsl.l + 14, 22, 36);
+  const darkAccentSoft = hslToHex(a.h, clamp(a.s * 0.5, 28, 45), darkSoftL);
 
   const light = {
     '--bg-app': lightBgAppHex,
@@ -1299,7 +1314,7 @@ function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
     '--ink-placeholder': lightInk.inkPlaceholder,
     '--accent': lightAccentMain,
     '--accent-strong': lightAccentStrong,
-    '--accent-soft': hslToHex(a.h, a.s * 0.5, 93),
+    '--accent-soft': lightAccentSoft,
     '--accent-ink': contrastInk(lightAccentStrong),
     '--heart': lightAccentStrong
   };
@@ -1316,7 +1331,7 @@ function computeThemeCss(accentHex, bgHex, cardHex, inkHex) {
     '--ink-placeholder': darkInk.inkPlaceholder,
     '--accent': darkAccentMain,
     '--accent-strong': darkAccentStrong,
-    '--accent-soft': hslToHex(a.h, Math.min(a.s * 0.4, 40), 24),
+    '--accent-soft': darkAccentSoft,
     // 예전엔 항상 검정으로 고정돼 있어서, 다크 모드에서 어둡고 채도 낮은 포인트색을
     // 고르면 버튼 글자가 안 보이는 문제가 있었음 — 실제 포인트색 밝기에 맞춰 계산.
     '--accent-ink': contrastInk(darkAccentStrong),
@@ -1337,8 +1352,8 @@ function applyBoardTheme(theme) {
   document.documentElement.style.setProperty('--u-letter-spacing', (typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) + 'em');
   document.documentElement.style.setProperty('--u-line-height', typeof t.lineHeight === 'number' ? t.lineHeight : 1.6);
   document.documentElement.style.setProperty('--u-zoom', typeof t.fontScale === 'number' ? t.fontScale : 1);
-  if (t.accent && t.bg) {
-    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.card, t.ink);
+  if (t.accent) {
+    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.card, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 1);
   } else {
     customThemeStyleEl.textContent = '';
   }
@@ -1395,13 +1410,16 @@ function openSettingsModal() {
   el('settingsSiteName').value = viewedSiteName || '';
   el('settingsFont').value = t.font || '';
   el('settingsAccent').value = t.accent || '#ff7ebd';
-  el('settingsBg').value = t.bg || '#fef4f8';
-  el('settingsCard').value = t.card || '#fef8fb';
+  el('settingsCard').value = t.card || '#ffffff';
   el('settingsInk').value = t.ink || '#5c3450';
+  const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 1) * 100);
+  el('settingsCardOpacity').value = cardOpacityPct;
+  el('settingsCardOpacityVal').textContent = cardOpacityPct + '%';
+  paintRangeFill(el('settingsCardOpacity'));
   // 이미 저장된 커스텀 색상이 있을 때만 "색상을 직접 정했다"고 간주한다.
   // 그래야 모서리만 바꾸고 저장해도 기본 팔레트가 계산된 커스텀 팔레트로
   // 덮어써지지 않는다.
-  colorsCustomized = !!(t.accent && t.bg);
+  colorsCustomized = !!t.accent;
 
   const fontScalePct = Math.round((typeof t.fontScale === 'number' ? t.fontScale : 1) * 100);
   const letterSpacingPct = Math.round((typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) * 100);
@@ -1433,9 +1451,14 @@ el('settingsModalOverlay').addEventListener('click', (e) => {
 let selectedRadiusPreset = 'normal';
 let colorsCustomized = false;
 el('settingsAccent').addEventListener('input', () => { colorsCustomized = true; });
-el('settingsBg').addEventListener('input', () => { colorsCustomized = true; });
 el('settingsCard').addEventListener('input', () => { colorsCustomized = true; });
 el('settingsInk').addEventListener('input', () => { colorsCustomized = true; });
+el('settingsCardOpacity').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsCardOpacityVal').textContent = v + '%';
+  colorsCustomized = true;
+  paintRangeFill(e.target);
+});
 el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     selectedRadiusPreset = btn.dataset.radius;
@@ -1468,9 +1491,9 @@ el('settingsSaveBtn').addEventListener('click', async () => {
   const siteName = el('settingsSiteName').value.trim().slice(0, 20);
   const font = el('settingsFont').value;
   const accent = el('settingsAccent').value;
-  const bg = el('settingsBg').value;
   const card = el('settingsCard').value;
   const ink = el('settingsInk').value;
+  const cardOpacity = Number(el('settingsCardOpacity').value) / 100;
   const fontScale = Number(el('settingsFontScale').value) / 100;
   const letterSpacing = Number(el('settingsLetterSpacing').value) / 100;
   const lineHeight = Number(el('settingsLineHeight').value) / 100;
@@ -1480,14 +1503,14 @@ el('settingsSaveBtn').addEventListener('click', async () => {
     const themePayload = { font: font || deleteField(), radius, fontScale, letterSpacing, lineHeight };
     if (colorsCustomized) {
       themePayload.accent = accent;
-      themePayload.bg = bg;
       themePayload.card = card;
       themePayload.ink = ink;
+      themePayload.cardOpacity = cardOpacity;
     } else {
       themePayload.accent = deleteField();
-      themePayload.bg = deleteField();
       themePayload.card = deleteField();
       themePayload.ink = deleteField();
+      themePayload.cardOpacity = deleteField();
     }
     await setDoc(doc(db, 'users', currentUser.uid), {
       siteName: siteName || deleteField(),
@@ -1497,9 +1520,9 @@ el('settingsSaveBtn').addEventListener('click', async () => {
     viewedTheme = {
       font, radius, fontScale, letterSpacing, lineHeight,
       accent: colorsCustomized ? accent : undefined,
-      bg: colorsCustomized ? bg : undefined,
       card: colorsCustomized ? card : undefined,
-      ink: colorsCustomized ? ink : undefined
+      ink: colorsCustomized ? ink : undefined,
+      cardOpacity: colorsCustomized ? cardOpacity : undefined
     };
     applyBoardTheme(viewedTheme);
     applySiteName(viewedSiteName);
@@ -1636,7 +1659,7 @@ el('logoutBtn').addEventListener('click', () => signOut(auth));
 el('handleModalLogout').addEventListener('click', () => signOut(auth));
 
 document.querySelector('.app-brand').addEventListener('click', () => {
-  if (getUrlHandle()) location.href = BASE_PATH;
+  location.reload();
 });
 
 el('userHandleLabel').addEventListener('click', () => {
@@ -1645,6 +1668,14 @@ el('userHandleLabel').addEventListener('click', () => {
   navigator.clipboard.writeText(url)
     .then(() => showToast('공유 링크가 복사되었습니다.'))
     .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+});
+
+// 아바타 클릭: 로그인한 자신의 사이트(보드)로 이동
+el('userAvatar').addEventListener('click', () => {
+  if (!currentUser || !currentUserHandle) return;
+  const target = BASE_PATH + encodeURIComponent(currentUserHandle);
+  if (location.pathname === target) { location.reload(); }
+  else { location.href = target; }
 });
 
 function openHandleModal() {

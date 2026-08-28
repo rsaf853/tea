@@ -28,7 +28,7 @@
        옅은 톤) 실제로는 거의 순백색으로 보여 분홍 배경 위에서 카드만 하얗게 튀어 보였다.
        포인트색 계열의 은은한 분홍을 살짝 더 얹어서, 밝기는 배경보다 여전히 높게 유지하되
        색상은 더 또렷하게 파스텔 톤으로 묶었다. */
-    --bg-card: #fff3f8;
+    --bg-card: #fff8fb;
 
     --border-soft: #ffedf5;
     --border: #ffe0ef;
@@ -724,7 +724,7 @@
 
   /* ---------- note modal ---------- */
   .note-modal-overlay {
-    position: fixed; inset: 0; background: rgba(30, 15, 25, 0.35);
+    position: fixed; inset: 0; background: rgba(20, 10, 16, 0.6);
     display: flex; align-items: center; justify-content: center; padding: 24px;
     opacity: 0; pointer-events: none; z-index: 80;
     transition: opacity 0.2s ease;
@@ -1028,8 +1028,8 @@
         </div>
       </div>
       <div class="settings-field">
-        <div class="settings-field-label"><span>카드 투명도</span><span class="val" id="settingsCardOpacityVal">50%</span></div>
-        <input type="range" id="settingsCardOpacity" min="0" max="100" step="5" value="50">
+        <div class="settings-field-label"><span>카드 투명도</span><span class="val" id="settingsCardOpacityVal">70%</span></div>
+        <input type="range" id="settingsCardOpacity" min="0" max="100" step="5" value="70">
       </div>
       <div class="settings-field">
         <div class="settings-field-label"><span>그림자 진하기</span><span class="val" id="settingsShadowAlphaVal">100%</span></div>
@@ -1535,7 +1535,7 @@ function inkSet(h, s, isLightBg) {
 
 function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
   const a = hexToHsl(accentHex);
-  const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0, 1) : 0.5;
+  const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0, 1) : 0.7;
 
   // 배경색: 라이트 모드는 사용자가 직접 고른 색을 그대로 쓴다(없으면 포인트색에서 옅게 자동 추출).
   // 다크 모드는 사용자가 고른 배경색을 무시하고, 포인트색 하나만으로 항상 적절히 어두운
@@ -1548,7 +1548,7 @@ function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
   // 카드(메모) 표면색은 사용자가 고르지 않는다. 커스텀 테마가 아닐 때의 기본 카드색이
   // 정확히 "흰색/진회색과 배경색을 반반 섞은" 색이므로(:root의 --bg-card 정의 참고),
   // 그 관계를 그대로 재현해야 커스텀 테마를 켜도 기본값과 이질감이 없다.
-  const lightCardBase = mixHexHsl('#ffffff', lightBgAppHex, 0.5);
+  const lightCardBase = mixHexHsl('#ffffff', lightBgAppHex, 0.35);
   const darkCardBase = mixHexHsl('#252525', darkBgAppHex, 0.5);
   const lightCardHex = mixHexHsl(lightCardBase, lightBgAppHex, 1 - opacity);
   const darkCardHex = mixHexHsl(darkCardBase, darkBgAppHex, 1 - opacity);
@@ -1659,7 +1659,7 @@ function applyBoardTheme(theme) {
   document.documentElement.style.setProperty('--u-zoom', typeof t.fontScale === 'number' ? t.fontScale : 1);
   document.documentElement.style.setProperty('--shadow-alpha', typeof t.shadowAlpha === 'number' ? t.shadowAlpha : 1);
   if (t.accent) {
-    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 1);
+    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 0.7);
   } else {
     customThemeStyleEl.textContent = '';
   }
@@ -1719,7 +1719,7 @@ function openSettingsModal() {
   el('settingsAccent').value = t.accent || '#ff7ebd';
   el('settingsBg').value = t.bg || '#fdf1f6';
   el('settingsInk').value = t.ink || '#5c3450';
-  const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 0.5) * 100);
+  const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 0.7) * 100);
   el('settingsCardOpacity').value = cardOpacityPct;
   el('settingsCardOpacityVal').textContent = cardOpacityPct + '%';
   paintRangeFill(el('settingsCardOpacity'));

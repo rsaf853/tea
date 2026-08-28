@@ -8,7 +8,3012 @@
 <link rel="apple-touch-icon" href="images/icon1.png" id="appleTouchIconLink">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <style>
+  :root {<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>r♡siememo</title>
+<link rel="icon" type="image/png" href="images/favi3.png" id="faviconLink">
+<link rel="apple-touch-icon" href="images/icon1.png" id="appleTouchIconLink">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<style>
   :root {
+    /* 기본(보통) 모서리 프리셋 — 커스텀 테마에서 덮어씀 */
+    --r-lg: 8px;
+    --r-md: 5px;
+    --r-sm: 3px;
+    --r-pill: 10px;
+    --font-base: 'Pretendard Variable';
+    --u-letter-spacing: 0em;
+    --u-line-height: 1.6;
+    --u-zoom: 1;
+    --shadow-alpha: 1; /* 그림자 진하기 배수 (설정 > 그림자 슬라이더에서 조절) */
+  }
+  :root,
+  html[data-theme="light"] {
+    --bg-app: #fdf1f6;
+    --bg-panel: #ffffff;
+    /* 기존엔 흰색과 배경색을 반반 섞었는데, 이 둘이 색상 차이가 워낙 작아서(둘 다 극단적으로
+       옅은 톤) 실제로는 거의 순백색으로 보여 분홍 배경 위에서 카드만 하얗게 튀어 보였다.
+       포인트색 계열의 은은한 분홍을 살짝 더 얹어서, 밝기는 배경보다 여전히 높게 유지하되
+       색상은 더 또렷하게 파스텔 톤으로 묶었다. */
+    --bg-card: #fff8fb;
+
+    --border-soft: #ffedf5;
+    --border: #ffe0ef;
+    --border-strong: #ffc3dd;
+
+    --ink: #5c3450;
+    --ink-soft: #96677f;
+    --ink-faint: #c99ab2;
+    --ink-placeholder: #e5c2d5;
+
+    --accent: #ff9bce;
+    --accent-strong: #ff6bad;
+    --accent-ink: #ffffff;
+    --accent-soft: #ffe3f0;
+
+    --danger: #e15b8a;
+    --danger-bg: #fdeef3;
+    --danger-border: #f5c6da;
+    --heart: #ff7ebd;
+
+    --shadow-bar: 0 4px 11px color-mix(in srgb, var(--accent-strong) calc(10% * var(--shadow-alpha)), transparent), 0 1px 2px color-mix(in srgb, var(--accent-strong) calc(6% * var(--shadow-alpha)), transparent);
+    --shadow-card: 0 3px 12px color-mix(in srgb, var(--accent-strong) calc(14% * var(--shadow-alpha)), transparent), 0 1px 2px color-mix(in srgb, var(--accent-strong) calc(8% * var(--shadow-alpha)), transparent);
+    --shadow-btn: 0 1px 3px color-mix(in srgb, var(--accent-strong) calc(16% * var(--shadow-alpha)), transparent), 0 1px 2px color-mix(in srgb, var(--ink) calc(5% * var(--shadow-alpha)), transparent);
+  }
+
+  html[data-theme="dark"] {
+    --bg-app: #121212;
+    --bg-panel: #1e1e1e;
+    --bg-card: color-mix(in srgb, #252525 50%, var(--bg-app) 50%);
+
+    --border-soft: #232323;
+    --border: #2a2a2a;
+    --border-strong: #383838;
+
+    --ink: #eeeeee;
+    --ink-soft: #aaaaaa;
+    --ink-faint: #777777;
+    --ink-placeholder: #555555;
+
+    --accent: #ffc9e5;
+    --accent-strong: #ffa3d1;
+    --accent-ink: #000000;
+    --accent-soft: #3a2530;
+
+    --danger: #ff9bb3;
+    --danger-bg: #3a2230;
+    --danger-border: #5c3540;
+    --heart: #ffa3d1;
+
+    --shadow-bar: 0 6px 16px rgba(0, 0, 0, calc(0.6 * var(--shadow-alpha))), 0 1px 2px rgba(0, 0, 0, calc(0.4 * var(--shadow-alpha)));
+    --shadow-card: 0 2px 9px rgba(0, 0, 0, calc(0.4 * var(--shadow-alpha)));
+    --shadow-btn: 0 1px 3px rgba(0, 0, 0, calc(0.35 * var(--shadow-alpha)));
+  }
+
+  /* ---------- 커스텀 폰트 (핸들 주인이 설정 가능) ---------- */
+  @font-face {
+    font-family: 'IbmPlexSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'IbmPlexSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-SemiBold.woff') format('woff');
+    font-weight: 600; font-display: swap;
+  }
+  @font-face {
+    font-family: 'NexonLv1Gothic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON%20Lv1%20Gothic%20OTF.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'NexonLv1Gothic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON%20Lv1%20Gothic%20OTF%20Bold.woff') format('woff');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Aritaburi';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    /* 700(굵게) 웨이트도 같은 파일로 등록 — 안 하면 브라우저가 이미 두꺼운 글자를
+       또 합성 볼드(faux-bold) 처리해서 훨씬 더 두껍게 보임 */
+    font-family: 'Aritaburi';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face {
+    font-family: 'ArittaDodum';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-dotum-Medium.woff') format('woff');
+    font-weight: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Mona12';
+    src: url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/Mona12.woff2') format('woff2');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Mona12';
+    src: url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/Mona12-Bold.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
+  }
+  @font-face {
+    /* 실제 "보통 굵기" 둥근모 파일 — 이전엔 Bold 파일이 400에도 걸려 있어서 항상 두껍게 보였음 */
+    font-family: 'BoldRound';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: 'BoldRound';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2507-2@1.0/BoldDungGeunMo.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
+  }
+
+  * { box-sizing: border-box; }
+
+  /* ---------- 색상 변수 애니메이션 등록 ----------
+     일반 커스텀 프로퍼티(--x)는 값이 바뀔 때 보간 없이 그대로 툭 바뀐다.
+     그래서 body의 background/color처럼 그 값을 "쓰는" 속성에 transition을
+     걸어도, 다크-라이트 전환처럼 변수 자체가 바뀌는 경우엔 부드럽게 안 섞이고
+     (특히 그라데이션처럼 여러 색이 섞인 곳에서) 툭 튀어 보이는 문제가 있었다.
+     @property로 타입(<color>)을 지정하면 변수 값 자체를 브라우저가 프레임마다
+     보간해주므로, 이 변수를 참조하는 모든 곳(단색이든 그라데이션이든)이
+     자동으로 함께 부드럽게 전환된다. */
+  @property --bg-app { syntax: '<color>'; inherits: true; initial-value: #fdf1f6; }
+  @property --bg-panel { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+  @property --bg-card { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+  @property --border-soft { syntax: '<color>'; inherits: true; initial-value: #ffedf5; }
+  @property --border { syntax: '<color>'; inherits: true; initial-value: #ffe0ef; }
+  @property --border-strong { syntax: '<color>'; inherits: true; initial-value: #ffc3dd; }
+  @property --ink { syntax: '<color>'; inherits: true; initial-value: #5c3450; }
+  @property --ink-soft { syntax: '<color>'; inherits: true; initial-value: #96677f; }
+  @property --ink-faint { syntax: '<color>'; inherits: true; initial-value: #c99ab2; }
+  @property --ink-placeholder { syntax: '<color>'; inherits: true; initial-value: #e5c2d5; }
+  @property --accent { syntax: '<color>'; inherits: true; initial-value: #ff9bce; }
+  @property --accent-strong { syntax: '<color>'; inherits: true; initial-value: #ff6bad; }
+  @property --accent-ink { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+  @property --accent-soft { syntax: '<color>'; inherits: true; initial-value: #ffe3f0; }
+  @property --danger { syntax: '<color>'; inherits: true; initial-value: #e15b8a; }
+  @property --danger-bg { syntax: '<color>'; inherits: true; initial-value: #fdeef3; }
+  @property --danger-border { syntax: '<color>'; inherits: true; initial-value: #f5c6da; }
+  @property --heart { syntax: '<color>'; inherits: true; initial-value: #ff7ebd; }
+  html {
+    transition:
+      --bg-app 0.4s ease, --bg-panel 0.4s ease, --bg-card 0.4s ease,
+      --border-soft 0.4s ease, --border 0.4s ease, --border-strong 0.4s ease,
+      --ink 0.4s ease, --ink-soft 0.4s ease, --ink-faint 0.4s ease, --ink-placeholder 0.4s ease,
+      --accent 0.4s ease, --accent-strong 0.4s ease, --accent-ink 0.4s ease, --accent-soft 0.4s ease,
+      --danger 0.4s ease, --danger-bg 0.4s ease, --danger-border 0.4s ease, --heart 0.4s ease;
+  }
+  body, html {
+    margin: 0; padding: 0; width: 100%; min-height: 100%;
+    font-family: var(--font-base), 'Pretendard Variable', -apple-system, sans-serif;
+    background: var(--bg-app); color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  /* sticky 헤더가 뷰포트 맨 위에 딱 붙어 보이지 않도록 아주 살짝 여백을 준다. */
+  body { padding-top: 8px; }
+
+  ::placeholder { color: var(--ink-placeholder); opacity: 1; }
+
+  /* ---------- selection ---------- */
+  ::selection { background: var(--accent); color: #ffffff; }
+  html[data-theme="dark"] ::selection { color: #000000; }
+
+  /* ---------- scrollbar ---------- */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--accent) 55%, transparent) transparent;
+  }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover { background-color: color-mix(in srgb, var(--accent-strong) 75%, transparent); }
+  *::-webkit-scrollbar-corner { background: transparent; }
+
+  /* 예전엔 640/1000/1120px로 폭이 계단식으로 고정돼서, 그 구간 사이(예: 701~900px)에서는
+     뷰포트가 커져도 폭이 그대로라 양옆 여백만 계속 벌어지다가 다음 구간에서 갑자기
+     좁아지는 부자연스러운 느낌이 있었다. 대신 최대 1120px까지는 유동적으로 늘어나게 하고,
+     항상 양옆 16px 여백만 유지되도록 해서 중간 구간에서도 여백이 과하게 커지지 않는다. */
+  /* width는 명시하지 않고 max-width + padding만 쓴다 — width를 calc()로 고정해버리면
+     desktop에서 글쓰기 패널이 열릴 때 JS가 주는 margin-right가 폭을 "줄이지" 못하고
+     박스를 그냥 옆으로 밀어버리기만 해서(오토마진이 흡수) 패널이 내용 위에 뜬 것처럼
+     보이는 문제가 있었다. width를 auto로 두어야 margin-right만큼 실제로 좁아지며
+     내용이 자연스럽게 옆으로 밀려나는(sliding push) 원래 동작으로 돌아온다. */
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 18px 16px 60px; box-sizing: border-box; transition: margin-right 0.38s cubic-bezier(0.32, 0.72, 0, 1); }
+
+  /* ---------- header ---------- */
+  /* app-header 자체는 뷰포트 전체 폭(full-width)으로 깔리는 sticky 바이고,
+     실제 내용(로고/버튼들)은 안쪽의 header-inner가 .wrap과 같은 max-width로
+     정렬을 맞춘다 — 그래야 배경만 꽉 차고 내용 정렬은 본문과 그대로 일치한다. */
+  .app-header {
+    position: sticky; top: 0; z-index: 30;
+    width: 100%;
+    margin-bottom: 12.5px;
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg-app);
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1120px; margin: 0 auto; padding: 11px 16px; box-sizing: border-box;
+    transition: margin-right 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  #boardSettingsBtn {
+    width: 28px; height: 28px;
+  }
+  .app-brand { display: flex; align-items: baseline; gap: 5px; font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; min-width: 0; }
+  .app-brand #siteNameLabel { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 46vw; }
+  .app-brand .heart { color: var(--heart); font-size: 0.9em; margin: 0 1px; }
+  .app-brand small { font-weight: 500; color: color-mix(in srgb, var(--ink-faint) 55%, var(--bg-app) 45%); font-size: 13px; }
+
+  .theme-toggle {
+    position: relative; width: 46px; height: 26px; border-radius: calc(var(--r-pill) * 0.6);
+    border: 1px solid var(--border); background: color-mix(in srgb, var(--accent) 22%, var(--accent-soft) 78%);
+    cursor: pointer; padding: 0; flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease, border-radius 0.2s ease;
+  }
+  .theme-toggle-thumb {
+    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: calc(var(--r-pill) * 0.6);
+    background: color-mix(in srgb, var(--accent-strong) 78%, white 22%);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--accent-strong) 35%, transparent);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.25s ease, border-radius 0.2s ease;
+  }
+  html[data-theme="dark"] .theme-toggle { background: color-mix(in srgb, var(--accent-soft) 50%, var(--bg-card) 50%); }
+  html[data-theme="dark"] .theme-toggle-thumb { transform: translateX(22px); background: var(--accent-strong); }
+
+  /* ---------- auth / handle ---------- */
+  .app-brand { cursor: pointer; }
+
+  .btn-login {
+    border: 1px solid var(--border-soft); background: var(--bg-panel); color: var(--ink-soft);
+    font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+    padding: 6px 12px; border-radius: var(--r-md); flex-shrink: 0;
+    box-shadow: var(--shadow-btn);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-login:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border-soft); background: var(--bg-panel);
+    box-shadow: var(--shadow-btn);
+    padding: 3px 4px 3px 3px; border-radius: var(--r-pill); flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .user-avatar {
+    width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
+    background: var(--accent-soft); flex-shrink: 0; cursor: pointer;
+  }
+  .user-handle-label {
+    font-size: 12px; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+    max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .user-handle-label:hover { color: var(--accent-strong); text-decoration: underline; }
+  .user-chip .icon-btn { width: 22px; height: 22px; font-size: 11px; border-radius: var(--r-pill); }
+  /* 로그아웃 버튼: 다른 아이콘 버튼들과 같은 톤(플랫 배경 + ink-soft)으로 맞춰서
+     혼자 칙칙하게 붕 떠 보이지 않게 한다. */
+  #logoutBtn {
+    box-shadow: none; border-color: transparent;
+    background: var(--bg-panel);
+    color: var(--ink-soft);
+  }
+  #logoutBtn:hover { background: var(--danger-bg); border-color: transparent; color: var(--danger); transform: none; }
+  #logoutBtn:active { transform: none; }
+
+  .link-btn {
+    border: none; background: none; color: var(--ink-faint);
+    font-family: inherit; font-size: 12px; cursor: pointer; text-decoration: underline;
+    padding: 0;
+  }
+  .link-btn:hover { color: var(--ink-soft); }
+
+  body.view-only .add-card,
+  body.view-only #addPanelToggle { display: none !important; }
+  @media (min-width: 701px) {
+    body.view-only .wrap { margin-right: auto !important; }
+  }
+
+  .board-viewonly-tag {
+    font-size: 11px; font-weight: 600; color: var(--accent-strong);
+    background: var(--accent-soft); border-radius: var(--r-sm); padding: 2px 7px; margin-left: 6px;
+  }
+
+  /* ---------- invite codes ---------- */
+  .invite-code-row {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--border-soft); border-radius: var(--r-md); padding: 8px 10px;
+    font-size: 13px;
+  }
+  .invite-code-row.used { opacity: 0.5; }
+  .invite-code-row .code {
+    font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .invite-code-row:not(.used) .code { cursor: pointer; }
+  .invite-code-row .status { font-size: 11px; font-weight: 600; }
+  .invite-code-row .status.unused { color: var(--accent-strong); }
+  .invite-code-row .status.used-tag { color: var(--ink-faint); }
+
+  /* ---------- add card panel ---------- */
+  .content-row {
+    display: block;
+    letter-spacing: var(--u-letter-spacing);
+    line-height: var(--u-line-height);
+    zoom: var(--u-zoom);
+  }
+
+  /* mobile: classic always-visible card, rounded style */
+  .add-card {
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
+    box-sizing: border-box; box-shadow: var(--shadow-card);
+    padding: 14px; margin: 0 0 16px;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+
+  @media (min-width: 701px) {
+    .content-row { display: block; }
+    .add-card {
+      position: fixed; top: 0; right: 0; height: 100vh;
+      padding: 16px; margin: 0; border: none; border-left: 1px solid var(--border-soft);
+      border-radius: 0; box-sizing: border-box;
+      background: var(--bg-panel); box-shadow: var(--shadow-bar); overflow-y: auto; overflow-x: hidden;
+      z-index: 50;
+      transform: translateX(105%);
+      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1), background 0.25s ease, border-color 0.25s ease;
+    }
+    .add-card.open {
+      transform: translateX(0);
+    }
+    .add-card.resizing { transition: background 0.25s ease, border-color 0.25s ease; }
+
+    .resize-handle {
+      position: absolute; top: 0; left: 0; width: 6px; height: 100%;
+      cursor: ew-resize; z-index: 3;
+    }
+    .resize-handle:hover, .resize-handle.active { background: var(--accent-soft); }
+  }
+
+  .add-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .add-panel-header span {
+    font-size: 14px; font-weight: 700; color: var(--ink);
+  }
+  @media (max-width: 700px) {
+    .add-panel-header { display: none; }
+  }
+
+  .btn-add-toggle {
+    display: flex; align-items: center; justify-content: center;
+    /* 진하게 채워진 색 때문에 실제 치수보다 커 보여서, 왼쪽 토글과 비슷한 존재감으로
+       보이도록 치수와 그림자를 살짝 줄였다 (정확한 px보다 시각적 크기감 기준).
+       단, 다른 아이콘 버튼(.icon-btn, 28px)과 같은 var(--r-pill) 값을 그대로 쓰면
+       박스가 더 작은 만큼(25px) 상대적으로 더 둥글어 보여서, 크기 비율만큼 보정해
+       다른 버튼들과 같은 둥근 정도로 보이게 맞춘다. */
+    width: 25px; height: 25px; border-radius: calc(var(--r-pill) * 25 / 28);
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--accent-strong) 30%, transparent);
+    font-size: 13px; font-weight: 500; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+  .btn-add-toggle:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--accent-ink); transform: translateY(-1px); }
+
+  @media (max-width: 700px) {
+    .btn-add-toggle { display: none; }
+  }
+
+
+  .note-title-input {
+    width: 100%; border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 8px 10px; margin-bottom: 8px;
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 13.5px; font-weight: 700; outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .note-title-input:focus { border-color: var(--accent); }
+  .note-title-input::placeholder { font-weight: 500; }
+
+  #newText, .rich-editable {
+    width: 100%; min-height: 74px; resize: vertical; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 12px;
+    background: var(--bg-card); color: var(--ink);
+    font-family: inherit; font-size: 13.5px; line-height: 1.55; outline: none;
+    transition: border-color 0.15s ease;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  #newText:focus, .rich-editable:focus { border-color: var(--accent); }
+  /* contenteditable은 placeholder 속성을 지원하지 않아서 :empty 상태일 때 흉내낸다. */
+  .rich-editable:empty:before {
+    content: attr(data-placeholder);
+    color: var(--ink-placeholder);
+    pointer-events: none;
+  }
+  @media (min-width: 701px) {
+    #newText { min-height: 150px; }
+  }
+
+  
+  .md-toolbar { display: flex; gap: 6px; margin-bottom: 8px; }
+  .md-btn {
+    width: 30px; height: 30px; border-radius: var(--r-md); border: 1px solid var(--border);
+    background: transparent; color: var(--ink); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; font-size: 13px; font-weight: 700; padding: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .md-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+  .md-btn i { font-style: italic; font-weight: 500; }
+  .hl-preview {
+    background: var(--accent-soft); color: var(--ink);
+    font-size: 12px; font-weight: 500; line-height: 1.3;
+    padding: 1px 4px; border-radius: var(--r-sm);
+  }
+
+  /* ---------- visibility (private / password) ---------- */
+  .visibility-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .vis-btn {
+    border: 1px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
+    font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer;
+    padding: 6px 10px; border-radius: var(--r-pill); transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .vis-btn:hover { border-color: var(--accent); color: var(--ink); }
+  /* 브라우저 기본 포커스 링이 남아있으면 "공개" 버튼 등에 각지고 두꺼운 사각 테두리가
+     따로 떠서(캡처에서 보이던 부자연스러운 여백의 정체) 어색해 보였다 — 깔끔한 전용
+     포커스 스타일로 교체. */
+  .vis-btn:focus { outline: none; }
+  .vis-btn:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+  .vis-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
+  .vis-btn .icon-label { pointer-events: none; line-height: 1; }
+
+  .note-card.locked-card { cursor: default; }
+  .locked-body {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    padding: 6px 2px 2px; color: var(--ink-faint);
+  }
+  .locked-body .locked-msg { display: inline-flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .locked-body .locked-sub { font-size: 11.5px; color: var(--ink-faint); }
+  .btn-unlock {
+    display: inline-flex; align-items: center; gap: 5px;
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+    padding: 7px 14px; border-radius: var(--r-md);
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+  .btn-unlock svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
+  .btn-unlock:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+  .btn-unlock:active { transform: translateY(1px); }
+  .note-vis-tag {
+    font-size: 11px; font-weight: 700; color: var(--accent-ink);
+    background: var(--accent-strong); border-radius: var(--r-md); padding: 2px 8px;
+    display: inline-flex; align-items: center; gap: 3px; margin: 0 6px 6px 0;
+  }
+  .note-vis-tag.vis-tag-private { background: var(--heart); }
+  .note-vis-tag svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
+  .note-vis-tag.vis-tag-private svg { width: 11px; height: 11px; }
+  .locked-body .locked-msg svg { width: 13px; height: 13px; flex-shrink: 0; display: block; }
+
+  .tag-input-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    margin-top: 8px; padding: 6px 8px;
+    border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-card);
+  }
+  .tag-input-row input {
+    flex: 1; min-width: 90px; border: none; background: transparent; outline: none;
+    color: var(--ink); font-family: inherit; font-size: 12.5px; padding: 3px 2px;
+  }
+  .tag-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--accent-soft); color: var(--ink); border: 1px solid var(--border-soft);
+    padding: 2px 7px; border-radius: var(--r-sm); font-size: 11px; white-space: nowrap;
+  }
+  .tag-chip .tag-chip-label::before { content: "#"; }
+  .tag-chip button {
+    border: none; background: none; color: var(--ink-soft); cursor: pointer;
+    font-size: 12px; line-height: 1; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .tag-chip button svg { width: 10px; height: 10px; display: block; }
+  .tag-chip button:hover { color: var(--danger); }
+
+  .add-card-footer { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .btn-save {
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    font-weight: 600; font-size: 13px; padding: 8px 18px; border-radius: var(--r-md); cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn-save:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+  /* ---------- search ---------- */
+  .search-row { position: relative; }
+  .search-row input {
+    /* ink 톤 대신 포인트색을 살짝 섞어서, 옆 버튼들과는 다르게 그림자 없이도
+       칙칙하지 않고 파스텔감 있게 살짝 진하게 보이도록. */
+    border: 1px solid transparent; border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--accent) 9%, var(--bg-app) 91%); color: var(--ink);
+    font-family: inherit; outline: none;
+    box-shadow: none;
+    transition: background 0.15s ease, width 0.2s ease, border-color 0.15s ease;
+  }
+  .search-row input:focus { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--bg-app) 86%); }
+  .search-row input::placeholder {
+    /* 기본 플레이스홀더보다는 채도 있게, 하지만 너무 진하지 않게 살짝만. */
+    color: color-mix(in srgb, var(--accent-strong) 18%, var(--ink-faint) 82%);
+  }
+
+  .header-search { flex-shrink: 0; }
+  .header-search input {
+    width: 92px; padding: 6px 10px; font-size: 12px;
+  }
+  .header-search:focus-within input { width: 150px; }
+
+  /* 모바일: 서치를 헤더 밖으로 빼서(JS) 메모 작성 영역 위에 전체 폭으로 배치.
+     헤더 안에 있으면 좁은 화면에서 로고/타이틀 텍스트를 가리는 문제가 있었음. */
+  @media (max-width: 700px) {
+    .header-search.search-full {
+      flex-shrink: 1; width: 100%; margin: 0 0 12px;
+    }
+    .header-search.search-full input,
+    .header-search.search-full:focus-within input {
+      width: 100%;
+    }
+  }
+
+  /* ---------- tag filter bar ---------- */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .filter-chip {
+    border: 1px solid var(--border-soft); background: var(--bg-card); color: var(--ink-faint);
+    font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 5px 10.5px; border-radius: var(--r-md);
+    box-shadow: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .filter-chip.tag-filter::before { content: "#"; }
+  .filter-chip:hover { border-color: var(--accent); color: var(--ink); background: var(--accent-soft); }
+  .filter-chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
+  /* "전체" 칩만 선택됐을 때는 나만보기 태그와 같은 진한 톤으로 — 기본 화면임을 뚜렷하게 보여준다.
+     다른 태그 칩이 선택된 경우는 위의 연한 active 스타일을 그대로 유지. */
+  .filter-chip.all-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
+  .filter-chip.icon-only { display: inline-flex; align-items: center; justify-content: center; padding: 5px 8.5px; }
+  .filter-chip.icon-only svg { width: 13px; height: 13px; display: block; }
+  .filter-chip.private-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
+
+  /* ---------- card grid (masonry via JS column packing) ---------- */
+  .card-grid {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .masonry-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .note-card {
+    background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
+    padding: 12px 14px; box-shadow: var(--shadow-card);
+    position: relative; contain: layout; transition: border-color 0.15s ease, background 0.25s ease;
+    width: 100%; box-sizing: border-box;
+    margin: 0;
+  }
+  .note-card:hover { border-color: var(--border-strong); }
+
+  .note-card-actions {
+    position: absolute; top: 8px; right: 8px; display: flex; gap: 4px;
+    opacity: 0; transition: opacity 0.15s ease;
+  }
+  .note-card:hover .note-card-actions,
+  .note-card:focus-within .note-card-actions { opacity: 1; }
+
+  .note-card-body {
+    margin-top: 0; transition: margin-top 0.18s ease;
+    cursor: pointer;
+  }
+  .note-card:hover .note-card-body,
+  .note-card:focus-within .note-card-body { margin-top: 28px; }
+
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: var(--r-pill); border: 1px solid var(--border-soft);
+    background: var(--bg-panel); color: var(--ink-soft); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+  /* 맨 위 헤더 줄의 버튼들만 그림자를 유지하고, 그 외 버튼들은 전부 플랫하게 둔다. */
+  .app-header .icon-btn { box-shadow: var(--shadow-btn); }
+  .icon-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); transform: translateY(-1px); }
+  .icon-btn:active { transform: translateY(0); }
+  .icon-btn.danger:hover { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+  .icon-btn svg { width: 15px; height: 15px; flex-shrink: 0; display: block; }
+
+  /* ---------- unified inline svg icons (텍스트 옆 아이콘) ---------- */
+  .icon-label { display: inline-flex; align-items: center; gap: 4px; }
+  .icon-label svg { width: 15px; height: 15px; flex-shrink: 0; display: block; }
+  .vis-icon-heart svg { width: 12px; height: 12px; }
+  .user-chip .icon-btn svg { width: 12px; height: 12px; }
+
+  .note-title {
+    font-size: 13.5px; line-height: 1.6; font-weight: 700; color: var(--ink);
+    word-break: break-word; margin: 0 4px 2px 0;
+  }
+  .note-text {
+    font-size: 13.5px; line-height: 1.6; color: var(--ink);
+    white-space: pre-wrap; word-break: break-word; margin: 0px;
+  }
+  .note-text.truncated {
+    max-height: 350px; overflow: hidden; position: relative;
+    cursor: pointer;
+  }
+  .note-text.truncated::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: 0; height: 56px;
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--bg-card) 0%, transparent) 0%,
+      color-mix(in srgb, var(--bg-card) 22%, transparent) 28%,
+      color-mix(in srgb, var(--bg-card) 50%, transparent) 52%,
+      color-mix(in srgb, var(--bg-card) 82%, transparent) 78%,
+      var(--bg-card) 100%);
+    pointer-events: none;
+  }
+  .note-text strong { font-weight: 700; }
+  .note-text em { font-style: italic; }
+  .note-text del { text-decoration: line-through; }
+  .note-text u { text-decoration: underline; }
+  .note-text mark {
+    background: var(--accent-soft); color: var(--ink);
+    padding: 0 3px; border-radius: var(--r-sm);
+  }
+  html[data-theme="dark"] .note-text mark { color: var(--ink); }
+  .note-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 30px 10px 0; }
+  .note-tags:empty { margin: 0; }
+  .note-tag {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 600; color: var(--accent-strong); background: var(--accent-soft);
+    padding: 2px 8px; border-radius: var(--r-md);
+  }
+  .note-tag::before { content: "#"; }
+
+  .note-edit-area {
+    min-height: 160px; border: 1px solid var(--accent);
+    margin-top: 4px;
+  }
+  .note-edit-footer { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+  .btn-mini {
+    border: 1px solid var(--border); background: var(--bg-card); color: var(--ink-soft);
+    font-size: 12px; padding: 5px 12px; border-radius: var(--r-md); cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-mini:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+  .btn-mini.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .btn-mini.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+  .empty-hint { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 50px 0; }
+
+  .site-footer {
+    text-align: center; font-size: 11px; color: var(--ink-faint);
+    opacity: 0.55; padding: 26px 0 4px;
+  }
+  /* 데스크탑에서는 평소에 숨겨두고, 메모 추가 패널이 열려 있을 때만
+     패널 오른쪽 아래에 고정 표시 */
+  @media (min-width: 701px) {
+    .site-footer { display: none; }
+    .content-row:has(.add-card.open) ~ .site-footer {
+      display: block;
+      position: fixed; right: 18px; bottom: 14px; left: auto;
+      padding: 0; margin: 0; z-index: 51;
+    }
+  }
+
+  /* ---------- toast ---------- */
+  #toastStack {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none;
+  }
+  .toast {
+    display: inline-flex; align-items: center; background: var(--bg-panel); color: var(--ink);
+    border: 1px solid var(--border-strong); padding: 9px 16px; border-radius: var(--r-pill);
+    font-size: 12.5px; font-weight: 500; white-space: nowrap; box-shadow: var(--shadow-bar);
+    opacity: 0; transform: translateY(-10px) scale(0.96);
+    transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1), transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  }
+  .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+  .toast.hide { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  .toast.toast-danger { border-color: var(--danger-border); color: var(--danger); }
+
+  /* ---------- note modal ---------- */
+  .note-modal-overlay {
+    position: fixed; inset: 0; background: rgba(20, 10, 16, 0.6);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; pointer-events: none; z-index: 80;
+    transition: opacity 0.2s ease;
+  }
+  .note-modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .note-modal-card {
+    background: var(--bg-panel); border: 1px solid var(--border-soft); border-radius: var(--r-lg);
+    box-shadow: var(--shadow-bar); padding: 44px 22px 22px; width: 100%; max-width: 480px;
+    max-height: 80vh; overflow-y: auto; position: relative;
+    transform: scale(0.96) translateY(6px);
+    transition: transform 0.2s ease, background 0.25s ease, border-color 0.25s ease;
+  }
+  .note-modal-overlay.open .note-modal-card { transform: scale(1) translateY(0); }
+
+  .note-modal-close {
+    position: absolute; top: 14px; right: 14px;
+  }
+  .note-modal-card .note-text,
+  .note-modal-card .note-title {
+    font-size: 14px; line-height: 1.7;
+  }
+  .note-modal-actions {
+    position: absolute; top: 14px; right: 50px;
+    display: flex; gap: 6px; margin: 0;
+  }
+
+  /* ---------- settings modal (compact, sectioned) ---------- */
+  #settingsModalCard { max-width: 460px; padding: 34px 18px 18px; }
+  @media (min-width: 860px) {
+    #settingsModalCard {
+      max-width: 820px; width: 92vw; max-height: 88vh;
+    }
+    .settings-columns {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 14px; align-items: start;
+    }
+    .settings-columns .settings-section { height: 100%; }
+  }
+  .settings-section {
+    border: 1px solid var(--border-soft); border-radius: var(--r-lg);
+    background: var(--bg-panel); padding: 14px 14px; margin-bottom: 12px;
+  }
+  .settings-section-title {
+    font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+    padding-bottom: 9px; border-bottom: 1px solid var(--border-soft);
+  }
+  .settings-section-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; color: var(--accent-strong); flex-shrink: 0;
+  }
+  .settings-section-icon svg { width: 15px; height: 15px; display: block; }
+  .settings-field { margin-bottom: 13px; }
+  .settings-field:last-child { margin-bottom: 0; }
+  .settings-field-label {
+    font-size: 11px; font-weight: 600; color: var(--ink-soft); margin-bottom: 5px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .settings-field-label .val { color: var(--ink-faint); font-weight: 400; }
+  .settings-field-hint {
+    font-size: 10px; color: var(--ink-faint); margin-top: 5px; line-height: 1.4;
+  }
+  .settings-grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .settings-grid4 .settings-field-label { font-size: 10px; }
+  .settings-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .settings-grid3 .settings-field-label { font-size: 10.5px; justify-content: center; }
+  .settings-grid3 > div { text-align: center; }
+  .settings-color-hex {
+    font-size: 10px; color: var(--ink-faint); margin-top: 5px; letter-spacing: 0.02em;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+  .settings-preview-box {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    padding: 12px 13px; border-radius: var(--r-md);
+    background: var(--bg-card); border: 1px solid var(--border-soft);
+  }
+  .settings-preview-tag {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill);
+    background: var(--accent-soft); color: var(--accent-strong);
+  }
+  .settings-preview-tag::before { content: "#"; }
+  .settings-preview-text { font-size: 12px; color: var(--ink); }
+  .settings-preview-btn {
+    font-family: inherit; font-size: 11px; font-weight: 700; border: none; cursor: default;
+    padding: 6px 12px; border-radius: var(--r-md);
+    background: var(--accent); color: var(--accent-ink);
+  }
+  .settings-text-preview {
+    display: block; font-size: calc(12.5px * var(--u-zoom, 1));
+    line-height: var(--u-line-height, 1.6); letter-spacing: var(--u-letter-spacing, 0em);
+    color: var(--ink);
+  }
+  #settingsModalCard input[type="text"],
+  #settingsModalCard select {
+    width: 100%; padding: 7px 9px; border-radius: var(--r-md);
+    border: 1px solid var(--border); background: var(--bg-panel); color: var(--ink);
+    font-size: 12px; font-family: inherit;
+  }
+  #settingsModalCard input[type="color"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 30px; padding: 0; border: none; outline: none;
+    border-radius: var(--r-sm); background: none; cursor: pointer;
+  }
+  #settingsModalCard input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  #settingsModalCard input[type="color"]::-webkit-color-swatch { border: none; border-radius: var(--r-sm); }
+  #settingsModalCard input[type="color"]::-moz-color-swatch { border: none; border-radius: var(--r-sm); }
+
+  /* ---------- favicon upload ---------- */
+  .favicon-upload-row { display: flex; align-items: center; gap: 8px; }
+  .favicon-preview {
+    width: 30px; height: 30px; border-radius: var(--r-sm); flex-shrink: 0;
+    border: 1px solid var(--border); background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .favicon-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .btn-favicon-upload {
+    border: 1px solid var(--border); background: var(--bg-panel); color: var(--ink-soft);
+    font-family: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer;
+    padding: 6px 10px; border-radius: var(--r-md);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-favicon-upload:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+
+  #settingsModalCard input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 5px; border-radius: var(--r-pill);
+    background: var(--accent-soft); margin: 6px 0 4px; cursor: pointer;
+  }
+  #settingsModalCard input[type="range"]::-webkit-slider-runnable-track { height: 5px; border-radius: var(--r-pill); background: transparent; }
+  #settingsModalCard input[type="range"]::-moz-range-track { height: 5px; border-radius: var(--r-pill); background: transparent; }
+  #settingsModalCard input[type="range"]::-moz-range-progress { height: 5px; border-radius: var(--r-pill); background: var(--accent); }
+  #settingsModalCard input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 14px; height: 14px; border-radius: 50%; margin-top: -4.5px;
+    background: var(--accent-strong); border: none;
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--accent-strong) 45%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent-strong) 25%, transparent);
+    cursor: pointer;
+  }
+  #settingsModalCard input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%; border: none;
+    background: var(--accent-strong);
+    box-shadow: 0 2px 5px color-mix(in srgb, var(--accent-strong) 45%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent-strong) 25%, transparent);
+    cursor: pointer;
+  }
+
+  #settingsModalCard .visibility-row { margin: 0; gap: 5px; }
+  #settingsModalCard .vis-btn { padding: 5px 9px; font-size: 10.5px; }
+
+  /* ---------- gate screen (핸들 없음 + 로그인 안 됨) ---------- */
+  .gate-stage{
+    position:fixed; inset:0; z-index:500;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; background:var(--bg-app);
+  }
+  .gate-stage[hidden]{ display:none; }
+  .gate-card{
+    width:100%; max-width:340px; background:var(--bg-panel);
+    border:1px solid var(--border-soft); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-bar); padding:34px 26px 28px; text-align:center;
+  }
+  .gate-brand{font-weight:800; font-size:25px; color:var(--ink); margin-bottom:18px; letter-spacing:-.01em;}
+  .gate-brand .heart{color:var(--accent-strong);}
+  .gate-card h2{font-size:12.5px; font-weight:700; margin:0 0 6px; color:var(--ink);}
+  .gate-sub{font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 22px;}
+  .gate-btn{
+    width:100%; border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink);
+    font-family:inherit; font-weight:600; font-size:13.5px; padding:11px 18px; border-radius:var(--r-md); cursor:pointer;
+    transition:background .15s ease;
+  }
+  .gate-btn:hover{background:var(--accent-strong); border-color:var(--accent-strong);}
+</style>
+</head>
+<body class="view-only">
+
+<div class="gate-stage" id="gateStage">
+  <div class="gate-card">
+    <div class="gate-brand">r<span class="heart">♡</span>siememo</div>
+    <h2>계정이 필요해요</h2>
+    <p class="gate-sub">로그인하면 핸들을 만들 수 있어요</p>
+    <button type="button" class="gate-btn" id="gateLoginBtn">Google로 로그인</button>
+  </div>
+</div>
+
+<div id="toastStack"></div>
+
+<div class="note-modal-overlay" id="noteModalOverlay">
+  <div class="note-modal-card" id="noteModalCard">
+    <button type="button" class="icon-btn note-modal-close" id="noteModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
+    <div class="note-modal-actions" id="noteModalActions"></div>
+    <div class="note-title" id="noteModalTitle" style="display:none;"></div>
+    <div class="note-tags" id="noteModalTags"></div>
+    <div class="note-text" id="noteModalText"></div>
+  </div>
+</div>
+
+<div class="note-modal-overlay" id="inappModalOverlay">
+  <div class="note-modal-card" id="inappModalCard" style="max-width:340px; padding:32px 22px 22px;">
+    <button type="button" class="icon-btn note-modal-close" id="inappModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
+    <div style="font-weight:700; font-size:15px; margin-bottom:8px;">Safari에서 열어주세요</div>
+    <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
+      카카오톡·인스타그램 같은 앱 안의 브라우저에서는 구글 로그인이 제한돼요.<br>
+      링크를 복사해서 Safari(또는 Chrome) 앱에 붙여넣어 열어주세요.
+    </div>
+    <div class="add-card-footer" style="margin-top:14px;">
+      <button type="button" class="btn-save" id="inappCopyLinkBtn">링크 복사하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="note-modal-overlay" id="unlockModalOverlay">
+  <div class="note-modal-card" id="unlockModalCard" style="max-width:340px; padding:32px 22px 22px;">
+    <button type="button" class="icon-btn note-modal-close" id="unlockModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
+    <div class="icon-label" style="font-weight:700; font-size:15px; margin-bottom:8px;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>비밀글이에요</div>
+    <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
+      비밀번호를 입력하면 내용을 볼 수 있어요.
+    </div>
+    <div class="tag-input-row">
+      <input type="password" id="unlockPasswordInput" placeholder="비밀번호">
+    </div>
+    <div class="add-card-footer" style="margin-top:14px;">
+      <button type="button" class="btn-save" id="unlockSubmitBtn">잠금 해제</button>
+    </div>
+  </div>
+</div>
+
+<div class="note-modal-overlay" id="handleModalOverlay">
+  <div class="note-modal-card" id="handleModalCard" style="max-width:360px; padding:36px 22px 22px;">
+    <div style="font-weight:700; font-size:15px; margin-bottom:8px;">나만의 핸들 만들기</div>
+    <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px;">
+      친구들과 메모장을 공유할 때 쓰일 이름이에요.<br>나중에 바꿀 수 없어요.
+    </div>
+    <div class="tag-input-row" id="inviteCodeRow" style="margin-bottom:8px;">
+      <input type="text" id="inviteCodeInput" placeholder="초대 코드">
+    </div>
+    <div class="tag-input-row">
+      <input type="text" id="handleInput" placeholder="영문/숫자/_ 3~20자">
+    </div>
+    <div class="add-card-footer" style="margin-top:14px;">
+      <button type="button" class="btn-save" id="handleSaveBtn">만들기</button>
+    </div>
+    <div style="text-align:center; margin-top:12px;">
+      <button type="button" id="handleModalLogout" class="link-btn">다른 계정으로 로그인</button>
+    </div>
+  </div>
+</div>
+
+<div class="note-modal-overlay" id="adminModalOverlay">
+  <div class="note-modal-card" id="adminModalCard" style="max-width:420px; padding:40px 22px 22px;">
+    <button type="button" class="icon-btn note-modal-close" id="adminModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
+    <div style="font-weight:700; font-size:15px; margin-bottom:12px;">초대 코드 관리</div>
+    <div class="add-card-footer" style="justify-content:flex-start; margin-bottom:14px;">
+      <button type="button" class="btn-save" id="genCodeBtn">새 코드 생성</button>
+    </div>
+    <div id="inviteCodeList" style="display:flex; flex-direction:column; gap:6px; max-height:340px; overflow-y:auto;"></div>
+  </div>
+</div>
+
+<div class="note-modal-overlay" id="settingsModalOverlay">
+  <div class="note-modal-card" id="settingsModalCard">
+    <button type="button" class="icon-btn note-modal-close" id="settingsModalClose" aria-label="닫기" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg></button>
+    <div style="font-weight:700; font-size:14px; margin-bottom:10px;">보드 설정</div>
+
+    <div class="settings-columns">
+    <div class="settings-section">
+      <div class="settings-section-title"><span class="settings-section-icon"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9.5" opacity="0.16"></circle><circle cx="12" cy="7.8" r="1.3"></circle><rect x="10.8" y="10.5" width="2.4" height="7" rx="1.2"></rect></svg></span>기본 정보</div>
+      <div class="settings-field">
+        <div class="settings-field-label">사이트 이름</div>
+        <input type="text" id="settingsSiteName" placeholder="r♡sie" maxlength="60">
+        <div class="settings-field-hint">상단 왼쪽에 표시되는 보드 이름이에요</div>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">파비콘</div>
+        <div class="favicon-upload-row">
+          <div class="favicon-preview" id="faviconPreview"><img id="faviconPreviewImg" alt="" style="display:none;"></div>
+          <label class="btn-favicon-upload" for="faviconFileInput">이미지 선택</label>
+          <input type="file" accept="image/*" id="faviconFileInput" style="display:none;">
+          <button type="button" class="link-btn" id="faviconRemoveBtn" style="display:none;">제거</button>
+        </div>
+        <div class="settings-field-hint">브라우저 탭에 표시되는 아이콘이에요 (정사각형 이미지 권장)</div>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">폰트</div>
+        <select id="settingsFont">
+          <option value="">프리텐다드</option>
+          <option value="IbmPlexSans" style="font-family:'IbmPlexSans';">IBM Plex Sans</option>
+          <option value="NexonLv1Gothic" style="font-family:'NexonLv1Gothic';">넥슨 Lv.1 고딕</option>
+          <option value="Aritaburi" style="font-family:'Aritaburi';">아리따부리</option>
+          <option value="ArittaDodum" style="font-family:'ArittaDodum';">아리따돋움</option>
+          <option value="Mona12" style="font-family:'Mona12';">모나12</option>
+          <option value="BoldRound" style="font-family:'BoldRound';">둥근모</option>
+        </select>
+        <div class="settings-field-hint">본문·제목·버튼 등 전체 글꼴이 바뀌어요</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title"><span class="settings-section-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a9.5 9.5 0 1 0 0 19c1.4 0 2.3-1 2.3-2.2 0-.6-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8h1.7A4.2 4.2 0 0 0 21 10.8C21 6 17 2.5 12 2.5Z" opacity="0.18"></path><circle cx="7.3" cy="10" r="1.5"></circle><circle cx="9.8" cy="6.7" r="1.5"></circle><circle cx="14.2" cy="6.7" r="1.5"></circle><circle cx="16.7" cy="10" r="1.5"></circle></svg></span>색상 &amp; 모양</div>
+      <div class="settings-field">
+        <div class="settings-grid3">
+          <div>
+            <div class="settings-field-label">포인트</div>
+            <input type="color" id="settingsAccent" value="#ff7ebd">
+            <div class="settings-color-hex" id="settingsAccentHex">#ff7ebd</div>
+          </div>
+          <div>
+            <div class="settings-field-label">배경</div>
+            <input type="color" id="settingsBg" value="#fdf1f6">
+            <div class="settings-color-hex" id="settingsBgHex">#fdf1f6</div>
+          </div>
+          <div>
+            <div class="settings-field-label">글자</div>
+            <input type="color" id="settingsInk" value="#5c3450">
+            <div class="settings-color-hex" id="settingsInkHex">#5c3450</div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>카드 투명도</span><span class="val" id="settingsCardOpacityVal">70%</span></div>
+        <input type="range" id="settingsCardOpacity" min="0" max="100" step="5" value="70">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>그림자 진하기</span><span class="val" id="settingsShadowAlphaVal">100%</span></div>
+        <input type="range" id="settingsShadowAlpha" min="0" max="150" step="10" value="100">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">모서리</div>
+        <div class="visibility-row" id="settingsRadiusRow">
+          <button type="button" class="vis-btn" data-radius="sharp">뾰족하게</button>
+          <button type="button" class="vis-btn" data-radius="normal">보통</button>
+          <button type="button" class="vis-btn" data-radius="round">둥글게</button>
+        </div>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">미리보기</div>
+        <div class="settings-preview-box" id="settingsPreviewBox">
+          <span class="settings-preview-tag">태그</span>
+          <span class="settings-preview-text">이런 느낌으로 보여요</span>
+          <button type="button" class="settings-preview-btn">버튼</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title"><span class="settings-section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="16" y2="12"></line><line x1="4" y1="17" x2="12" y2="17"></line></svg></span>텍스트</div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>글자 크기</span><span class="val" id="settingsFontScaleVal">100%</span></div>
+        <input type="range" id="settingsFontScale" min="80" max="150" step="5" value="100">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>자간</span><span class="val" id="settingsLetterSpacingVal">0em</span></div>
+        <input type="range" id="settingsLetterSpacing" min="-5" max="15" step="1" value="0">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label"><span>줄간격</span><span class="val" id="settingsLineHeightVal">1.6</span></div>
+        <input type="range" id="settingsLineHeight" min="120" max="220" step="5" value="160">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">텍스트 미리보기</div>
+        <div class="settings-preview-box settings-text-preview">이 정도 크기와 줄간격으로<br>메모가 표시돼요.</div>
+      </div>
+    </div>
+    </div>
+
+    <div class="add-card-footer" style="justify-content:space-between;">
+      <button type="button" id="settingsResetBtn" class="link-btn">기본값으로</button>
+      <button type="button" class="btn-save" id="settingsSaveBtn">저장</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="app-header">
+  <div class="header-inner">
+    <div class="app-brand">
+      <span id="siteNameLabel">r<span class="heart">♡</span>sie</span>
+      <small id="boardLabel">memo</small>
+    </div>
+    <div class="header-right">
+      <div class="search-row header-search">
+        <input type="text" id="searchInput" placeholder="Search">
+      </div>
+      <button type="button" id="loginBtn" class="btn-login">Google로 로그인</button>
+      <div class="user-chip" id="userChip" style="display:none;">
+        <img id="userAvatar" class="user-avatar" alt="">
+        <span id="userHandleLabel" class="user-handle-label"></span>
+        <button type="button" id="logoutBtn" class="icon-btn" title="로그아웃"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a1.6 1.6 0 0 1 1.6 1.6v6a1.6 1.6 0 0 1-3.2 0v-6A1.6 1.6 0 0 1 12 2.5Z"></path><path d="M6.95 6.25a1.5 1.5 0 0 1 .1 2.11 6.5 6.5 0 1 0 9.9 0 1.5 1.5 0 1 1 2.27-1.96 9.5 9.5 0 1 1-14.44 0 1.5 1.5 0 0 1 2.17-.15Z"></path></svg></button>
+      </div>
+      <button type="button" id="adminBtn" class="icon-btn" title="초대 코드 관리" style="display:none;"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9.5" cy="8" r="4"></circle><path d="M2.5 20.3a7 7 0 0 1 14 0 1 1 0 0 1-1 1.1h-12a1 1 0 0 1-1-1.1Z"></path><path d="M18.5 6.5a1.25 1.25 0 0 1 1.25 1.25v2.25h2.25a1.25 1.25 0 1 1 0 2.5h-2.25v2.25a1.25 1.25 0 1 1-2.5 0v-2.25h-2.25a1.25 1.25 0 1 1 0-2.5h2.25V7.75A1.25 1.25 0 0 1 18.5 6.5Z"></path></svg></button>
+      <button type="button" id="boardSettingsBtn" class="icon-btn" title="보드 설정" style="display:none;"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="8.2" cy="7.5" r="3.1"></circle><rect x="3" y="15" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="15.8" cy="16.5" r="3.1"></circle></svg></button>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="테마 모드 전환" title="테마 모드 전환">
+        <span class="theme-toggle-thumb"></span>
+      </button>
+      <button type="button" id="addPanelToggle" class="btn-add-toggle" aria-label="메모 추가" title="메모 추가">+</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="content-row" id="contentRow">
+    <div class="add-card" id="addPanel">
+      <div class="resize-handle" id="resizeHandle"></div>
+      <div class="add-panel-header">
+        <span>메모 추가</span>
+      </div>
+      <input type="text" id="newTitle" class="note-title-input" placeholder="제목 (선택)">
+      <div class="md-toolbar">
+        <button type="button" class="md-btn" data-cmd="bold" title="굵게">B</button>
+        <button type="button" class="md-btn" data-cmd="italic" title="기울임"><i>I</i></button>
+        <button type="button" class="md-btn" data-cmd="underline" title="밑줄"><u>U</u></button>
+        <button type="button" class="md-btn" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
+        <button type="button" class="md-btn" data-cmd="highlight" title="하이라이트"><span class="hl-preview">가</span></button>
+      </div>
+      <div id="newText" class="rich-editable" contenteditable="true" data-placeholder="내용을 입력하세요"></div>
+      <div class="tag-input-row" id="newTagRow">
+        <input type="text" id="newTagInput" placeholder="태그 입력">
+      </div>
+      <div class="visibility-row" id="newVisibilityRow">
+        <button type="button" class="vis-btn active" data-vis="public">공개</button>
+        <button type="button" class="vis-btn" data-vis="private"><span class="icon-label vis-icon-heart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.6s-7.3-4.4-9.9-8.9C.5 8.4 1.5 4.2 5.1 2.9c2.5-.9 5.1 0 6.6 2.1L12 5.6l.3-.6c1.5-2.1 4.1-3 6.6-2.1 3.6 1.3 4.6 5.5 3 8.8-2.6 4.5-9.9 8.9-9.9 8.9Z"></path></svg>나만보기</span></button>
+        <button type="button" class="vis-btn" data-vis="password"><span class="icon-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>비밀글</span></button>
+      </div>
+      <div class="tag-input-row" id="newPasswordRow" style="display:none;">
+        <input type="password" id="newPasswordInput" placeholder="비밀번호 설정 (4자 이상)">
+      </div>
+      <div class="add-card-footer">
+        <button type="button" class="btn-save" id="saveNewBtn">저장</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="filter-bar" id="filterBar"></div>
+
+      <div class="card-grid" id="cardGrid"></div>
+      <div class="empty-hint" id="emptyHint" style="display:none;">아직 저장된 카드가 없습니다.</div>
+    </div>
+  </div>
+
+  <footer class="site-footer">by @hard7uck</footer>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc,
+  onSnapshot, query, where, orderBy, runTransaction, deleteField
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDvy-GOWFM3XJps5QsT64GAQcPTpwo93KU",
+  authDomain: "rosie-memo.firebaseapp.com",
+  projectId: "rosie-memo",
+  storageBucket: "rosie-memo.firebasestorage.app",
+  messagingSenderId: "141580936838",
+  appId: "1:141580936838:web:3724d54b108bdd95b95307",
+  measurementId: "G-DK9TQM5Q0T"
+};
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+// signInWithPopup은 Safari(특히 iOS)에서 내부적으로 리다이렉트처럼 처리되면서
+// 세션스토리지 상태를 잃어버려 "missing initial state" 에러가 나는 경우가 있다.
+// signInWithRedirect는 같은 탭이 그대로 페이지를 나갔다 돌아오는 방식이라 더 안전하다.
+getRedirectResult(auth).catch(() => {
+  showToast('로그인에 실패했습니다.', 'danger');
+});
+
+const el = id => document.getElementById(id);
+const THEME_KEY = 'rosie_ooc_theme';
+
+// 카카오톡/인스타그램 등 인앱 브라우저 감지: 이런 브라우저는 구글이 보안상
+// OAuth 로그인을 막아버려서, 로그인을 시도해도 실패하거나 이상한 에러가 뜬다.
+// 미리 감지해서 "Safari에서 열어주세요" 안내로 대신 보여준다.
+function isInAppBrowser() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+  return /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|FB_IAB|Line\/|WhatsApp|MicroMessenger|Snapchat|TikTok|musical_ly|Twitter|Daumapps/i.test(ua);
+}
+function openInappModal() { el('inappModalOverlay').classList.add('open'); }
+function closeInappModal() { el('inappModalOverlay').classList.remove('open'); }
+el('inappModalClose').addEventListener('click', closeInappModal);
+el('inappModalOverlay').addEventListener('click', (e) => { if (e.target === el('inappModalOverlay')) closeInappModal(); });
+el('inappCopyLinkBtn').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(location.href);
+    showToast('링크가 복사되었어요. Safari에 붙여넣어 열어주세요.');
+  } catch (e) {
+    showToast('복사에 실패했어요. 주소를 직접 복사해주세요.', 'danger');
+  }
+});
+
+// ---------- 아이콘 (전부 SVG로 통일 — 크기/두께 일관되게) ----------
+const ICONS = {
+  lock: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6a4.9 4.9 0 0 0-4.9 4.9v2.2c-1.7.3-3 1.8-3 3.6v4.1a3.6 3.6 0 0 0 3.6 3.6h8.6a3.6 3.6 0 0 0 3.6-3.6v-4.1c0-1.8-1.3-3.3-3-3.6V7.5A4.9 4.9 0 0 0 12 2.6Zm-2.9 7V7.5a2.9 2.9 0 1 1 5.8 0V9.6Zm2.9 4.1a1.8 1.8 0 0 1 1 3.3v1.3a1 1 0 1 1-2 0v-1.3a1.8 1.8 0 0 1 1-3.3Z"></path></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.6s-7.3-4.4-9.9-8.9C.5 8.4 1.5 4.2 5.1 2.9c2.5-.9 5.1 0 6.6 2.1L12 5.6l.3-.6c1.5-2.1 4.1-3 6.6-2.1 3.6 1.3 4.6 5.5 3 8.8-2.6 4.5-9.9 8.9-9.9 8.9Z"></path></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.6s-7.3-4.4-9.9-8.9C.5 8.4 1.5 4.2 5.1 2.9c2.5-.9 5.1 0 6.6 2.1L12 5.6l.3-.6c1.5-2.1 4.1-3 6.6-2.1 3.6 1.3 4.6 5.5 3 8.8-2.6 4.5-9.9 8.9-9.9 8.9Z"></path></svg>',
+  admin: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9.5" cy="8" r="4"></circle><path d="M2.5 20.3a7 7 0 0 1 14 0 1 1 0 0 1-1 1.1h-12a1 1 0 0 1-1-1.1Z"></path><path d="M18.5 6.5a1.25 1.25 0 0 1 1.25 1.25v2.25h2.25a1.25 1.25 0 1 1 0 2.5h-2.25v2.25a1.25 1.25 0 1 1-2.5 0v-2.25h-2.25a1.25 1.25 0 1 1 0-2.5h2.25V7.75A1.25 1.25 0 0 1 18.5 6.5Z"></path></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.1 4.9a5 5 0 0 1 7.07 7.07l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77l2.5-2.5a2.5 2.5 0 0 0-3.53-3.53l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77Z"></path><path d="M9.9 19.1a5 5 0 0 1-7.07-7.07l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77l-2.5 2.5a2.5 2.5 0 0 0 3.53 3.53l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77Z"></path></svg>',
+  gear: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="6" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="8.2" cy="7.5" r="3.1"></circle><rect x="3" y="15" width="18" height="3" rx="1.5" opacity="0.35"></rect><circle cx="15.8" cy="16.5" r="3.1"></circle></svg>',
+  power: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a1.6 1.6 0 0 1 1.6 1.6v6a1.6 1.6 0 0 1-3.2 0v-6A1.6 1.6 0 0 1 12 2.5Z"></path><path d="M6.95 6.25a1.5 1.5 0 0 1 .1 2.11 6.5 6.5 0 1 0 9.9 0 1.5 1.5 0 1 1 2.27-1.96 9.5 9.5 0 1 1-14.44 0 1.5 1.5 0 0 1 2.17-.15Z"></path></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.4 2.4a2.7 2.7 0 0 1 3.2 4.2l-.8.8-3.6-3.6.8-.8a2.7 2.7 0 0 1 .4-.6Z"></path><path d="M16.1 4.5 19.9 8.3 9.1 19.1a2 2 0 0 1-.95.53l-4.2 1a1 1 0 0 1-1.19-1.19l1-4.2a2 2 0 0 1 .53-.95Z"></path></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 2h9a3 3 0 0 1 3 3v.5h-2V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h.5v2H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Z" opacity="0.55"></path><rect x="8" y="8" width="13" height="13" rx="3"></rect></svg>',
+  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="6.5" y1="6.5" x2="17.5" y2="17.5"></line><line x1="17.5" y1="6.5" x2="6.5" y2="17.5"></line></svg>',
+  link: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.1 4.9a5 5 0 0 1 7.07 7.07l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77l2.5-2.5a2.5 2.5 0 0 0-3.53-3.53l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77Z"></path><path d="M9.9 19.1a5 5 0 0 1-7.07-7.07l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77l-2.5 2.5a2.5 2.5 0 0 0 3.53 3.53l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77Z"></path></svg>'
+};
+const BASE_PATH = '/tea/';
+const RESERVED_HANDLES = ['rose', 'rosie', 'luck', 'justice'];
+// 초대 코드 없이도 가입 가능하게 하려면 false, 다시 초대 코드가 필요해지면 true로 바꾸면 됨.
+const REQUIRE_INVITE_CODE = false;
+
+// ---------- password-note crypto helpers ----------
+function b64FromBuf(buf) {
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  bytes.forEach(b => { bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+function bufFromB64(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
+async function deriveAesKey(password, saltBytes) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: saltBytes, iterations: 150000, hash: 'SHA-256' },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+async function encryptNoteText(text, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveAesKey(password, salt);
+  const cipherBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(text));
+  return { cipher: b64FromBuf(cipherBuf), iv: b64FromBuf(iv), salt: b64FromBuf(salt) };
+}
+async function decryptNoteText(card, password) {
+  try {
+    const salt = new Uint8Array(bufFromB64(card.salt));
+    const iv = new Uint8Array(bufFromB64(card.iv));
+    const key = await deriveAesKey(password, salt);
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, bufFromB64(card.cipher));
+    return new TextDecoder().decode(plainBuf);
+  } catch (e) {
+    return null; // 비밀번호가 틀렸거나 데이터가 손상됨
+  }
+}
+// cardId -> { text, password } (세션 동안만 메모리에 유지, 새로고침하면 다시 잠김)
+const unlockedCards = new Map();
+
+let cards = [];
+let newTags = [];
+let newVisibility = 'public'; // 'public' | 'private' | 'password'
+let activeFilters = new Set();
+let privateOnlyFilter = false;
+let searchQuery = '';
+let editingId = null;
+
+// ---------- auth / board state ----------
+let currentUser = null;
+let currentUserHandle = null;
+let viewedUid = null;
+let viewedHandle = null;
+let isOwner = false;
+let unsubscribeCards = null;
+
+// convert a legacy/redirected ?u=handle URL into a pretty /handle path
+(function normalizePrettyUrl() {
+  const params = new URLSearchParams(location.search);
+  const u = params.get('u');
+  if (!u) return;
+  params.delete('u');
+  const restQs = params.toString();
+  const newPath = BASE_PATH + encodeURIComponent(u) + (restQs ? '?' + restQs : '') + location.hash;
+  history.replaceState(null, '', newPath);
+})();
+
+function getUrlHandle() {
+  let path = location.pathname;
+  if (path.startsWith(BASE_PATH)) path = path.slice(BASE_PATH.length);
+  path = path.replace(/^\/+|\/+$/g, '');
+  if (path) return decodeURIComponent(path.split('/')[0]);
+  return new URLSearchParams(location.search).get('u');
+}
+
+function updateGateVisibility(urlHandle) {
+  el('gateStage').hidden = !!(currentUser || urlHandle);
+}
+
+async function initView() {
+  const urlHandle = getUrlHandle();
+  updateGateVisibility(urlHandle);
+
+  // 로그인한 사용자는 지금 어떤 주소(다른 사람의 보드 포함)를 보고 있든
+  // 자기 핸들이 없으면 핸들 생성부터 안내한다.
+  if (currentUser) {
+    const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
+    currentUserHandle = userSnap.exists() ? userSnap.data().handle : null;
+    if (!currentUserHandle) {
+      viewedUid = null; viewedHandle = null;
+      updateBoardLabel(); updateOwnerUI(); loadBoardTheme(null);
+      openHandleModal();
+      return;
+    }
+  }
+
+  if (urlHandle) {
+    const handleSnap = await getDoc(doc(db, 'handles', urlHandle));
+    if (!handleSnap.exists()) {
+      viewedUid = null; viewedHandle = null;
+      updateBoardLabel(); updateOwnerUI(); loadBoardTheme(null); subscribeCards();
+      showToast('존재하지 않는 핸들이에요.', 'danger');
+      return;
+    }
+    viewedUid = handleSnap.data().uid;
+    viewedHandle = urlHandle;
+  } else if (currentUser) {
+    viewedUid = currentUser.uid;
+    viewedHandle = currentUserHandle;
+    // 로그인 직후(또는 핸들 생성 직후) 주소를 /핸들 형태로 맞춰준다
+    const prettyPath = BASE_PATH + encodeURIComponent(currentUserHandle);
+    if (location.pathname !== prettyPath) {
+      history.replaceState(null, '', prettyPath + location.search + location.hash);
+    }
+  } else {
+    viewedUid = null; viewedHandle = null;
+  }
+
+  closeHandleModal();
+  isOwner = !!(currentUser && viewedUid === currentUser.uid);
+  updateBoardLabel();
+  updateOwnerUI();
+  loadBoardTheme(viewedUid);
+  subscribeCards();
+}
+
+function subscribeCards() {
+  if (unsubscribeCards) { unsubscribeCards(); unsubscribeCards = null; }
+  cards = [];
+  if (!viewedUid) { renderAll(); return; }
+  // 소유자는 전체(비공개 포함)를 보고, 방문자는 '나만보기' 글은 쿼리 단계에서부터 제외한다.
+  // (Firestore 보안 규칙과 짝을 맞춰야 실제로 서버 단에서도 막힘 — 콘솔에 규칙 반영 필요)
+  const q = isOwner
+    ? query(collection(db, 'users', viewedUid, 'cards'), orderBy('createdAt', 'desc'))
+    : query(collection(db, 'users', viewedUid, 'cards'), where('visibility', 'in', ['public', 'password']));
+  unsubscribeCards = onSnapshot(q, (snap) => {
+    cards = snap.docs.map(d => ({ id: d.id, ...d.data(), tags: d.data().tags || [] }));
+    if (!isOwner) {
+      // 방문자 쿼리는 orderBy 없이 받아오므로(복합 색인 회피) 여기서 최신순 정렬
+      cards.sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0));
+    }
+    renderAll();
+    checkHashForNote();
+    if (isOwner) migrateLegacyVisibility(snap);
+  }, (err) => {
+    cards = []; renderAll();
+    console.error('cards 구독 실패:', err.code, err.message);
+    showToast(`카드 목록을 불러오지 못했어요 (${err.code || err.message})`, 'danger');
+  });
+}
+
+// 예전에 만들어진 카드(visibility 필드 없음)를 'public'으로 채워 넣어,
+// 방문자용 where('visibility','in',[...]) 쿼리에서 누락되지 않도록 한다.
+function migrateLegacyVisibility(snap) {
+  snap.docs.forEach(d => {
+    if (d.data().visibility === undefined) {
+      updateDoc(doc(db, 'users', currentUser.uid, 'cards', d.id), { visibility: 'public' }).catch(() => {});
+    }
+  });
+}
+
+function updateBoardLabel() {
+  const label = el('boardLabel');
+  if (viewedHandle && !isOwner) {
+    label.innerHTML = `@${viewedHandle}<span class="board-viewonly-tag">보기 전용</span>`;
+  } else if (viewedSiteName && viewedHandle) {
+    // 사이트 이름을 직접 지정한 경우, memo 대신 자기 핸들을 보여준다.
+    label.textContent = `@${viewedHandle}`;
+  } else {
+    label.textContent = 'memo';
+  }
+}
+
+// ---------- board theme (핸들 주인이 커스터마이즈 가능) ----------
+const DEFAULT_SITE_NAME = 'r<span class="heart">♡</span>sie';
+const RADIUS_PRESETS = {
+  sharp:  { lg: '2px', md: '2px', sm: '2px', pill: '6px'   },
+  normal: { lg: '8px', md: '5px', sm: '3px', pill: '10px'  },
+  round:  { lg: '20px', md: '14px', sm: '8px', pill: '999px' }
+};
+const customThemeStyleEl = document.createElement('style');
+customThemeStyleEl.id = 'customThemeStyle';
+document.head.appendChild(customThemeStyleEl);
+
+function hexToHsl(hex) {
+  hex = hex.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16) / 255;
+  const g = parseInt(hex.substr(2, 2), 16) / 255;
+  const b = parseInt(hex.substr(4, 2), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+  if (max === min) { h = s = 0; }
+  else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      default: h = (r - g) / d + 4;
+    }
+    h /= 6;
+  }
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+function hslToHex(h, s, l) {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+  const toHex = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  return {
+    r: parseInt(hex.substr(0, 2), 16),
+    g: parseInt(hex.substr(2, 2), 16),
+    b: parseInt(hex.substr(4, 2), 16)
+  };
+}
+// 색상의 실제 상대 휘도(perceived luminance)를 계산해서 검정/흰색 글자 중 어느 쪽이
+// 더 잘 보이는지 판단한다. HSL의 lightness만 보면 색상(hue)에 따라 실제 밝기 인상이
+// 크게 달라서(예: 노랑은 밝아 보이고 파랑은 어두워 보임) 대비가 틀어지는 문제가 있었음.
+function relLuminance(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  const lin = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+function contrastInk(hex) {
+  return relLuminance(hex) > 0.42 ? '#3a2a33' : '#ffffff';
+}
+// WCAG 스타일 명암비(1~21). 두 색이 실제로 얼마나 구분되어 보이는지를 수치로 잰다.
+function contrastRatio(hex1, hex2) {
+  const l1 = relLuminance(hex1) + 0.05;
+  const l2 = relLuminance(hex2) + 0.05;
+  return l1 > l2 ? l1 / l2 : l2 / l1;
+}
+// 같은 색상(hue)/채도(sat)를 유지한 채 명도(lightness)만 밀어서, bgHex와의 명암비가
+// minRatio 이상이 될 때까지 자동으로 더 밝게(또는 더 어둡게) 보정한다.
+// 어떤 포인트색을 고르더라도 그 위의 글자/태그 텍스트가 묻히지 않도록 하는 안전장치.
+function ensureContrast(h, s, l, bgHex, minRatio, dir) {
+  let hex = hslToHex(h, s, l);
+  let guard = 0;
+  while (contrastRatio(hex, bgHex) < minRatio && guard < 100) {
+    l = clamp(l + dir, 0, 100);
+    hex = hslToHex(h, s, l);
+    guard++;
+    if ((dir > 0 && l >= 100) || (dir < 0 && l <= 0)) break;
+  }
+  return hex;
+}
+// 글자색과 배경색을 t 비율로 섞어서 단계별(진하게~은은하게) 톤을 만들어준다.
+function mixHex(hex1, hex2, t) {
+  const c1 = hexToRgb(hex1), c2 = hexToRgb(hex2);
+  const toHex = (v) => Math.round(v).toString(16).padStart(2, '0');
+  const r = c1.r + (c2.r - c1.r) * t;
+  const g = c1.g + (c2.g - c1.g) * t;
+  const b = c1.b + (c2.b - c1.b) * t;
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+// RGB 직선 보간은 색상(hue)이 서로 다른 두 색(예: 핑크 포인트색 + 파란 배경색)을 섞으면
+// 그 중간에서 회색/갈색 톤을 지나가며 "칙칙하게" 보이는 문제가 있다. 색상환을 따라
+// (최단 방향으로) hue를 보간하고 채도/명도는 별도로 섞어서, 사용자가 어떤 포인트색과
+// 배경색 조합을 고르든 탁해지지 않고 파스텔감을 유지하도록 한다.
+function mixHexHsl(hex1, hex2, t) {
+  const c1 = hexToHsl(hex1), c2 = hexToHsl(hex2);
+  // 채도가 아주 낮은(거의 흰색/회색인) 색은 hue 값 자체가 미세한 반올림 오차에 좌우되어
+  // 사실상 의미가 없다. 이런 색끼리 hue를 그대로 선형보간하면 서로 무관한 hue가 섞여
+  // 들어가면서 탁한/칙칙한 색이 튀어나온다 (예: 카드 투명도를 낮출 때). 그래서 둘 중
+  // 채도가 있는 쪽의 hue를 그대로 쓰고, 둘 다 거의 무채색이면 보간하지 않는다 —
+  // 이렇게 하면 투명도를 낮춰도 항상 같은 파스텔 색상(hue) 위에서만 밝기가 바뀐다.
+  const NEUTRAL_S = 6;
+  let h;
+  if (c1.s < NEUTRAL_S && c2.s < NEUTRAL_S) {
+    h = c1.h;
+  } else if (c1.s < NEUTRAL_S) {
+    h = c2.h;
+  } else if (c2.s < NEUTRAL_S) {
+    h = c1.h;
+  } else {
+    let dh = c2.h - c1.h;
+    if (dh > 180) dh -= 360;
+    if (dh < -180) dh += 360;
+    h = c1.h + dh * t;
+    if (h < 0) h += 360;
+    if (h >= 360) h -= 360;
+  }
+  const s = c1.s + (c2.s - c1.s) * t;
+  const l = c1.l + (c2.l - c1.l) * t;
+  return hslToHex(h, s, l);
+}
+// 사용자가 직접 고른 글자색을 기준으로 soft/faint/placeholder 단계를 배경색 쪽으로 섞어 만든다.
+function customInkSet(inkHex, bgAppHex) {
+  return {
+    ink: inkHex,
+    inkSoft: mixHexHsl(inkHex, bgAppHex, 0.32),
+    inkFaint: mixHexHsl(inkHex, bgAppHex, 0.58),
+    inkPlaceholder: mixHexHsl(inkHex, bgAppHex, 0.76)
+  };
+}
+
+// 배경/카드 밝기에 맞춰 본문 글자색(명도)을 밝게/어둡게 자동으로 골라준다.
+function inkSet(h, s, isLightBg) {
+  return isLightBg ? {
+    ink: hslToHex(h, Math.min(s * 0.4, 30), 27),
+    inkSoft: hslToHex(h, Math.min(s * 0.3, 25), 46),
+    inkFaint: hslToHex(h, Math.min(s * 0.25, 20), 68),
+    inkPlaceholder: hslToHex(h, Math.min(s * 0.25, 20), 82)
+  } : {
+    ink: hslToHex(h, Math.min(s * 0.12, 12), 93),
+    inkSoft: hslToHex(h, Math.min(s * 0.1, 10), 72),
+    inkFaint: hslToHex(h, Math.min(s * 0.1, 10), 52),
+    inkPlaceholder: hslToHex(h, Math.min(s * 0.1, 10), 40)
+  };
+}
+
+function computeCardOnlyCss(opacity) {
+  // 색상을 아직 커스텀하지 않은 상태에서 카드 투명도만 미리보기할 때 쓴다.
+  // 패널/테두리/포인트색 등 전체 팔레트를 다시 계산하지 않고 --bg-card 하나만
+  // 실제 기본값(라이트 #fdf1f6, 다크 #121212) 기준으로 다시 섞어서 보여준다.
+  const lightBgAppHex = '#fdf1f6';
+  const darkBgAppHex = '#121212';
+  const lightCardBase = mixHexHsl('#ffffff', lightBgAppHex, 0.35);
+  const darkCardBase = mixHexHsl('#252525', darkBgAppHex, 0.5);
+  const lightCardHex = mixHexHsl(lightCardBase, lightBgAppHex, 1 - opacity);
+  const darkCardHex = mixHexHsl(darkCardBase, darkBgAppHex, 1 - opacity);
+  return `html[data-theme="light"] { --bg-card: ${lightCardHex}; }\nhtml[data-theme="dark"] { --bg-card: ${darkCardHex}; }`;
+}
+
+function computeThemeCss(accentHex, bgHex, inkHex, cardOpacity) {
+  const a = hexToHsl(accentHex);
+  const opacity = typeof cardOpacity === 'number' ? clamp(cardOpacity, 0, 1) : 0.7;
+
+  // 배경색: 라이트 모드는 사용자가 직접 고른 색을 그대로 쓴다(없으면 포인트색에서 옅게 자동 추출).
+  // 다크 모드는 사용자가 고른 배경색을 무시하고, 포인트색 하나만으로 항상 적절히 어두운
+  // 톤을 자동 계산한다 — 어떤 배경색을 골라도 다크 모드가 밝거나 눈부시게 튀지 않게 하기 위함.
+  // (예전엔 채도를 26%까지만 허용해서 원본 배경(#fdf1f6, 실제 채도 75%)보다 훨씬 흐리고
+  // 뿌옇게 나왔다 — 원본 파스텔 배경과 같은 채도 대역을 쓰도록 올렸다.)
+  const lightBgAppHex = bgHex || hslToHex(a.h, Math.min(a.s * 0.78, 78), 97);
+  const darkBgAppHex = hslToHex(a.h, Math.min(a.s * 0.30, 22), 10);
+
+  // 카드(메모) 표면색은 사용자가 고르지 않는다. 커스텀 테마가 아닐 때의 기본 카드색이
+  // 정확히 "흰색/진회색과 배경색을 반반 섞은" 색이므로(:root의 --bg-card 정의 참고),
+  // 그 관계를 그대로 재현해야 커스텀 테마를 켜도 기본값과 이질감이 없다.
+  const lightCardBase = mixHexHsl('#ffffff', lightBgAppHex, 0.35);
+  const darkCardBase = mixHexHsl('#252525', darkBgAppHex, 0.5);
+  const lightCardHex = mixHexHsl(lightCardBase, lightBgAppHex, 1 - opacity);
+  const darkCardHex = mixHexHsl(darkCardBase, darkBgAppHex, 1 - opacity);
+
+  let lightInk, darkInk;
+  if (inkHex) {
+    // 글자색을 직접 고른 경우: 라이트 모드는 고른 색 그대로, 다크 모드는 같은 색조를
+    // 어두운 배경에서도 읽히도록 밝기만 반전해서 자동으로 맞춰준다.
+    const i = hexToHsl(inkHex);
+    const darkVariantHex = hslToHex(i.h, Math.min(i.s * 0.5, 20), clamp(100 - i.l, 78, 95));
+    lightInk = customInkSet(inkHex, lightBgAppHex);
+    darkInk = customInkSet(darkVariantHex, darkBgAppHex);
+  } else {
+    lightInk = inkSet(a.h, a.s, true);
+    darkInk = inkSet(a.h, a.s, false);
+  }
+
+  // ---- 포인트색 3단계(soft/main/strong) ----
+  // 예전엔 accent-soft를 "카드 밝기 - 16" 같은 식으로 카드색에서 역산했는데, 그러면
+  // 카드/배경 계산에 낀 작은 오차가 그대로 누적돼 색이 탁해졌다. 지금은 원본 팔레트
+  // (accent l80 → soft l94.5 → strong l71, 채도는 항상 그대로 유지)를 그대로 본떠서
+  // 포인트색 자신의 명도에서 "±오프셋"만큼만 움직인다 — 그래서 기본값과 정확히 같은
+  // 색을 고르면 결과도 원본과 사실상 동일하고, 값을 살짝만 바꿔도 그만큼만 부드럽게
+  // 따라 움직인다(갑자기 확 어두워지는 계단 현상이 없어짐).
+  const isAchromatic = a.s < 2;
+  const satFloor = isAchromatic ? 0 : clamp(a.s, 60, 100);
+  const lightAccentMain = hslToHex(a.h, satFloor, clamp(a.l, 68, 88));
+  const lightAccentSoft = hslToHex(a.h, satFloor, clamp(a.l + 14, 90, 97));
+  let lightAccentStrongL = clamp(a.l - 9, 55, 75);
+
+  const darkSatFloor = isAchromatic ? 0 : clamp(a.s * 0.9, 55, 100);
+  const darkAccentMain = hslToHex(a.h, darkSatFloor, clamp(a.l + 22, 70, 90));
+  let darkAccentStrongL = clamp(a.l + 10, 60, 84);
+  // 다크 모드의 태그 배경(accent-soft)은 원본에서 보면 카드색과 거의 같은 톤에 아주
+  // 살짝만 포인트색이 물든 어두운 색이라, 카드색 쪽으로 대부분 섞어서 만든다.
+  // (여기도 카드 투명도와 무관하게 항상 같은 톤이어야 하므로 darkCardHex가 아니라
+  // darkCardBase를 기준으로 삼는다.)
+  const darkAccentSoft = mixHexHsl(darkAccentMain, darkCardBase, 0.9);
+
+  // 태그/필터칩 "글자"(accent-strong)가 그 배경(accent-soft) 위에서 항상 또렷이 읽히도록,
+  // 명암비가 부족할 때만 최소한으로 보정한다. 위에서 이미 원본 팔레트와 거의 같은 값이
+  // 나오도록 만들어놨기 때문에, 기본값을 그대로 쓰면 이 보정은 사실상 개입하지 않는다.
+  const lightAccentStrong = ensureContrast(a.h, satFloor, lightAccentStrongL, lightAccentSoft, 2.2, -1);
+  const darkAccentStrong = ensureContrast(a.h, darkSatFloor, darkAccentStrongL, darkAccentSoft, 3.0, 1);
+
+  const light = {
+    '--bg-app': lightBgAppHex,
+    // 패널(검색창/유저칩/모달 등)도 카드색과 배경색 사이 톤으로 묶어서, 카드색을
+    // 바꿔도 패널만 하얗게 따로 떠 보이지 않게 한다.
+    // 패널(검색창/유저칩/모달 등)도 카드색과 배경색 사이 톤으로 묶어서, 카드색을
+    // 바꿔도 패널만 하얗게 따로 떠 보이지 않게 한다. 단, "카드 투명도" 설정은 메모
+    // 카드 자체(--bg-card)에만 적용돼야 하므로, 투명도가 반영되기 전의 카드 베이스색
+    // (lightCardBase)을 기준으로 계산해서 패널이 투명도 값에 따라 같이 흐려지지
+    // 않도록 한다.
+    '--bg-panel': mixHexHsl(lightBgAppHex, lightCardBase, 0.5),
+    '--bg-card': lightCardHex,
+    '--border-soft': mixHexHsl(lightAccentMain, lightBgAppHex, 0.94),
+    '--border': mixHexHsl(lightAccentMain, lightBgAppHex, 0.85),
+    '--border-strong': mixHexHsl(lightAccentMain, lightBgAppHex, 0.65),
+    '--ink': lightInk.ink,
+    '--ink-soft': lightInk.inkSoft,
+    '--ink-faint': lightInk.inkFaint,
+    '--ink-placeholder': lightInk.inkPlaceholder,
+    '--accent': lightAccentMain,
+    '--accent-strong': lightAccentStrong,
+    '--accent-soft': lightAccentSoft,
+    '--accent-ink': contrastInk(lightAccentStrong),
+    '--heart': lightAccentStrong
+  };
+  const dark = {
+    '--bg-app': darkBgAppHex,
+    '--bg-panel': mixHexHsl(darkBgAppHex, darkCardBase, 0.5),
+    '--bg-card': darkCardHex,
+    '--border-soft': mixHexHsl(darkAccentMain, darkBgAppHex, 0.91),
+    '--border': mixHexHsl(darkAccentMain, darkBgAppHex, 0.82),
+    '--border-strong': mixHexHsl(darkAccentMain, darkBgAppHex, 0.66),
+    '--ink': darkInk.ink,
+    '--ink-soft': darkInk.inkSoft,
+    '--ink-faint': darkInk.inkFaint,
+    '--ink-placeholder': darkInk.inkPlaceholder,
+    '--accent': darkAccentMain,
+    '--accent-strong': darkAccentStrong,
+    '--accent-soft': darkAccentSoft,
+    // 예전엔 항상 검정으로 고정돼 있어서, 다크 모드에서 어둡고 채도 낮은 포인트색을
+    // 고르면 버튼 글자가 안 보이는 문제가 있었음 — 실제 포인트색 밝기에 맞춰 계산.
+    '--accent-ink': contrastInk(darkAccentStrong),
+    '--heart': darkAccentStrong
+  };
+  const toCssBlock = (sel, vars) => `html[data-theme="${sel}"] { ${Object.entries(vars).map(([k, v]) => `${k}: ${v};`).join(' ')} }`;
+  return toCssBlock('light', light) + '\n' + toCssBlock('dark', dark);
+}
+
+function applyFavicon(dataUrl) {
+  el('faviconLink').setAttribute('href', dataUrl || 'images/favi3.png');
+  el('appleTouchIconLink').setAttribute('href', dataUrl || 'images/icon1.png');
+}
+
+function applyBoardTheme(theme) {
+  const t = theme || {};
+  document.documentElement.style.setProperty('--font-base', t.font ? `'${t.font}'` : `'Pretendard Variable'`);
+  const radius = RADIUS_PRESETS[t.radius] || RADIUS_PRESETS.normal;
+  document.documentElement.style.setProperty('--r-lg', radius.lg);
+  document.documentElement.style.setProperty('--r-md', radius.md);
+  document.documentElement.style.setProperty('--r-sm', radius.sm);
+  document.documentElement.style.setProperty('--r-pill', radius.pill);
+  document.documentElement.style.setProperty('--u-letter-spacing', (typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) + 'em');
+  document.documentElement.style.setProperty('--u-line-height', typeof t.lineHeight === 'number' ? t.lineHeight : 1.6);
+  document.documentElement.style.setProperty('--u-zoom', typeof t.fontScale === 'number' ? t.fontScale : 1);
+  document.documentElement.style.setProperty('--shadow-alpha', typeof t.shadowAlpha === 'number' ? t.shadowAlpha : 1);
+  if (t.accent) {
+    customThemeStyleEl.textContent = computeThemeCss(t.accent, t.bg, t.ink, typeof t.cardOpacity === 'number' ? t.cardOpacity : 0.7);
+  } else if (typeof t.cardOpacity === 'number') {
+    customThemeStyleEl.textContent = computeCardOnlyCss(t.cardOpacity);
+  } else {
+    customThemeStyleEl.textContent = '';
+  }
+  applyFavicon(t.favicon || null);
+}
+
+function applySiteName(name) {
+  const nameEl = el('siteNameLabel');
+  if (name) {
+    // 사이트 이름을 직접 정한 경우: 탭 제목도 그 이름만 그대로 사용.
+    nameEl.textContent = name;
+    document.title = name;
+  } else if (viewedHandle) {
+    // 기본값: 로그인한 핸들 주인의 보드는 r♡sie 대신 자기 핸들을 보여준다.
+    nameEl.textContent = viewedHandle;
+    document.title = viewedHandle;
+  } else {
+    nameEl.innerHTML = DEFAULT_SITE_NAME;
+    document.title = 'r♡siememo';
+  }
+  updateBoardLabel();
+}
+
+let viewedTheme = null;
+let viewedSiteName = null;
+async function loadBoardTheme(uid) {
+  if (!uid) {
+    viewedTheme = null; viewedSiteName = null;
+    applyBoardTheme(null); applySiteName(null);
+    return;
+  }
+  try {
+    viewedTheme = null; viewedSiteName = null;
+    const snap = await getDoc(doc(db, 'users', uid));
+    const data = snap.exists() ? snap.data() : {};
+    viewedTheme = data.theme || null;
+    viewedSiteName = data.siteName || null;
+    applyBoardTheme(viewedTheme);
+    applySiteName(viewedSiteName);
+  } catch (e) {
+    viewedTheme = null; viewedSiteName = null;
+    applyBoardTheme(null); applySiteName(null);
+  }
+}
+
+// 조정 바(range) 트랙을 테마 포인트색으로 채워서 그린다.
+function paintRangeFill(inputEl) {
+  const min = Number(inputEl.min), max = Number(inputEl.max), val = Number(inputEl.value);
+  const pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
+  inputEl.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--accent-soft) ${pct}%)`;
+}
+
+function openSettingsModal() {
+  const t = viewedTheme || {};
+  el('settingsSiteName').value = viewedSiteName || '';
+  el('settingsFont').value = t.font || '';
+  el('settingsAccent').value = t.accent || '#ff9bce';
+  el('settingsBg').value = t.bg || '#fdf1f6';
+  el('settingsInk').value = t.ink || '#5c3450';
+  const cardOpacityPct = Math.round((typeof t.cardOpacity === 'number' ? t.cardOpacity : 0.7) * 100);
+  el('settingsCardOpacity').value = cardOpacityPct;
+  el('settingsCardOpacityVal').textContent = cardOpacityPct + '%';
+  paintRangeFill(el('settingsCardOpacity'));
+  const shadowAlphaPct = Math.round((typeof t.shadowAlpha === 'number' ? t.shadowAlpha : 1) * 100);
+  el('settingsShadowAlpha').value = shadowAlphaPct;
+  el('settingsShadowAlphaVal').textContent = shadowAlphaPct + '%';
+  paintRangeFill(el('settingsShadowAlpha'));
+  // 이미 저장된 커스텀 색상이 있을 때만 "색상을 직접 정했다"고 간주한다.
+  // 그래야 모서리만 바꾸고 저장해도 기본 팔레트가 계산된 커스텀 팔레트로
+  // 덮어써지지 않는다.
+  colorsCustomized = !!t.accent;
+  cardOpacityCustomized = typeof t.cardOpacity === 'number';
+  pendingFavicon = { changed: false, dataUrl: null };
+  originalFaviconValue = t.favicon || null;
+  setFaviconPreview(originalFaviconValue);
+
+  const fontScalePct = Math.round((typeof t.fontScale === 'number' ? t.fontScale : 1) * 100);
+  const letterSpacingPct = Math.round((typeof t.letterSpacing === 'number' ? t.letterSpacing : 0) * 100);
+  const lineHeightPct = Math.round((typeof t.lineHeight === 'number' ? t.lineHeight : 1.6) * 100);
+  el('settingsFontScale').value = fontScalePct;
+  el('settingsFontScaleVal').textContent = fontScalePct + '%';
+  el('settingsLetterSpacing').value = letterSpacingPct;
+  el('settingsLetterSpacingVal').textContent = (letterSpacingPct / 100) + 'em';
+  el('settingsLineHeight').value = lineHeightPct;
+  el('settingsLineHeightVal').textContent = (lineHeightPct / 100).toFixed(2);
+  paintRangeFill(el('settingsFontScale'));
+  paintRangeFill(el('settingsLetterSpacing'));
+  paintRangeFill(el('settingsLineHeight'));
+
+  const radiusKey = t.radius || 'normal';
+  el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.radius === radiusKey));
+  el('settingsModalOverlay').classList.add('open');
+}
+function closeSettingsModal() {
+  el('settingsModalOverlay').classList.remove('open');
+  // 저장하지 않고 닫으면 미리보기로 바꿔둔 값을 실제 저장된 테마로 되돌린다.
+  applyBoardTheme(viewedTheme);
+}
+el('boardSettingsBtn').addEventListener('click', () => { if (isOwner) openSettingsModal(); });
+el('settingsModalClose').addEventListener('click', closeSettingsModal);
+el('settingsModalOverlay').addEventListener('click', (e) => {
+  if (e.target === el('settingsModalOverlay')) closeSettingsModal();
+});
+let selectedRadiusPreset = 'normal';
+let colorsCustomized = false;
+let cardOpacityCustomized = false;
+// 파비콘: 파일을 고르면 즉시 정사각형으로 리사이즈해 미리보기 + 실제 탭 아이콘까지
+// 바로 반영한다. 저장을 눌러야만 실제로 서버에 반영되고, 취소하면 원래 값으로 되돌아간다.
+let pendingFavicon = { changed: false, dataUrl: null };
+let originalFaviconValue = null;
+function setFaviconPreview(url) {
+  const img = el('faviconPreviewImg');
+  if (url) {
+    img.src = url; img.style.display = 'block';
+    el('faviconRemoveBtn').style.display = '';
+  } else {
+    img.src = ''; img.style.display = 'none';
+    el('faviconRemoveBtn').style.display = 'none';
+  }
+}
+el('faviconFileInput').addEventListener('change', () => {
+  const file = el('faviconFileInput').files && el('faviconFileInput').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 128;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.max(size / img.width, size / img.height);
+      const dw = img.width * scale, dh = img.height * scale;
+      ctx.drawImage(img, (size - dw) / 2, (size - dh) / 2, dw, dh);
+      const dataUrl = canvas.toDataURL('image/png');
+      pendingFavicon = { changed: true, dataUrl };
+      setFaviconPreview(dataUrl);
+      applyFavicon(dataUrl);
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  el('faviconFileInput').value = '';
+});
+el('faviconRemoveBtn').addEventListener('click', () => {
+  pendingFavicon = { changed: true, dataUrl: null };
+  setFaviconPreview(null);
+  applyFavicon(null);
+});
+// 색상 입력은 저장 전까지 화면에 반영되지 않아서, 어떤 조합이 나올지 모른 채
+// 저장을 누르고서야 확인하게 되는 문제가 있었다. 드래그하는 즉시 실제 팔레트를
+// 계산해 전체 화면(과 미리보기 카드)에 바로 반영해서 결과를 보면서 고를 수 있게 한다.
+function previewCustomTheme() {
+  const accent = el('settingsAccent').value;
+  const bg = el('settingsBg').value;
+  const ink = el('settingsInk').value;
+  const cardOpacity = Number(el('settingsCardOpacity').value) / 100;
+  customThemeStyleEl.textContent = computeThemeCss(accent, bg, ink, cardOpacity);
+  el('settingsAccentHex').textContent = accent;
+  el('settingsBgHex').textContent = bg;
+  el('settingsInkHex').textContent = ink;
+}
+el('settingsAccent').addEventListener('input', () => { colorsCustomized = true; previewCustomTheme(); });
+el('settingsBg').addEventListener('input', () => { colorsCustomized = true; previewCustomTheme(); });
+el('settingsInk').addEventListener('input', () => { colorsCustomized = true; previewCustomTheme(); });
+el('settingsCardOpacity').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsCardOpacityVal').textContent = v + '%';
+  cardOpacityCustomized = true;
+  paintRangeFill(e.target);
+  if (colorsCustomized) {
+    previewCustomTheme();
+  } else {
+    customThemeStyleEl.textContent = computeCardOnlyCss(v / 100);
+  }
+});
+el('settingsShadowAlpha').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsShadowAlphaVal').textContent = v + '%';
+  document.documentElement.style.setProperty('--shadow-alpha', v / 100);
+  paintRangeFill(e.target);
+});
+el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedRadiusPreset = btn.dataset.radius;
+    el('settingsRadiusRow').querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b === btn));
+  });
+});
+
+// 자간/줄간격/글자크기: 드래그하는 대로 바로 미리보기.
+el('settingsFontScale').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsFontScaleVal').textContent = v + '%';
+  document.documentElement.style.setProperty('--u-zoom', v / 100);
+  paintRangeFill(e.target);
+});
+el('settingsLetterSpacing').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsLetterSpacingVal').textContent = (v / 100) + 'em';
+  document.documentElement.style.setProperty('--u-letter-spacing', (v / 100) + 'em');
+  paintRangeFill(e.target);
+});
+el('settingsLineHeight').addEventListener('input', (e) => {
+  const v = Number(e.target.value);
+  el('settingsLineHeightVal').textContent = (v / 100).toFixed(2);
+  document.documentElement.style.setProperty('--u-line-height', v / 100);
+  paintRangeFill(e.target);
+});
+
+el('settingsSaveBtn').addEventListener('click', async () => {
+  if (!isOwner || !currentUser) return;
+  const siteName = el('settingsSiteName').value.trim().slice(0, 60);
+  const font = el('settingsFont').value;
+  const accent = el('settingsAccent').value;
+  const bg = el('settingsBg').value;
+  const ink = el('settingsInk').value;
+  const cardOpacity = Number(el('settingsCardOpacity').value) / 100;
+  const shadowAlpha = Number(el('settingsShadowAlpha').value) / 100;
+  const fontScale = Number(el('settingsFontScale').value) / 100;
+  const letterSpacing = Number(el('settingsLetterSpacing').value) / 100;
+  const lineHeight = Number(el('settingsLineHeight').value) / 100;
+  const activeRadiusBtn = el('settingsRadiusRow').querySelector('.vis-btn.active');
+  const radius = activeRadiusBtn ? activeRadiusBtn.dataset.radius : 'normal';
+  try {
+    const themePayload = { font: font || deleteField(), radius, fontScale, letterSpacing, lineHeight, shadowAlpha };
+    if (colorsCustomized) {
+      themePayload.accent = accent;
+      themePayload.bg = bg;
+      themePayload.ink = ink;
+    } else {
+      themePayload.accent = deleteField();
+      themePayload.bg = deleteField();
+      themePayload.ink = deleteField();
+    }
+    if (cardOpacityCustomized) {
+      themePayload.cardOpacity = cardOpacity;
+    } else {
+      themePayload.cardOpacity = deleteField();
+    }
+    const finalFavicon = pendingFavicon.changed ? pendingFavicon.dataUrl : originalFaviconValue;
+    if (pendingFavicon.changed) {
+      themePayload.favicon = pendingFavicon.dataUrl || deleteField();
+    }
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      siteName: siteName || deleteField(),
+      theme: themePayload
+    }, { merge: true });
+    viewedSiteName = siteName || null;
+    viewedTheme = {
+      font, radius, fontScale, letterSpacing, lineHeight, shadowAlpha,
+      accent: colorsCustomized ? accent : undefined,
+      bg: colorsCustomized ? bg : undefined,
+      ink: colorsCustomized ? ink : undefined,
+      cardOpacity: cardOpacityCustomized ? cardOpacity : undefined,
+      favicon: finalFavicon || undefined
+    };
+    applyBoardTheme(viewedTheme);
+    applySiteName(viewedSiteName);
+    closeSettingsModal();
+    showToast('설정이 저장되었습니다.');
+  } catch (e) {
+    showToast('설정 저장에 실패했습니다.', 'danger');
+  }
+});
+el('settingsResetBtn').addEventListener('click', async () => {
+  if (!isOwner || !currentUser) return;
+  try {
+    // 사이트 이름은 "기본값으로" 초기화 대상에서 제외 — 테마(색/폰트/모서리 등)만 초기화한다.
+    await updateDoc(doc(db, 'users', currentUser.uid), {
+      theme: deleteField()
+    });
+    viewedTheme = null;
+    applyBoardTheme(null);
+    colorsCustomized = false;
+    cardOpacityCustomized = false;
+    closeSettingsModal();
+    showToast('기본값으로 되돌렸습니다.');
+  } catch (e) {
+    showToast('초기화에 실패했습니다.', 'danger');
+  }
+});
+
+function updateOwnerUI() {
+  document.body.classList.toggle('view-only', !isOwner);
+  el('boardSettingsBtn').style.display = isOwner ? '' : 'none';
+}
+
+function updateAuthUI() {
+  if (currentUser) {
+    el('loginBtn').style.display = 'none';
+    el('userChip').style.display = 'flex';
+    el('userAvatar').src = currentUser.photoURL || '';
+    el('userHandleLabel').textContent = currentUserHandle ? `@${currentUserHandle}` : (currentUser.displayName || '');
+    el('userHandleLabel').title = currentUserHandle ? '내 공유 링크 복사' : '';
+  } else {
+    el('loginBtn').style.display = '';
+    el('userChip').style.display = 'none';
+    currentUserHandle = null;
+  }
+  updateAdminUI();
+}
+
+// ---------- admin: invite code management ----------
+const ADMIN_EMAIL = 'rsafrosie@gmail.com';
+let isAdmin = false;
+let unsubscribeInviteCodes = null;
+
+function updateAdminUI() {
+  isAdmin = !!(currentUser && currentUser.email === ADMIN_EMAIL);
+  el('adminBtn').style.display = isAdmin ? '' : 'none';
+}
+
+function openAdminModal() {
+  el('adminModalOverlay').classList.add('open');
+  subscribeInviteCodes();
+}
+function closeAdminModal() {
+  el('adminModalOverlay').classList.remove('open');
+  if (unsubscribeInviteCodes) { unsubscribeInviteCodes(); unsubscribeInviteCodes = null; }
+}
+el('adminBtn').addEventListener('click', () => { if (isAdmin) openAdminModal(); });
+el('adminModalClose').addEventListener('click', closeAdminModal);
+el('adminModalOverlay').addEventListener('click', (e) => {
+  if (e.target === el('adminModalOverlay')) closeAdminModal();
+});
+
+function subscribeInviteCodes() {
+  const q = query(collection(db, 'inviteCodes'), orderBy('createdAt', 'desc'));
+  unsubscribeInviteCodes = onSnapshot(q, (snap) => {
+    renderInviteCodeList(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  }, () => showToast('코드 목록을 불러오지 못했습니다.', 'danger'));
+}
+
+function renderInviteCodeList(list) {
+  const wrap = el('inviteCodeList');
+  wrap.innerHTML = '';
+  if (list.length === 0) {
+    wrap.innerHTML = '<div style="font-size:12.5px; color:var(--ink-faint);">아직 생성된 코드가 없어요.</div>';
+    return;
+  }
+  list.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'invite-code-row' + (item.used ? ' used' : '');
+    row.innerHTML = `
+      <span class="code">${item.id}</span>
+      <span class="status ${item.used ? 'used-tag' : 'unused'}">${item.used ? '사용됨' : '사용 가능'}</span>
+    `;
+    if (!item.used) {
+      const codeEl = row.querySelector('.code');
+      codeEl.title = '클릭해서 복사';
+      codeEl.addEventListener('click', () => {
+        navigator.clipboard.writeText(item.id)
+          .then(() => showToast('코드가 복사되었습니다.'))
+          .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+      });
+    }
+    wrap.appendChild(row);
+  });
+}
+
+function generateInviteCode() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+el('genCodeBtn').addEventListener('click', async () => {
+  if (!isAdmin) return;
+  try {
+    let code = generateInviteCode();
+    for (let i = 0; i < 5; i++) {
+      const snap = await getDoc(doc(db, 'inviteCodes', code));
+      if (!snap.exists()) break;
+      code = generateInviteCode();
+    }
+    await setDoc(doc(db, 'inviteCodes', code), {
+      used: false, createdAt: Date.now(), createdBy: currentUser.uid
+    });
+    navigator.clipboard.writeText(code).catch(() => {});
+    showToast(`코드 생성됨: ${code} (클립보드에 복사됨)`);
+  } catch (e) {
+    showToast('코드 생성에 실패했습니다.', 'danger');
+  }
+});
+
+el('loginBtn').addEventListener('click', async () => {
+  if (isInAppBrowser()) { openInappModal(); return; }
+  try { await signInWithRedirect(auth, provider); }
+  catch (e) { showToast('로그인에 실패했습니다.', 'danger'); }
+});
+el('gateLoginBtn').addEventListener('click', async () => {
+  if (isInAppBrowser()) { openInappModal(); return; }
+  try { await signInWithRedirect(auth, provider); }
+  catch (e) { showToast('로그인에 실패했습니다.', 'danger'); }
+});
+el('logoutBtn').addEventListener('click', () => signOut(auth));
+el('handleModalLogout').addEventListener('click', () => signOut(auth));
+
+document.querySelector('.app-brand').addEventListener('click', () => {
+  location.reload();
+});
+
+el('userHandleLabel').addEventListener('click', () => {
+  if (!isOwner || !viewedHandle) return;
+  const url = `${location.origin}${BASE_PATH}${viewedHandle}`;
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('공유 링크가 복사되었습니다.'))
+    .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+});
+
+// 아바타 클릭: 로그인한 자신의 사이트(보드)로 이동
+el('userAvatar').addEventListener('click', () => {
+  if (!currentUser || !currentUserHandle) return;
+  const target = BASE_PATH + encodeURIComponent(currentUserHandle);
+  if (location.pathname === target) { location.reload(); }
+  else { location.href = target; }
+});
+
+function openHandleModal() {
+  el('inviteCodeRow').style.display = REQUIRE_INVITE_CODE ? 'flex' : 'none';
+  el('handleModalOverlay').classList.add('open');
+}
+function closeHandleModal() {
+  el('handleModalOverlay').classList.remove('open');
+}
+el('handleSaveBtn').addEventListener('click', async () => {
+  const inviteCode = el('inviteCodeInput').value.trim();
+  const handle = el('handleInput').value.trim().toLowerCase();
+  if (REQUIRE_INVITE_CODE && !inviteCode) {
+    showToast('초대 코드를 입력해주세요.', 'danger');
+    return;
+  }
+  if (!/^[a-z0-9_]{3,20}$/.test(handle)) {
+    showToast('영문 소문자/숫자/_ 3~20자로 입력해주세요.', 'danger');
+    return;
+  }
+  if (RESERVED_HANDLES.includes(handle)) {
+    showToast('사용할 수 없는 핸들이에요.', 'danger');
+    return;
+  }
+  try {
+    await runTransaction(db, async (tx) => {
+      const handleRef = doc(db, 'handles', handle);
+      let codeRef = null;
+      if (REQUIRE_INVITE_CODE) {
+        codeRef = doc(db, 'inviteCodes', inviteCode);
+        const codeSnap = await tx.get(codeRef);
+        const handleSnap = await tx.get(handleRef);
+        if (!codeSnap.exists() || codeSnap.data().used) throw new Error('badcode');
+        if (handleSnap.exists()) throw new Error('taken');
+        tx.update(codeRef, { used: true, usedBy: currentUser.uid, usedAt: Date.now() });
+        tx.set(handleRef, { uid: currentUser.uid, inviteCode });
+      } else {
+        const handleSnap = await tx.get(handleRef);
+        if (handleSnap.exists()) throw new Error('taken');
+        tx.set(handleRef, { uid: currentUser.uid });
+      }
+      tx.set(doc(db, 'users', currentUser.uid), {
+        handle,
+        displayName: currentUser.displayName || '',
+        photoURL: currentUser.photoURL || ''
+      }, { merge: true });
+    });
+    el('handleInput').value = '';
+    el('inviteCodeInput').value = '';
+    currentUserHandle = handle;
+    updateAuthUI();
+    await initView();
+    showToast('핸들이 생성되었습니다.');
+  } catch (e) {
+    if (e.message === 'taken') showToast('이미 사용 중인 핸들이에요.', 'danger');
+    else if (e.message === 'badcode') showToast('유효하지 않거나 이미 사용된 초대 코드예요.', 'danger');
+    else showToast('오류가 발생했습니다.', 'danger');
+  }
+});
+
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  if (!user) currentUserHandle = null;
+  await initView();
+  updateAuthUI();
+});
+
+// ---------- toast ----------
+function showToast(msg, type) {
+  const stack = el('toastStack');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type === 'danger' ? ' toast-danger' : '');
+  t.textContent = msg;
+  stack.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show'); t.classList.add('hide');
+    setTimeout(() => t.remove(), 250);
+  }, 1600);
+}
+
+// ---------- new card tag input ----------
+function renderNewTagChips() {
+  const row = el('newTagRow');
+  const input = el('newTagInput');
+  row.querySelectorAll('.tag-chip').forEach(c => c.remove());
+  newTags.forEach(tag => {
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `<span class="tag-chip-label">${tag}</span> <button type="button" aria-label="태그 삭제">${ICONS.close}</button>`;
+    chip.querySelector('button').addEventListener('click', () => {
+      newTags = newTags.filter(t => t !== tag);
+      renderNewTagChips();
+    });
+    row.insertBefore(chip, input);
+  });
+}
+
+let newTagComposing = false;
+const newTagInputEl = el('newTagInput');
+
+function commitNewTagIfNeeded() {
+  const raw = newTagInputEl.value;
+  if (/[,\s]$/.test(raw)) {
+    const v = raw.replace(/[,\s]+$/, '').trim();
+    if (v && !newTags.includes(v)) { newTags.push(v); renderNewTagChips(); }
+    newTagInputEl.value = '';
+  }
+}
+
+newTagInputEl.addEventListener('compositionstart', () => { newTagComposing = true; });
+newTagInputEl.addEventListener('compositionend', () => {
+  newTagComposing = false;
+  commitNewTagIfNeeded();
+});
+newTagInputEl.addEventListener('input', () => {
+  if (newTagComposing) return;
+  commitNewTagIfNeeded();
+});
+newTagInputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (e.isComposing || e.keyCode === 229) return;
+    const v = newTagInputEl.value.trim();
+    if (v) {
+      if (!newTags.includes(v)) { newTags.push(v); renderNewTagChips(); }
+      newTagInputEl.value = '';
+    }
+  } else if (e.key === 'Backspace' && !newTagInputEl.value && newTags.length) {
+    newTags.pop(); renderNewTagChips();
+  }
+});
+
+// ---------- rich text 서식 (버튼으로만 적용, 마크다운 문법 입력은 인식하지 않음) ----------
+// Enter를 눌렀을 때 각 줄이 <div>로 감싸이지 않고 <br>만 추가되도록 해서
+// 기존 textarea의 줄바꿈 방식과 최대한 비슷하게 유지한다.
+try { document.execCommand('defaultParagraphSeparator', false, 'br'); } catch (e) {}
+
+function toggleMarkWrap() {
+  const sel = window.getSelection();
+  if (!sel.rangeCount || sel.isCollapsed) return;
+  const range = sel.getRangeAt(0);
+  let container = range.commonAncestorContainer;
+  if (container.nodeType === 3) container = container.parentNode;
+  const markAncestor = container.closest && container.closest('mark');
+  if (markAncestor) {
+    const parent = markAncestor.parentNode;
+    while (markAncestor.firstChild) parent.insertBefore(markAncestor.firstChild, markAncestor);
+    parent.removeChild(markAncestor);
+    return;
+  }
+  const mark = document.createElement('mark');
+  try {
+    range.surroundContents(mark);
+  } catch (e) {
+    // 선택 영역이 여러 엘리먼트에 걸쳐 있으면 surroundContents가 실패해서 대체 방식 사용
+    const frag = range.extractContents();
+    mark.appendChild(frag);
+    range.insertNode(mark);
+  }
+  sel.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(mark);
+  sel.addRange(newRange);
+}
+
+function applyRichFormat(editable, cmd) {
+  editable.focus();
+  if (cmd === 'highlight') {
+    toggleMarkWrap();
+  } else {
+    try { document.execCommand(cmd); } catch (e) {}
+  }
+}
+
+// 툴바가 새 메모 작성 패널과, 카드마다 동적으로 생기는 수정 폼 양쪽에 다 있어서
+// 위임 방식으로 한 번만 등록 — 클릭된 툴바와 같은 부모 안에 있는 .rich-editable을 찾아 적용한다.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.md-toolbar .md-btn[data-cmd]');
+  if (!btn) return;
+  const toolbar = btn.closest('.md-toolbar');
+  const container = toolbar.parentElement;
+  const editable = container ? container.querySelector('.rich-editable') : null;
+  if (!editable) return;
+  applyRichFormat(editable, btn.dataset.cmd);
+});
+// 내용을 전부 지워도 브라우저가 빈 <br> 하나를 남겨두는 경우가 있어서,
+// 그럴 땐 진짜로 비워줘야 placeholder(:empty)가 다시 보인다.
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.classList && t.classList.contains('rich-editable')) {
+    if (t.innerHTML === '<br>' || t.textContent.trim() === '' && !t.querySelector('img')) {
+      if (t.innerHTML !== '') t.innerHTML = '';
+    }
+  }
+});
+
+// 허용된 서식 태그만 남기고(속성 포함) 나머지는 벗겨내는 sanitizer.
+// 저장 전/렌더링 전 양쪽에 적용해서, 예전 마크다운 문법으로 저장된 글자(예: **텍스트**)는
+// 더 이상 굵게 해석되지 않고 글자 그대로 보이게 된다.
+const RICH_ALLOWED_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, S: 1, STRIKE: 1, DEL: 1, MARK: 1, BR: 1 };
+function sanitizeRichHtml(html) {
+  const src = document.createElement('div');
+  src.innerHTML = html || '';
+  const out = document.createElement('div');
+  (function build(sourceNode, targetParent) {
+    sourceNode.childNodes.forEach(child => {
+      if (child.nodeType === 3) {
+        targetParent.appendChild(document.createTextNode(child.textContent));
+      } else if (child.nodeType === 1) {
+        if (RICH_ALLOWED_TAGS[child.tagName]) {
+          const clone = document.createElement(child.tagName);
+          build(child, clone);
+          targetParent.appendChild(clone);
+        } else {
+          // 허용 안 된 태그(div 등)는 태그만 벗기고 안의 내용은 그대로 살린다
+          build(child, targetParent);
+        }
+      }
+    });
+  })(src, out);
+  return out.innerHTML;
+}
+// 검색/복사용 — 태그를 다 떼고 순수 텍스트만 뽑아낸다.
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  return tmp.textContent || '';
+}
+
+// ---------- new card visibility (공개 / 나만보기 / 비밀번호) ----------
+const newVisibilityRow = el('newVisibilityRow');
+const newPasswordRow = el('newPasswordRow');
+const newPasswordInput = el('newPasswordInput');
+function setNewVisibility(vis) {
+  newVisibility = vis;
+  newVisibilityRow.querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.vis === vis));
+  newPasswordRow.style.display = vis === 'password' ? 'flex' : 'none';
+}
+newVisibilityRow.querySelectorAll('.vis-btn').forEach(btn => {
+  btn.addEventListener('click', () => setNewVisibility(btn.dataset.vis));
+});
+
+el('saveNewBtn').addEventListener('click', async () => {
+  if (!isOwner || !currentUser) { showToast('로그인 후 이용해주세요.', 'danger'); return; }
+  const newTextEl = el('newText');
+  if (!newTextEl.textContent.trim()) { showToast('내용을 입력해주세요.', 'danger'); return; }
+  const text = sanitizeRichHtml(newTextEl.innerHTML);
+
+  let payload = { tags: [...newTags], title: el('newTitle').value.trim(), createdAt: Date.now(), visibility: newVisibility };
+
+  if (newVisibility === 'password') {
+    const pw = newPasswordInput.value;
+    if (!pw || pw.length < 4) { showToast('비밀번호는 4자 이상으로 입력해주세요.', 'danger'); return; }
+    const { cipher, iv, salt } = await encryptNoteText(text, pw);
+    payload = { ...payload, text: '', cipher, iv, salt };
+  } else {
+    payload = { ...payload, text };
+  }
+
+  try {
+    const ref = await addDoc(collection(db, 'users', currentUser.uid, 'cards'), payload);
+    if (newVisibility === 'password') {
+      unlockedCards.set(ref.id, { text, password: newPasswordInput.value });
+    }
+    newTextEl.innerHTML = '';
+    el('newTitle').value = '';
+    newTags = []; renderNewTagChips();
+    newPasswordInput.value = '';
+    setNewVisibility('public');
+    showToast('저장되었습니다.');
+  } catch (e) {
+    showToast('저장에 실패했습니다.', 'danger');
+  }
+});
+
+// ---------- add panel ----------
+const addPanel = el('addPanel');
+const addPanelToggle = el('addPanelToggle');
+const resizeHandle = el('resizeHandle');
+const wrapEl = document.querySelector('.wrap');
+const headerInnerEl = document.querySelector('.header-inner');
+const DEFAULT_PANEL_WIDTH = 340;
+const MIN_PANEL_WIDTH = 280;
+const MAX_PANEL_WIDTH = 620;
+let panelWidth = DEFAULT_PANEL_WIDTH;
+let isResizing = false;
+
+function isDesktop() { return window.innerWidth >= 701; }
+
+if (isDesktop()) addPanel.style.width = panelWidth + 'px';
+
+function syncWrapMargin() {
+  const mr = (isDesktop() && addPanel.classList.contains('open')) ? panelWidth + 'px' : '';
+  wrapEl.style.marginRight = mr;
+  if (headerInnerEl) headerInnerEl.style.marginRight = mr;
+}
+
+function updateToggleIcon() {
+  const isOpen = addPanel.classList.contains('open');
+  addPanelToggle.textContent = isOpen ? '×' : '+';
+  const label = isOpen ? '닫기' : '메모 추가';
+  addPanelToggle.setAttribute('aria-label', label);
+  addPanelToggle.setAttribute('title', label);
+}
+function openAddPanel() {
+  addPanel.classList.add('open'); document.body.classList.add('panel-open');
+  syncWrapMargin(); updateToggleIcon();
+}
+function closeAddPanel() {
+  addPanel.classList.remove('open'); document.body.classList.remove('panel-open');
+  syncWrapMargin(); updateToggleIcon();
+}
+addPanelToggle.addEventListener('click', () => {
+  addPanel.classList.contains('open') ? closeAddPanel() : openAddPanel();
+});
+
+resizeHandle.addEventListener('mousedown', (e) => {
+  if (!isDesktop() || !addPanel.classList.contains('open')) return;
+  isResizing = true;
+  addPanel.classList.add('resizing');
+  resizeHandle.classList.add('active');
+  document.body.style.userSelect = 'none';
+  e.preventDefault();
+});
+document.addEventListener('mousemove', (e) => {
+  if (!isResizing) return;
+  const newWidth = window.innerWidth - e.clientX;
+  panelWidth = Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, newWidth));
+  addPanel.style.width = panelWidth + 'px';
+  syncWrapMargin();
+});
+document.addEventListener('mouseup', () => {
+  if (!isResizing) return;
+  isResizing = false;
+  addPanel.classList.remove('resizing');
+  resizeHandle.classList.remove('active');
+  document.body.style.userSelect = '';
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && addPanel.classList.contains('open')) closeAddPanel();
+});
+
+// ---------- search ----------
+el('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderCardGrid();
+});
+
+// ---------- filter bar ----------
+function getAllTags() {
+  const set = new Set();
+  cards.forEach(c => c.tags.forEach(t => set.add(t)));
+  return [...set].sort((a,b) => a.localeCompare(b, 'ko'));
+}
+
+function renderFilterBar() {
+  const bar = el('filterBar');
+  bar.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.type = 'button'; allBtn.className = 'filter-chip all-filter' + (activeFilters.size === 0 && !privateOnlyFilter ? ' active' : '');
+  allBtn.textContent = '전체';
+  allBtn.addEventListener('click', () => { activeFilters.clear(); privateOnlyFilter = false; renderAll(); });
+  bar.appendChild(allBtn);
+
+  // 나만보기 글만 모아보기 — 사이트 주인이 자기 사이트를 볼 때만 노출
+  if (isOwner) {
+    const privBtn = document.createElement('button');
+    privBtn.type = 'button';
+    privBtn.className = 'filter-chip private-filter icon-only' + (privateOnlyFilter ? ' active' : '');
+    privBtn.title = '나만보기';
+    privBtn.innerHTML = ICONS.heart;
+    privBtn.addEventListener('click', () => {
+      privateOnlyFilter = !privateOnlyFilter;
+      renderAll();
+    });
+    bar.appendChild(privBtn);
+  }
+
+  getAllTags().forEach(tag => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-chip tag-filter' + (activeFilters.has(tag) ? ' active' : '');
+    btn.textContent = tag;
+    btn.addEventListener('click', () => {
+      if (activeFilters.has(tag)) activeFilters.delete(tag); else activeFilters.add(tag);
+      renderAll();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+// ---------- card grid ----------
+function getVisibleCards() {
+  let list = cards;
+  if (privateOnlyFilter) list = list.filter(c => c.visibility === 'private');
+  if (activeFilters.size > 0) list = list.filter(c => c.tags.some(t => activeFilters.has(t)));
+  if (searchQuery) {
+    list = list.filter(c => {
+      const searchableText = isCardLocked(c) ? '' : stripHtml(getCardDisplayText(c));
+      return searchableText.toLowerCase().includes(searchQuery) ||
+        c.tags.some(t => t.toLowerCase().includes(searchQuery));
+    });
+  }
+  return list;
+}
+
+function copyCardText(text) {
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('클립보드에 복사되었습니다.'))
+    .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+}
+
+function copyCardLink(id) {
+  const handleSeg = viewedHandle ? encodeURIComponent(viewedHandle) : '';
+  const url = `${location.origin}${BASE_PATH}${handleSeg}#note-${id}`;
+  navigator.clipboard.writeText(url)
+    .then(() => showToast('링크가 복사되었습니다.'))
+    .catch(() => showToast('복사에 실패했습니다.', 'danger'));
+  location.hash = `note-${id}`;
+}
+
+async function deleteCard(id) {
+  if (!isOwner || !currentUser) return;
+  try {
+    await deleteDoc(doc(db, 'users', currentUser.uid, 'cards', String(id)));
+    showToast('삭제되었습니다.');
+  } catch (e) {
+    showToast('삭제에 실패했습니다.', 'danger');
+  }
+}
+
+// ---------- lock helpers ----------
+function isCardLocked(card) {
+  if (card.visibility === 'private') return !isOwner;
+  if (card.visibility === 'password') return !unlockedCards.has(card.id);
+  return false;
+}
+function getCardDisplayText(card) {
+  if (card.visibility === 'password') {
+    const u = unlockedCards.get(card.id);
+    return u ? u.text : '';
+  }
+  return card.text;
+}
+
+// ---------- unlock (password) modal ----------
+const unlockModalOverlay = el('unlockModalOverlay');
+const unlockModalClose = el('unlockModalClose');
+const unlockPasswordInput = el('unlockPasswordInput');
+let unlockTargetId = null;
+let unlockThen = null;
+
+function openUnlockModal(cardId, then) {
+  unlockTargetId = cardId;
+  unlockThen = then || null;
+  unlockPasswordInput.value = '';
+  unlockModalOverlay.classList.add('open');
+  setTimeout(() => unlockPasswordInput.focus(), 50);
+}
+function closeUnlockModal() {
+  unlockModalOverlay.classList.remove('open');
+  unlockTargetId = null; unlockThen = null;
+}
+unlockModalClose.addEventListener('click', closeUnlockModal);
+unlockModalOverlay.addEventListener('click', (e) => { if (e.target === unlockModalOverlay) closeUnlockModal(); });
+
+async function attemptUnlock() {
+  const card = cards.find(c => String(c.id) === String(unlockTargetId));
+  if (!card) { closeUnlockModal(); return; }
+  const pw = unlockPasswordInput.value;
+  if (!pw) { showToast('비밀번호를 입력해주세요.', 'danger'); return; }
+  const plain = await decryptNoteText(card, pw);
+  if (plain === null) { showToast('비밀번호가 올바르지 않아요.', 'danger'); return; }
+  unlockedCards.set(card.id, { text: plain, password: pw });
+  const cb = unlockThen;
+  closeUnlockModal();
+  renderAll();
+  if (cb) cb();
+}
+el('unlockSubmitBtn').addEventListener('click', attemptUnlock);
+unlockPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptUnlock(); });
+
+// ---------- note modal ----------
+const noteModalOverlay = el('noteModalOverlay');
+const noteModalClose = el('noteModalClose');
+let modalCardId = null;
+
+el('noteModalActions').innerHTML = `
+  <button type="button" class="icon-btn" id="noteModalCopyBtn" title="복사">${ICONS.copy}</button>
+  <button type="button" class="icon-btn" id="noteModalShareBtn" title="공유">${ICONS.share}</button>
+  <button type="button" class="icon-btn" id="noteModalEditBtn" title="수정" style="display:none;">${ICONS.edit}</button>
+`;
+el('noteModalCopyBtn').addEventListener('click', () => {
+  const card = cards.find(c => String(c.id) === String(modalCardId));
+  if (card) copyCardText(stripHtml(getCardDisplayText(card)));
+});
+el('noteModalShareBtn').addEventListener('click', () => {
+  if (modalCardId != null) copyCardLink(modalCardId);
+});
+el('noteModalEditBtn').addEventListener('click', () => {
+  if (modalCardId == null) return;
+  editingId = modalCardId;
+  closeNoteModal();
+  renderAll();
+});
+
+function openNoteModal(id) {
+  const card = cards.find(c => String(c.id) === String(id));
+  if (!card) return;
+  if (card.visibility === 'private' && !isOwner) {
+    showToast('비공개 메모예요.', 'danger');
+    if (location.hash.startsWith('#note-')) history.replaceState(null, '', location.pathname + location.search);
+    return;
+  }
+  if (card.visibility === 'password' && !unlockedCards.has(card.id)) {
+    openUnlockModal(card.id, () => openNoteModal(id));
+    return;
+  }
+  modalCardId = card.id;
+  const titleEl = el('noteModalTitle');
+  if (card.title) { titleEl.textContent = card.title; titleEl.style.display = 'block'; }
+  else { titleEl.textContent = ''; titleEl.style.display = 'none'; }
+  el('noteModalEditBtn').style.display = isOwner ? 'flex' : 'none';
+  const tagsWrap = el('noteModalTags');
+  tagsWrap.innerHTML = '';
+  card.tags.forEach(tag => {
+    const span = document.createElement('span');
+    span.className = 'note-tag'; span.textContent = tag;
+    tagsWrap.appendChild(span);
+  });
+  el('noteModalText').innerHTML = sanitizeRichHtml(getCardDisplayText(card));
+  noteModalOverlay.classList.add('open');
+  if (location.hash !== `#note-${id}`) location.hash = `note-${id}`;
+}
+function closeNoteModal() {
+  noteModalOverlay.classList.remove('open');
+  modalCardId = null;
+  if (location.hash.startsWith('#note-')) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+}
+noteModalClose.addEventListener('click', closeNoteModal);
+noteModalOverlay.addEventListener('click', (e) => {
+  if (e.target === noteModalOverlay) closeNoteModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && noteModalOverlay.classList.contains('open')) closeNoteModal();
+});
+
+function checkHashForNote() {
+  const match = location.hash.match(/^#note-(.+)$/);
+  if (match) openNoteModal(match[1]);
+}
+window.addEventListener('hashchange', checkHashForNote);
+
+function getMasonryColumnCount() {
+  const w = window.innerWidth;
+  if (w >= 1320) return 4;
+  if (w >= 901) return 3;
+  if (w >= 560) return 2;
+  return 1;
+}
+
+function renderCardGrid() {
+  const grid = el('cardGrid');
+  const visible = getVisibleCards();
+  grid.innerHTML = '';
+  const hint = el('emptyHint');
+  hint.style.display = visible.length === 0 ? 'block' : 'none';
+  hint.textContent = (searchQuery || activeFilters.size > 0)
+    ? '조건에 맞는 카드가 없습니다.'
+    : (!viewedUid
+        ? (currentUser ? '핸들을 먼저 만들어주세요.' : '로그인 후 메모를 시작해보세요.')
+        : '아직 저장된 카드가 없습니다.');
+
+  // 각 화면 폭에 맞는 열(column) 래퍼를 만들고, 카드가 추가될 때마다
+  // 현재 높이가 가장 낮은 열에 넣어서 진짜 masonry(핀터레스트식) 배치를 만든다.
+  const colCount = getMasonryColumnCount();
+  const cols = [];
+  for (let i = 0; i < colCount; i++) {
+    const colEl = document.createElement('div');
+    colEl.className = 'masonry-col';
+    grid.appendChild(colEl);
+    cols.push({ el: colEl, height: 0 });
+  }
+
+  visible.forEach(card => {
+    const div = document.createElement('div');
+    div.className = 'note-card';
+
+    if (isOwner && editingId === card.id) {
+      const displayText = getCardDisplayText(card);
+      div.innerHTML = `
+        <input type="text" class="note-title-input edit-title-input" value="${escapeHtml(card.title || '')}" placeholder="제목 (선택)">
+        <div class="md-toolbar">
+          <button type="button" class="md-btn" data-cmd="bold" title="굵게">B</button>
+          <button type="button" class="md-btn" data-cmd="italic" title="기울임"><i>I</i></button>
+          <button type="button" class="md-btn" data-cmd="underline" title="밑줄"><u>U</u></button>
+          <button type="button" class="md-btn" data-cmd="strikeThrough" title="취소선"><s>S</s></button>
+          <button type="button" class="md-btn" data-cmd="highlight" title="하이라이트"><span class="hl-preview">가</span></button>
+        </div>
+        <div class="note-edit-area rich-editable" contenteditable="true" data-placeholder="내용을 입력하세요">${sanitizeRichHtml(displayText)}</div>
+        <div class="tag-input-row edit-tag-row"></div>
+        <div class="visibility-row edit-vis-row">
+          <button type="button" class="vis-btn" data-vis="public">공개</button>
+          <button type="button" class="vis-btn" data-vis="private"><span class="icon-label vis-icon-heart">${ICONS.heart}나만보기</span></button>
+          <button type="button" class="vis-btn" data-vis="password"><span class="icon-label">${ICONS.lock}비밀글</span></button>
+        </div>
+        <div class="tag-input-row edit-password-row" style="display:none;">
+          <input type="password" class="edit-password-input" placeholder="비밀번호 변경 (비워두면 기존 비밀번호 유지)">
+        </div>
+        <div class="note-edit-footer">
+          <button type="button" class="btn-mini" data-act="cancel">취소</button>
+          <button type="button" class="btn-mini primary" data-act="save">저장</button>
+        </div>
+      `;
+      const editTags = [...card.tags];
+      const tagRow = div.querySelector('.edit-tag-row');
+      const tagInput = document.createElement('input');
+      tagInput.type = 'text'; tagInput.placeholder = '태그 입력';
+
+      function renderEditChips() {
+        tagRow.querySelectorAll('.tag-chip').forEach(c => c.remove());
+        editTags.forEach(tag => {
+          const chip = document.createElement('span');
+          chip.className = 'tag-chip';
+          chip.innerHTML = `<span class="tag-chip-label">${tag}</span> <button type="button">${ICONS.close}</button>`;
+          chip.querySelector('button').addEventListener('click', () => {
+            const idx = editTags.indexOf(tag); if (idx > -1) editTags.splice(idx, 1);
+            renderEditChips();
+          });
+          tagRow.insertBefore(chip, tagInput);
+        });
+      }
+      tagRow.appendChild(tagInput);
+      renderEditChips();
+
+      let editTagComposing = false;
+      function commitEditTagIfNeeded() {
+        const raw = tagInput.value;
+        if (/[,\s]$/.test(raw)) {
+          const v = raw.replace(/[,\s]+$/, '').trim();
+          if (v && !editTags.includes(v)) { editTags.push(v); renderEditChips(); }
+          tagInput.value = '';
+        }
+      }
+      tagInput.addEventListener('compositionstart', () => { editTagComposing = true; });
+      tagInput.addEventListener('compositionend', () => {
+        editTagComposing = false;
+        commitEditTagIfNeeded();
+      });
+      tagInput.addEventListener('input', () => {
+        if (editTagComposing) return;
+        commitEditTagIfNeeded();
+      });
+      tagInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (e.isComposing || e.keyCode === 229) return;
+          const v = tagInput.value.trim();
+          if (v) {
+            if (!editTags.includes(v)) { editTags.push(v); renderEditChips(); }
+            tagInput.value = '';
+          }
+        } else if (e.key === 'Backspace' && !tagInput.value && editTags.length) {
+          editTags.pop(); renderEditChips();
+        }
+      });
+
+      // 공개범위 (공개 / 나만보기 / 비밀번호)
+      let editVisibility = card.visibility || 'public';
+      const editVisRow = div.querySelector('.edit-vis-row');
+      const editPasswordRow = div.querySelector('.edit-password-row');
+      function setEditVisibility(vis) {
+        editVisibility = vis;
+        editVisRow.querySelectorAll('.vis-btn').forEach(b => b.classList.toggle('active', b.dataset.vis === vis));
+        editPasswordRow.style.display = vis === 'password' ? 'flex' : 'none';
+      }
+      editVisRow.querySelectorAll('.vis-btn').forEach(btn => {
+        btn.addEventListener('click', () => setEditVisibility(btn.dataset.vis));
+      });
+      setEditVisibility(editVisibility);
+
+      div.querySelector('[data-act="cancel"]').addEventListener('click', () => { editingId = null; renderAll(); });
+      div.querySelector('[data-act="save"]').addEventListener('click', async () => {
+        const editAreaEl = div.querySelector('.note-edit-area');
+        if (!editAreaEl.textContent.trim()) { showToast('내용을 입력해주세요.', 'danger'); return; }
+        const newText = sanitizeRichHtml(editAreaEl.innerHTML);
+        try {
+          let payload = { tags: editTags, title: div.querySelector('.edit-title-input').value.trim(), visibility: editVisibility };
+          if (editVisibility === 'password') {
+            const pwInput = div.querySelector('.edit-password-input');
+            let pw = pwInput ? pwInput.value : '';
+            if (!pw) {
+              const cached = unlockedCards.get(card.id);
+              pw = cached ? cached.password : '';
+            }
+            if (!pw || pw.length < 4) { showToast('비밀번호는 4자 이상으로 입력해주세요.', 'danger'); return; }
+            const { cipher, iv, salt } = await encryptNoteText(newText, pw);
+            payload.text = ''; payload.cipher = cipher; payload.iv = iv; payload.salt = salt;
+            unlockedCards.set(card.id, { text: newText, password: pw });
+          } else {
+            payload.text = newText;
+            payload.cipher = deleteField(); payload.iv = deleteField(); payload.salt = deleteField();
+            unlockedCards.delete(card.id);
+          }
+          await updateDoc(doc(db, 'users', currentUser.uid, 'cards', String(card.id)), payload);
+          editingId = null; renderAll();
+          showToast('수정되었습니다.');
+        } catch (e) {
+          showToast('수정에 실패했습니다.', 'danger');
+        }
+      });
+    } else {
+      const locked = isCardLocked(card);
+
+      if (locked) {
+        div.classList.add('locked-card');
+        const isPw = card.visibility === 'password';
+        div.innerHTML = `
+          <div class="note-card-actions">
+            <button type="button" class="icon-btn" data-act="link" title="링크 복사">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14.1 4.9a5 5 0 0 1 7.07 7.07l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77l2.5-2.5a2.5 2.5 0 0 0-3.53-3.53l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77Z"></path><path d="M9.9 19.1a5 5 0 0 1-7.07-7.07l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77l-2.5 2.5a2.5 2.5 0 0 0 3.53 3.53l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77Z"></path></svg>
+            </button>
+            ${isOwner ? `<button type="button" class="icon-btn danger" data-act="delete" title="삭제">${ICONS.close}</button>` : ''}
+          </div>
+          <div class="locked-body">
+            <div class="locked-msg">${ICONS.lock}${card.title ? escapeHtml(card.title) : '비밀글입니다'}</div>
+            ${isPw ? '' : '<div class="locked-sub">작성자만 볼 수 있어요.</div>'}
+            ${isPw ? `<button type="button" class="btn-unlock" data-act="unlock">잠금 해제</button>` : ''}
+          </div>
+        `;
+        div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
+        if (isOwner) {
+          div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+        }
+        if (isPw) {
+          div.querySelector('[data-act="unlock"]').addEventListener('click', () => openUnlockModal(card.id));
+        }
+      } else {
+        div.innerHTML = `
+        <div class="note-card-actions">
+          <button type="button" class="icon-btn" data-act="link" title="링크 복사">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14.1 4.9a5 5 0 0 1 7.07 7.07l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77l2.5-2.5a2.5 2.5 0 0 0-3.53-3.53l-2.5 2.5a1.25 1.25 0 1 1-1.77-1.77Z"></path><path d="M9.9 19.1a5 5 0 0 1-7.07-7.07l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77l-2.5 2.5a2.5 2.5 0 0 0 3.53 3.53l2.5-2.5a1.25 1.25 0 1 1 1.77 1.77Z"></path></svg>
+          </button>
+          <button type="button" class="icon-btn" data-act="copy" title="복사">${ICONS.copy}</button>
+          ${isOwner ? `<button type="button" class="icon-btn" data-act="edit" title="수정">${ICONS.edit}</button>` : ''}
+          ${isOwner ? `<button type="button" class="icon-btn danger" data-act="delete" title="삭제">${ICONS.close}</button>` : ''}
+        </div>
+        <div class="note-card-body">
+          ${card.visibility === 'private' ? `<span class="note-vis-tag vis-tag-private">${ICONS.heart}나만보기</span>` : (card.visibility === 'password' ? `<span class="note-vis-tag">${ICONS.lock}비밀글</span>` : '')}
+          <div class="note-tags"></div>
+          ${card.title ? `<div class="note-title">${escapeHtml(card.title)}</div>` : ''}
+          <div class="note-text"></div>
+        </div>
+      `;
+      const displayText = getCardDisplayText(card);
+      div.querySelector('.note-text').innerHTML = sanitizeRichHtml(displayText);
+      const tagsWrap = div.querySelector('.note-tags');
+      card.tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'note-tag'; span.textContent = tag;
+        tagsWrap.appendChild(span);
+      });
+      div.querySelector('[data-act="link"]').addEventListener('click', () => copyCardLink(card.id));
+      div.querySelector('[data-act="copy"]').addEventListener('click', () => copyCardText(stripHtml(displayText)));
+      if (isOwner) {
+        div.querySelector('[data-act="edit"]').addEventListener('click', () => { editingId = card.id; renderAll(); });
+        div.querySelector('[data-act="delete"]').addEventListener('click', () => deleteCard(card.id));
+      }
+
+      const textEl = div.querySelector('.note-text');
+      const bodyEl = div.querySelector('.note-card-body');
+      bodyEl.addEventListener('click', () => openNoteModal(card.id));
+      const TRUNCATE_HEIGHT = 333;
+      requestAnimationFrame(() => {
+        if (textEl.scrollHeight > TRUNCATE_HEIGHT + 4) {
+          textEl.classList.add('truncated');
+        }
+      });
+      }
+    }
+
+    let shortest = cols[0];
+    for (let i = 1; i < cols.length; i++) {
+      if (cols[i].height < shortest.height) shortest = cols[i];
+    }
+    shortest.el.appendChild(div);
+    shortest.height += div.offsetHeight;
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderAll() {
+  renderFilterBar();
+  renderCardGrid();
+}
+
+// ---------- 모바일 서치 위치 이동 ----------
+// 모바일 폭에서는 서치가 헤더 안에 있으면 로고/타이틀을 가려서, 메모 작성
+// 패널 위에 전체 폭으로 옮겨 보여준다. (같은 엘리먼트를 그대로 옮기므로
+// #searchInput 참조/이벤트는 그대로 유지됨)
+(function () {
+  const searchEl = document.querySelector('.header-search');
+  const contentRowEl = el('contentRow');
+  if (!searchEl || !contentRowEl) return;
+  const originalParent = searchEl.parentNode;
+  const originalNextSibling = searchEl.nextSibling;
+  let isMobilePlaced = false;
+  function layoutSearch() {
+    const mobile = window.innerWidth <= 700;
+    if (mobile && !isMobilePlaced) {
+      searchEl.classList.add('search-full');
+      contentRowEl.insertBefore(searchEl, contentRowEl.firstChild);
+      isMobilePlaced = true;
+    } else if (!mobile && isMobilePlaced) {
+      searchEl.classList.remove('search-full');
+      originalParent.insertBefore(searchEl, originalNextSibling);
+      isMobilePlaced = false;
+    }
+  }
+  layoutSearch();
+  let searchLayoutTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(searchLayoutTimer);
+    searchLayoutTimer = setTimeout(layoutSearch, 120);
+  });
+})();
+
+// ---------- theme ----------
+(function () {
+  const root = document.documentElement;
+  const toggleBtn = el('themeToggle');
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    toggleBtn.setAttribute('aria-pressed', theme === 'dark');
+  }
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+  toggleBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+  });
+})();
+
+// 화면 폭이 바뀌어 masonry 열 개수가 달라질 때만 다시 배치한다.
+let lastMasonryColCount = getMasonryColumnCount();
+let masonryResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(masonryResizeTimer);
+  masonryResizeTimer = setTimeout(() => {
+    const cc = getMasonryColumnCount();
+    if (cc !== lastMasonryColCount) {
+      lastMasonryColCount = cc;
+      renderCardGrid();
+    }
+  }, 150);
+});
+
+renderAll();
+checkHashForNote();
+</script>
+</body>
+</html>
     /* 기본(보통) 모서리 프리셋 — 커스텀 테마에서 덮어씀 */
     --r-lg: 8px;
     --r-md: 5px;

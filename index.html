@@ -873,9 +873,40 @@
   #settingsModalCard .visibility-row { margin: 0; gap: 5px; }
   #settingsModalCard .vis-btn { padding: 5px 9px; font-size: 10.5px; }
 
+  /* ---------- gate screen (핸들 없음 + 로그인 안 됨) ---------- */
+  .gate-stage{
+    position:fixed; inset:0; z-index:500;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; background:var(--bg-app);
+  }
+  .gate-stage[hidden]{ display:none; }
+  .gate-card{
+    width:100%; max-width:340px; background:var(--bg-panel);
+    border:1px solid var(--border-soft); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-bar); padding:34px 26px 28px; text-align:center;
+  }
+  .gate-brand{font-weight:800; font-size:25px; color:var(--ink); margin-bottom:18px; letter-spacing:-.01em;}
+  .gate-brand .heart{color:var(--accent-strong);}
+  .gate-card h2{font-size:12.5px; font-weight:700; margin:0 0 6px; color:var(--ink);}
+  .gate-sub{font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin:0 0 22px;}
+  .gate-btn{
+    width:100%; border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink);
+    font-family:inherit; font-weight:600; font-size:13.5px; padding:11px 18px; border-radius:var(--r-md); cursor:pointer;
+    transition:background .15s ease;
+  }
+  .gate-btn:hover{background:var(--accent-strong); border-color:var(--accent-strong);}
 </style>
 </head>
 <body class="view-only">
+
+<div class="gate-stage" id="gateStage">
+  <div class="gate-card">
+    <div class="gate-brand">r<span class="heart">♡</span>siememo</div>
+    <h2>계정이 필요해요</h2>
+    <p class="gate-sub">로그인하면 핸들을 만들 수 있어요</p>
+    <button type="button" class="gate-btn" id="gateLoginBtn">Google로 로그인</button>
+  </div>
+</div>
 
 <div id="toastStack"></div>
 
@@ -1246,8 +1277,13 @@ function getUrlHandle() {
   return new URLSearchParams(location.search).get('u');
 }
 
+function updateGateVisibility(urlHandle) {
+  el('gateStage').hidden = !!(currentUser || urlHandle);
+}
+
 async function initView() {
   const urlHandle = getUrlHandle();
+  updateGateVisibility(urlHandle);
 
   // 로그인한 사용자는 지금 어떤 주소(다른 사람의 보드 포함)를 보고 있든
   // 자기 핸들이 없으면 핸들 생성부터 안내한다.
@@ -2000,6 +2036,10 @@ el('genCodeBtn').addEventListener('click', async () => {
 });
 
 el('loginBtn').addEventListener('click', async () => {
+  try { await signInWithPopup(auth, provider); }
+  catch (e) { showToast('로그인에 실패했습니다.', 'danger'); }
+});
+el('gateLoginBtn').addEventListener('click', async () => {
   try { await signInWithPopup(auth, provider); }
   catch (e) { showToast('로그인에 실패했습니다.', 'danger'); }
 });

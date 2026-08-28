@@ -384,8 +384,11 @@
   .btn-add-toggle {
     display: flex; align-items: center; justify-content: center;
     /* 진하게 채워진 색 때문에 실제 치수보다 커 보여서, 왼쪽 토글과 비슷한 존재감으로
-       보이도록 치수와 그림자를 살짝 줄였다 (정확한 px보다 시각적 크기감 기준). */
-    width: 25px; height: 25px; border-radius: var(--r-pill);
+       보이도록 치수와 그림자를 살짝 줄였다 (정확한 px보다 시각적 크기감 기준).
+       단, 다른 아이콘 버튼(.icon-btn, 28px)과 같은 var(--r-pill) 값을 그대로 쓰면
+       박스가 더 작은 만큼(25px) 상대적으로 더 둥글어 보여서, 크기 비율만큼 보정해
+       다른 버튼들과 같은 둥근 정도로 보이게 맞춘다. */
+    width: 25px; height: 25px; border-radius: calc(var(--r-pill) * 25 / 28);
     border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
     box-shadow: 0 1px 2px color-mix(in srgb, var(--accent-strong) 30%, transparent);
     font-size: 13px; font-weight: 500; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0;
@@ -558,7 +561,7 @@
   .filter-bar { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
   .filter-chip {
     border: 1px solid var(--border-soft); background: var(--bg-card); color: var(--ink-faint);
-    font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 5px 12px; border-radius: var(--r-md);
+    font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 5px 10.5px; border-radius: var(--r-md);
     box-shadow: none;
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
@@ -568,7 +571,7 @@
   /* "전체" 칩만 선택됐을 때는 나만보기 태그와 같은 진한 톤으로 — 기본 화면임을 뚜렷하게 보여준다.
      다른 태그 칩이 선택된 경우는 위의 연한 active 스타일을 그대로 유지. */
   .filter-chip.all-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
-  .filter-chip.icon-only { display: inline-flex; align-items: center; justify-content: center; padding: 5px 10px; }
+  .filter-chip.icon-only { display: inline-flex; align-items: center; justify-content: center; padding: 5px 8.5px; }
   .filter-chip.icon-only svg { width: 13px; height: 13px; display: block; }
   .filter-chip.private-filter.active { background: var(--heart); border-color: var(--heart); color: var(--accent-ink); }
 
